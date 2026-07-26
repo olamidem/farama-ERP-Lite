@@ -28,10 +28,12 @@ export const StaffForm = ({
   const [fullName, setFullName] = useState(initialData?.full_name || "");
   const [email, setEmail] = useState(initialData?.email || "");
   const [phone, setPhone] = useState(initialData?.phone || "");
-  const [role, setRole] = useState(initialData?.role || roles[0]?.name || "Cashier");
+  const [role, setRole] = useState(
+    initialData?.role || roles[0]?.name || "Cashier",
+  );
   const [pin, setPin] = useState(initialData?.pin_hash || "");
   const [status, setStatus] = useState<"active" | "suspended">(
-    initialData?.status === "suspended" ? "suspended" : "active"
+    initialData?.status === "suspended" ? "suspended" : "active",
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -130,7 +132,9 @@ export const StaffForm = ({
             </label>
             <select
               value={status}
-              onChange={(e) => setStatus(e.target.value as "active" | "suspended")}
+              onChange={(e) =>
+                setStatus(e.target.value as "active" | "suspended")
+              }
               className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 cursor-pointer"
             >
               <option value="active">Active</option>
