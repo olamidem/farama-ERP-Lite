@@ -45,7 +45,10 @@ export const StaffStatsCards = ({
   ];
 
   return (
-    <div id="staff-stats-cards" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in">
+    <div
+      id="staff-stats-cards"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in"
+    >
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
@@ -61,7 +64,9 @@ export const StaffStatsCards = ({
               <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                 {stat.label}
               </p>
-              <h3 className="text-xl font-black text-slate-900">{stat.value}</h3>
+              <h3 className="text-xl font-black text-slate-900">
+                {stat.value}
+              </h3>
             </div>
           </div>
         );
