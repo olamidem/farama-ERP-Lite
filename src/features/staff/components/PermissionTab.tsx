@@ -3,43 +3,50 @@ const permissionsList = [
     code: "catalog_read",
     module: "Catalog",
     name: "Read Products & Categories",
-    description: "Enables viewing products, variations, units and general categorizations.",
+    description:
+      "Enables viewing products, variations, units and general categorizations.",
   },
   {
     code: "catalog_write",
     module: "Catalog",
     name: "Write Products & Categories",
-    description: "Enables creating, updating, importing, or deleting store catalogue entries.",
+    description:
+      "Enables creating, updating, importing, or deleting store catalogue entries.",
   },
   {
     code: "inventory_read",
     module: "Inventory",
     name: "Read Inventory Levels",
-    description: "Provides read-only access to stock ledgers, counts, and warehouse values.",
+    description:
+      "Provides read-only access to stock ledgers, counts, and warehouse values.",
   },
   {
     code: "inventory_write",
     module: "Inventory",
     name: "Perform Stock Adjustments",
-    description: "Enables performing physical stock counts, stock corrections, and manual transfers.",
+    description:
+      "Enables performing physical stock counts, stock corrections, and manual transfers.",
   },
   {
     code: "purchases_manage",
     module: "Inventory",
     name: "Manage Supplier Purchase Orders",
-    description: "Provides full control over incoming restock requests, purchase forms, and invoices.",
+    description:
+      "Provides full control over incoming restock requests, purchase forms, and invoices.",
   },
   {
     code: "staff_manage",
     module: "Staff",
     name: "Administrate Organization",
-    description: "Enables resetting staff PINs, creating/suspending users, and editing role assignments.",
+    description:
+      "Enables resetting staff PINs, creating/suspending users, and editing role assignments.",
   },
   {
     code: "settings_manage",
     module: "System",
     name: "Manage System Settings",
-    description: "Enables configuring tax structures, default currencies, store hours, and automated backup routines.",
+    description:
+      "Enables configuring tax structures, default currencies, store hours, and automated backup routines.",
   },
 ];
 
@@ -75,8 +82,12 @@ export const PermissionTab = () => {
                     {perm.code}
                   </code>
                 </td>
-                <td className="py-4 px-6 font-bold text-slate-800">{perm.name}</td>
-                <td className="py-4 px-6 font-medium text-slate-400">{perm.description}</td>
+                <td className="py-4 px-6 font-bold text-slate-800">
+                  {perm.name}
+                </td>
+                <td className="py-4 px-6 font-medium text-slate-400">
+                  {perm.description}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -88,4 +99,4 @@ export const PermissionTab = () => {
 
 // Also export as PermissionsTab for maximum compatibility
 export { PermissionTab as PermissionsTab };
-export default PermissionTab;
+export default PermissionTab;   
