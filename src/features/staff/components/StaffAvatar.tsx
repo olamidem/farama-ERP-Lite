@@ -5,7 +5,10 @@ interface StaffAvatarProps {
   className?: string;
 }
 
-export const StaffAvatar = ({ employee, className = "w-9 h-9" }: StaffAvatarProps) => {
+export const StaffAvatar = ({
+  employee,
+  className = "w-9 h-9",
+}: StaffAvatarProps) => {
   const getInitials = () => {
     if (employee.full_name) {
       return employee.full_name
