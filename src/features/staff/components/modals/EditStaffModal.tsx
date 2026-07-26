@@ -1,5 +1,7 @@
 import { StaffForm } from "../components/StaffForm";
 import type { Employee, RoleData } from "../types";
+import { USER_STATUS } from "../../auth/types/enums";
+import type { UserStatus } from "../../auth/types/enums";
 
 interface EditStaffModalProps {
   isOpen: boolean;
@@ -12,7 +14,7 @@ interface EditStaffModalProps {
       email: string;
       phone: string;
       role: string;
-      status: "active" | "suspended";
+      status: UserStatus;
     }
   ) => void;
   roles: RoleData[];
@@ -50,7 +52,7 @@ export const EditStaffModal = ({
               email: data.email,
               phone: data.phone,
               role: data.role,
-              status: data.status || "active",
+              status: data.status || USER_STATUS.ACTIVE,
             });
             onClose();
           }}
