@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import type { Employee } from "../types/staff";
 
-export const useEmployeeFilter = (employees: Employee[]) => {
+export const useEmployeeFilters = (employees: Employee[]) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<
     "all" | "active" | "suspended"

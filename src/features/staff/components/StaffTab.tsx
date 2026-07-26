@@ -4,7 +4,8 @@ import { cn } from "../../../utils/cn";
 import { StaffFilters } from "./StaffFilters";
 import { StaffTable } from "./StaffTable";
 import Pagination from "../../../components/ui/pagination/Pagination";
-import type { Employee, RoleData, ActivityLog } from "../types";
+import type { ActivityLog, Employee, RoleData } from "../types/staff";
+import { useEmployeeFilters } from "../hooks/useEmployeeFilters";
 
 interface StaffTabProps {
   employees: Employee[];
@@ -35,21 +36,16 @@ export const StaffTab = ({
   onRoleChange,
   onTabChange,
 }: StaffTabProps) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "suspended">("all");
+  const {
+    searchQuery,
+    setSearchQuery,
+    statusFilter,
+    setStatusFilter,
+    filteredEmployees,
+  } = useEmployeeFilters(employees);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-
-  const filteredEmployees = useMemo(() => {
-    return employees.filter((emp) => {
-      const matchSearch =
-        emp.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        emp.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        emp.phone.includes(searchQuery);
-      const matchStatus = statusFilter === "all" || emp.status === statusFilter;
-      return matchSearch && matchStatus;
-    });
-  }, [employees, searchQuery, statusFilter]);
 
   const paginatedEmployees = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
