@@ -69,7 +69,7 @@ export const StaffActions = ({
           "p-2 rounded-xl transition cursor-pointer border border-transparent disabled:opacity-40 disabled:cursor-not-allowed",
           isActive
             ? "text-slate-400 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-100"
-            : "text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 hover:border-emerald-100"
+            : "text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 hover:border-emerald-100",
         )}
       >
         {isActive ? <UserX size={13} /> : <UserCheck size={13} />}
