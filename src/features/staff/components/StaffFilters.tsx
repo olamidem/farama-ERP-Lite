@@ -31,7 +31,11 @@ export const StaffFilters = ({
 
         <select
           value={statusFilter}
-          onChange={(e) => onStatusFilterChange(e.target.value as "all" | "active" | "suspended")}
+          onChange={(e) =>
+            onStatusFilterChange(
+              e.target.value as "all" | "active" | "suspended",
+            )
+          }
           className="rounded-xl border border-slate-200 bg-white py-2 px-3 text-xs font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 cursor-pointer"
         >
           <option value="all">All Statuses</option>
