@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { Employee } from "../types/staff";
+import { USER_STATUS } from "../../auth/types/enums";
 
 export const useEmployeeFilters = (employees: Employee[]) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,7 +19,8 @@ export const useEmployeeFilters = (employees: Employee[]) => {
 
       const matchesStatus =
         statusFilter === "all" ||
-        employee.status === statusFilter;
+        (employee.status === USER_STATUS.ACTIVE && statusFilter === "active") ||
+        (employee.status === USER_STATUS.SUSPENDED && statusFilter === "suspended");
 
       return matchesSearch && matchesStatus;
     });
