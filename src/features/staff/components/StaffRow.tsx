@@ -77,12 +77,16 @@ export const StaffRow = ({
 
       {/* Last Login */}
       <td className="py-4 px-6">
-        <p className="text-xs font-bold text-slate-500">{employee.last_login}</p>
+        <p className="text-xs font-bold text-slate-500">
+          {employee.last_login}
+        </p>
       </td>
 
       {/* Access status */}
       <td className="py-4 px-6">
-        <StaffStatusBadge status={employee.status === "suspended" ? "suspended" : "active"} />
+        <StaffStatusBadge
+          status={employee.status === "suspended" ? "suspended" : "active"}
+        />
       </td>
 
       {/* Row level operations */}
