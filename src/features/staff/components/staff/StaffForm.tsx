@@ -31,13 +31,12 @@ export const StaffForm = ({
     phone: initialData?.phone ?? "",
     role: initialData?.role ?? roles[0]?.name ?? "Cashier",
     pin: initialData?.pin ?? "",
-    status:
-      (initialData?.status as "active" | "suspended") ?? "active",
+    status: (initialData?.status as "active" | "suspended") ?? "active",
   });
 
   const updateField = <K extends keyof typeof formData>(
     field: K,
-    value: (typeof formData)[K]
+    value: (typeof formData)[K],
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -145,10 +144,7 @@ export const StaffForm = ({
             className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 cursor-pointer"
           >
             {roles.map((role) => (
-              <option
-                key={role.id}
-                value={role.name}
-              >
+              <option key={role.id} value={role.name}>
                 {role.name}
               </option>
             ))}
@@ -182,10 +178,7 @@ export const StaffForm = ({
             <select
               value={formData.status}
               onChange={(e) =>
-                updateField(
-                  "status",
-                  e.target.value as "active" | "suspended"
-                )
+                updateField("status", e.target.value as "active" | "suspended")
               }
               className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 cursor-pointer"
             >

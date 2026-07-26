@@ -55,8 +55,8 @@ const createEmployee = async (
     throw new Error(error.message);
   }
 
- const employee = data as unknown as EmployeeQueryResult;
-
+  const employee = data as unknown as EmployeeQueryResult;
+  
 return mapEmployee(employee);
 };
 
