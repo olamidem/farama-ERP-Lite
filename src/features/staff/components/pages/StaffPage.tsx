@@ -7,22 +7,32 @@ import { ViewStaffModal } from "../modals/ViewStaffModal";
 import { DeleteStaffDialog } from "../modals/DeleteStaffDialog";
 import useAuthStore from "../../../auth/store/authStore";
 import { useStaff } from "../../hooks/useStaff";
+import { useCreateEmployee } from "../../hooks/useCreateEmployee";
+import { useUpdateEmployee } from "../../hooks/useUpdateEmployee";
 import { useResetPin } from "../../hooks/useResetPin";
+import { useDeleteEmployee } from "../../hooks/useDeleteEmployee";
+import type { Employee } from "../../types/staff";
+import { USER_STATUS, type UserStatus } from "../../../auth/types/enums";
+import { cn } from "../../../../utils/cn";
+import StaffTab from "../StaffTab";
+import RolesTab from "../RolesTab";
+import PermissionTab from "../PermissionTab";
+import { LogsTab } from "../LogsTab";
+import { StaffStatsCards } from "../StaffStatusCard";
+
 
 export const StaffPage = () => {
   const currentUser = useAuthStore((state) => state.user);
 
   // Core Data Hooks
   const { employees, roles, logs, isLoading, refetch } = useStaff();
-  const { createStaff } = useCreateStaff();
-  const { updateStaff } = useUpdateStaff();
+  const { createEmployee } = useCreateEmployee();
+  const { updateEmployee } = useUpdateEmployee();
   const { resetPin } = useResetPin();
-  const { deleteStaff, isDeleting } = useDeleteStaff();
+  const { deleteEmployee, isDeleting } = useDeleteEmployee();
 
   // Navigation state
-  const [activeTab, setActiveTab] = useState<
-    "employees" | "roles" | "permissions" | "logs"
-  >("employees");
+  const [activeTab, setActiveTab] = useState<"employees" | "roles" | "permissions" | "logs">("employees");
 
   // Modal Dialog States
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -42,7 +52,7 @@ export const StaffPage = () => {
     role: string;
     pin: string;
   }) => {
-    await createStaff(data);
+    await createEmployee(data);
     setIsAddModalOpen(false);
   };
 
@@ -53,10 +63,10 @@ export const StaffPage = () => {
       email: string;
       phone: string;
       role: string;
-      status: "active" | "suspended";
-    },
+      status: UserStatus;
+    }
   ) => {
-    await updateStaff(id, data);
+    await updateEmployee(id, data);
     setIsEditModalOpen(false);
     setSelectedEmp(null);
   };
@@ -64,8 +74,8 @@ export const StaffPage = () => {
   const handleToggleStatus = async (id: string) => {
     const emp = employees.find((e) => e.id === id);
     if (!emp) return;
-    const newStatus = emp.status === "active" ? "suspended" : "active";
-    await updateStaff(id, { status: newStatus });
+    const newStatus = emp.status === USER_STATUS.ACTIVE ? USER_STATUS.SUSPENDED : USER_STATUS.ACTIVE;
+    await updateEmployee(id, { status: newStatus });
   };
 
   const handleResetPinSubmit = async (id: string, pin: string) => {
@@ -75,12 +85,12 @@ export const StaffPage = () => {
   };
 
   const handleRoleChange = async (empId: string, newRole: string) => {
-    await updateStaff(empId, { role: newRole });
+    await updateEmployee(empId, { role: newRole });
   };
 
   const handleDeleteConfirm = async () => {
     if (selectedEmp) {
-      await deleteStaff(selectedEmp.id);
+      await deleteEmployee(selectedEmp.id);
       setIsDeleteModalOpen(false);
       setSelectedEmp(null);
     }
@@ -91,10 +101,8 @@ export const StaffPage = () => {
       {/* Stats Cards Section */}
       <StaffStatsCards
         employeesCount={employees.length}
-        activeCount={employees.filter((e) => e.status === "active").length}
-        suspendedCount={
-          employees.filter((e) => e.status === "suspended").length
-        }
+        activeCount={employees.filter((e) => e.status === USER_STATUS.ACTIVE).length}
+        suspendedCount={employees.filter((e) => e.status === USER_STATUS.SUSPENDED).length}
         rolesCount={roles.length}
       />
 
@@ -113,17 +121,13 @@ export const StaffPage = () => {
             return (
               <button
                 key={tab.id}
-                onClick={() =>
-                  setActiveTab(
-                    tab.id as "employees" | "roles" | "permissions" | "logs",
-                  )
-                }
+                onClick={() => setActiveTab(tab.id as "employees" | "roles" | "permissions" | "logs")}
                 type="button"
                 className={cn(
                   "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap",
                   active
                     ? "bg-slate-900 text-white shadow-md shadow-slate-900/10"
-                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-800",
+                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
                 )}
               >
                 <Icon size={14} />
@@ -177,9 +181,7 @@ export const StaffPage = () => {
 
               {activeTab === "permissions" && <PermissionTab />}
 
-              {activeTab === "logs" && (
-                <LogsTab logs={logs} onRefresh={() => refetch()} />
-              )}
+              {activeTab === "logs" && <LogsTab logs={logs} onRefresh={() => refetch()} />}
             </>
           )}
         </div>
@@ -236,3 +238,5 @@ export const StaffPage = () => {
     </div>
   );
 };
+
+export default StaffPage;
