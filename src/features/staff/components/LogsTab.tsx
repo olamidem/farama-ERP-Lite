@@ -87,4 +87,3 @@ export const LogsTab = ({ logs, onRefresh }: LogsTabProps) => {
     </div>
   );
 };
-export default LogsTab;
