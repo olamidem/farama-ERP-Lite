@@ -22,7 +22,9 @@ export const RolesTab = ({ roles }: RolesTabProps) => {
                 <Shield size={16} className="text-indigo-600" />
                 <span>{r.name}</span>
               </h4>
-              <p className="text-xs font-medium text-slate-400 mt-1">{r.description}</p>
+              <p className="text-xs font-medium text-slate-400 mt-1">
+                {r.description}
+              </p>
             </div>
 
             <div className="border-t border-slate-50 pt-4 flex flex-col gap-2">
