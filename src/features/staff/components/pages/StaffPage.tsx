@@ -1,29 +1,13 @@
 import { useState } from "react";
 import { Users, Shield, LockOpen, FileClock, RefreshCw } from "lucide-react";
-import { useAuthStore } from "../../../store/authStore";
-import { cn } from "../../../utils/cn";
-
-// Hooks
-import { useStaff } from "../hooks/useStaff";
-import { useCreateStaff } from "../hooks/useCreateStaff";
-import { useUpdateStaff } from "../hooks/useUpdateStaff";
-import { useDeleteStaff } from "../hooks/useDeleteStaff";
-import { useResetPin } from "../hooks/useResetPin";
-
-// Components
-import { StaffStatsCards } from "../components/StaffStatsCards";
-import { StaffTab } from "../components/StaffTab";
-import { RolesTab } from "../components/RolesTab";
-import { PermissionTab } from "../components/PermissionTab";
-import { LogsTab } from "../components/LogsTab";
-
-// Modals
 import { AddStaffModal } from "../modals/AddStaffModal";
 import { EditStaffModal } from "../modals/EditStaffModal";
 import { ResetPinModal } from "../modals/ResetPinModal";
 import { ViewStaffModal } from "../modals/ViewStaffModal";
 import { DeleteStaffDialog } from "../modals/DeleteStaffDialog";
-import type { Employee } from "../types";
+import useAuthStore from "../../../auth/store/authStore";
+import { useStaff } from "../../hooks/useStaff";
+import { useResetPin } from "../../hooks/useResetPin";
 
 export const StaffPage = () => {
   const currentUser = useAuthStore((state) => state.user);
@@ -252,5 +236,3 @@ export const StaffPage = () => {
     </div>
   );
 };
-
-export default StaffPage;
