@@ -40,7 +40,9 @@ export const StaffRow = ({
               {employee.full_name}
             </p>
             <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
-              {employee.role?.name || "N/A"}
+              {typeof employee.role === "object"
+                ? (employee.role as unknown as { name?: string })?.name || "N/A"
+                : employee.role || "N/A"}
             </p>
           </div>
         </div>
@@ -64,7 +66,15 @@ export const StaffRow = ({
       <td className="py-4 px-6">
         <select
           disabled={isSelf}
-          value={employee.role?.id || ""}
+          value={
+            typeof employee.role === "object"
+              ? (employee.role as unknown as { id?: string })?.id || ""
+              : roles.find(
+                  (r) => r.name === employee.role || r.id === employee.role,
+                )?.id ||
+                employee.role ||
+                ""
+          }
           onChange={(e) => onRoleChange(employee.id, e.target.value)}
           className="rounded-lg border border-slate-200 bg-white py-1 px-2.5 text-xs font-bold text-slate-700 focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         >
@@ -86,7 +96,9 @@ export const StaffRow = ({
       {/* Access status */}
       <td className="py-4 px-6">
         <StaffStatusBadge
-          status={employee.status === USER_STATUS.SUSPENDED ? "suspended" : "active"}
+          status={
+            employee.status === USER_STATUS.SUSPENDED ? "suspended" : "active"
+          }
         />
       </td>
 

@@ -91,7 +91,8 @@ export const updateProfile = async (
   userId: string,
   updates: Partial<Profile>,
 ): Promise<Profile> => {
-  const { role: _role, ...allowedUpdates } = updates;
+  const allowedUpdates = { ...updates };
+  delete allowedUpdates.role;
 
   const { error } = await supabase
     .from("profiles")

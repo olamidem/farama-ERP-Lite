@@ -12,6 +12,7 @@ import { useStaff } from "../../hooks/useStaff";
 import type { ActivityLog, Employee } from "../../types/staff";
 import { StaffAvatar } from "../StaffAvatar";
 import { StaffStatusBadge } from "../StaffStatusBadge";
+import { USER_STATUS } from "../../../auth/types/enums";
 
 
 export const StaffDetailsPage = () => {
@@ -100,7 +101,7 @@ export const StaffDetailsPage = () => {
               </p>
             </div>
             <div className="pt-1">
-              <StaffStatusBadge status={employee.status} />
+              <StaffStatusBadge status={employee.status === USER_STATUS.SUSPENDED ? "suspended" : "active"} />
             </div>
           </div>
 
