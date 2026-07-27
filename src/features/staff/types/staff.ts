@@ -2,6 +2,7 @@ import type { UserStatus } from "../../auth/types/enums";
 
 export interface Employee {
   id: string;
+  employee_number: string | null;
   full_name: string;
   email: string;
   phone: string;
