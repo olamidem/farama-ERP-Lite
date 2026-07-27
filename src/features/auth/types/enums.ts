@@ -2,6 +2,8 @@ export const USER_STATUS = {
   ACTIVE: "ACTIVE",
   INACTIVE: "INACTIVE",
   SUSPENDED: "SUSPENDED",
+  PENDING: "PENDING",
+  INVITED: "INVITED",
 } as const;
 
 export type UserStatus = (typeof USER_STATUS)[keyof typeof USER_STATUS];

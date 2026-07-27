@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { USER_STATUS } from "../../auth/types/enums";
 import type { UserStatus } from "../../auth/types/enums";
 import type { Employee, RoleData } from "../types/staff";
@@ -33,30 +33,28 @@ export const StaffForm = ({
   const [role, setRole] = useState(
     initialData?.role || roles[0]?.name || "Cashier",
   );
-  const [pin, setPin] = useState(initialData?.pin_hash || "");
   const [status, setStatus] = useState<UserStatus>(
     initialData?.status === USER_STATUS.SUSPENDED
       ? USER_STATUS.SUSPENDED
       : USER_STATUS.ACTIVE,
   );
 
-  const [prevRoles, setPrevRoles] = useState(roles);
-  if (roles !== prevRoles) {
-    setPrevRoles(roles);
+  useEffect(() => {
     if (roles.length > 0) {
       const hasCurrentRole = roles.some(
         (r) => r.name.toLowerCase() === role.toLowerCase() || r.id === role,
       );
+
       if (!hasCurrentRole) {
-        setRole(initialData?.role || roles[0]?.name || "");
+        setRole(initialData?.role || roles[0].name);
       }
     }
-  }
+  }, [roles, initialData?.role, role]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (mode === "create") {
-      onSubmit({ full_name: fullName, email, phone, role, pin });
+      onSubmit({ full_name: fullName, email, phone, role });
     } else {
       onSubmit({ full_name: fullName, email, phone, role, status });
     }
@@ -110,10 +108,11 @@ export const StaffForm = ({
           <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
             Role Assignment
           </label>
+
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
+            className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 bg-white"
           >
             {roles.map((r) => (
               <option key={r.id} value={r.name}>
@@ -124,33 +123,22 @@ export const StaffForm = ({
         </div>
 
         {mode === "create" ? (
-          <div className="space-y-1">
-            <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
-              Operator PIN *
-            </label>
-            <input
-              required
-              type="password"
-              maxLength={6}
-              placeholder="4 to 6 digit PIN"
-              value={pin}
-              onChange={(e) => {
-                if (/^\d*$/.test(e.target.value)) {
-                  setPin(e.target.value);
-                }
-              }}
-              className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-mono font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
-            />
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-center">
+            <p className="text-xs font-medium text-amber-800">
+              An invitation email will be sent to this employee. They will
+              create their own password after accepting the invitation.
+            </p>
           </div>
         ) : (
           <div className="space-y-1">
             <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
-              Access Status *
+              Access Status
             </label>
+
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as UserStatus)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 cursor-pointer"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700"
             >
               <option value={USER_STATUS.ACTIVE}>Active</option>
               <option value={USER_STATUS.SUSPENDED}>Suspended</option>

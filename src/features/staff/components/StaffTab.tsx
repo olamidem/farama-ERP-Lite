@@ -20,6 +20,8 @@ interface StaffTabProps {
   onToggleStatus: (id: string) => void;
   onDeleteClick: (emp: Employee) => void;
   onRoleChange: (id: string, role: string) => void;
+  onResendInvitation: (emp: Employee) => void;
+  onResetPassword: (emp: Employee) => void;
   onTabChange: (tab: "employees" | "roles" | "permissions" | "logs") => void;
 }
 
@@ -35,6 +37,8 @@ export const StaffTab = ({
   onToggleStatus,
   onDeleteClick,
   onRoleChange,
+  onResendInvitation,
+  onResetPassword,
   onTabChange,
 }: StaffTabProps) => {
   const {
@@ -111,6 +115,8 @@ export const StaffTab = ({
           onToggleStatus={onToggleStatus}
           onDelete={onDeleteClick}
           onRoleChange={onRoleChange}
+          onResendInvitation={onResendInvitation}
+          onResetPassword={onResetPassword}
         />
 
         <Pagination

@@ -2,7 +2,6 @@ import type { UserStatus } from "../../auth/types/enums";
 
 export interface Employee {
   id: string;
-  employee_number: string | null;
   full_name: string;
   email: string;
   phone: string;
@@ -15,6 +14,10 @@ export interface Employee {
   updated_at: string;
   joined_at: string;
   pin_hash: string | null;
+  password_set: boolean;
+  invited_at?: string | null;
+  activated_at?: string | null;
+  employee_number?: string | null;
 }
 
 export interface ActivityLog {
