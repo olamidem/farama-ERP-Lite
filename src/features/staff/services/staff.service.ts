@@ -1,5 +1,5 @@
 import { supabase } from "../../../api/supabase";
-import type { Employee, ActivityLog, RoleData } from "../types/staff";
+import type { Employee, ActivityLog, RoleData, UserSession, UserPreferences } from "../types/staff";
 import {
   ROLE_SELECT,
   EMPLOYEE_SELECT,
@@ -18,7 +18,7 @@ import { mapAuditLog } from "../utils/mapAuditLog";
 import { mapRole } from "../utils/mapRole";
 
 const getRoles = async (): Promise<RoleData[]> => {
-  const { data, error } = await supabase.from("roles").select(ROLE_SELECT);
+  const { data, error } = await supabase.from("roles").select(ROLE_SELECT)
 
   if (error) {
     throw new Error(error.message);
@@ -41,6 +41,7 @@ const getEmployees = async (): Promise<Employee[]> => {
   return employees.map(mapEmployee);
 };
 
+
 const createEmployee = async (
   payload: CreateEmployeeDto,
 ): Promise<Employee> => {
@@ -55,28 +56,14 @@ const createEmployee = async (
   }
 
   const employee = data as unknown as EmployeeQueryResult;
-  return mapEmployee(employee);
+  
+return mapEmployee(employee);
 };
 
 const updateEmployee = async (
   id: string,
   updates: UpdateEmployeeDto,
 ): Promise<Employee> => {
-  if (!updates || Object.keys(updates).length === 0) {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select(EMPLOYEE_SELECT)
-      .eq("id", id)
-      .single();
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    const employee = data as unknown as EmployeeQueryResult;
-    return mapEmployee(employee);
-  }
-
   const { data, error } = await supabase
     .from("profiles")
     .update(updates)
@@ -88,8 +75,8 @@ const updateEmployee = async (
     throw new Error(error.message);
   }
 
-  const employee = data as unknown as EmployeeQueryResult;
-  return mapEmployee(employee);
+ const employee = data as unknown as EmployeeQueryResult;
+return mapEmployee(employee);
 };
 
 const deleteEmployee = async (id: string): Promise<void> => {
@@ -112,7 +99,7 @@ const getLogs = async (): Promise<ActivityLog[]> => {
     throw new Error(error.message);
   }
   const logs = (data ?? []) as unknown as AuditLogQueryResult[];
-  return logs.map(mapAuditLog);
+ return logs.map(mapAuditLog);
 };
 
 const logActivity = async (payload: CreateActivityLogDto): Promise<void> => {
@@ -147,6 +134,32 @@ const resetPin = async (
   }
 };
 
+const getSessions = async (profileId: string): Promise<UserSession[]> => {
+  const { data, error } = await supabase
+    .from("user_sessions")
+    .select("*")
+    .eq("profile_id", profileId)
+    .order("last_active", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return (data ?? []) as unknown as UserSession[];
+};
+
+const getPreferences = async (profileId: string): Promise<UserPreferences | null> => {
+  const { data, error } = await supabase
+    .from("user_preferences")
+    .select("*")
+    .eq("profile_id", profileId)
+    .single();
+
+  if (error && error.code !== "PGRST116") { // Ignore not found error
+    throw new Error(error.message);
+  }
+  return data as unknown as UserPreferences;
+};
+
 export const staffService = {
   getRoles,
   getEmployees,
@@ -156,6 +169,8 @@ export const staffService = {
   getLogs,
   logActivity,
   resetPin,
+  getSessions,
+  getPreferences,
 };
 
 export default staffService;

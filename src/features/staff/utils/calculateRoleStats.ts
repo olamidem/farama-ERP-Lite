@@ -13,23 +13,25 @@ export const calculateRoleStats = (employees: Employee[]): RoleStat[] => {
   const percentage = (count: number) =>
     total === 0 ? 0 : Math.round((count / total) * 100);
 
+  const getRoleName = (role: unknown) => typeof role === "object" && role !== null ? (role as { name?: string }).name || "" : (role as string) || "";
+
   const administrators = employees.filter(
     (e) =>
-      ["Super Admin", "Administrator", "Admin"].includes(e.role?.name || "") &&
+      ["Super Admin", "Administrator", "Admin"].includes(getRoleName(e.role)) &&
       e.status === USER_STATUS.ACTIVE,
   ).length;
 
   const managers = employees.filter(
-    (e) => e.role?.name === "Manager" && e.status === USER_STATUS.ACTIVE,
+    (e) => getRoleName(e.role) === "Manager" && e.status === USER_STATUS.ACTIVE,
   ).length;
 
   const cashiers = employees.filter(
-    (e) => e.role?.name === "Cashier" && e.status === USER_STATUS.ACTIVE,
+    (e) => getRoleName(e.role) === "Cashier" && e.status === USER_STATUS.ACTIVE,
   ).length;
 
   const storekeepers = employees.filter(
     (e) =>
-      ["Inventory Clerk", "Storekeeper"].includes(e.role?.name || "") &&
+      ["Inventory Clerk", "Storekeeper"].includes(getRoleName(e.role)) &&
       e.status === USER_STATUS.ACTIVE,
   ).length;
 

@@ -9,6 +9,7 @@ export const mapEmployee = (employee: EmployeeQueryResult): Employee => {
 
   return {
     id: employee.id,
+    employee_number: employee.employee_number ?? "",
     full_name: employee.full_name ?? "",
     email: employee.email ?? "",
     phone: employee.phone ?? "",

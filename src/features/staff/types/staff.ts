@@ -14,6 +14,10 @@ export interface Employee {
   updated_at: string;
   joined_at: string;
   pin_hash: string | null;
+  password_set: boolean;
+  invited_at?: string | null;
+  activated_at?: string | null;
+  employee_number?: string | null;
 }
 
 export interface ActivityLog {
@@ -37,4 +41,24 @@ export interface RoleData {
   member_count: number;
   memberCount: number;
   permissions: string[];
+}
+
+export interface UserSession {
+  id: string;
+  profile_id: string;
+  device_name: string;
+  browser: string;
+  location: string | null;
+  is_current: boolean;
+  last_active: string;
+  created_at: string;
+}
+
+export interface UserPreferences {
+  id: string;
+  profile_id: string;
+  theme: string;
+  language: string;
+  email_notifications: boolean;
+  updated_at: string;
 }

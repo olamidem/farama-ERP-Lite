@@ -29,9 +29,9 @@ export const useResetPin = () => {
   });
 
   return {
-    resetPin: async (id: string, pin_hash: string) => {
-      return mutation.mutateAsync({ id, pin_hash });
-    },
+    resetPin: (payload: ResetPinPayload) =>
+      mutation.mutateAsync(payload),
+
     isResetting: mutation.isPending,
   };
 };

@@ -11,6 +11,7 @@ export const ROLE_SELECT = `
 
 export const EMPLOYEE_SELECT = `
   id,
+  employee_number,
   full_name,
   email,
   phone,

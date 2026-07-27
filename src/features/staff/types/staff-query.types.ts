@@ -24,6 +24,7 @@ export interface EmployeeRole {
 
 export interface EmployeeQueryResult {
   id: string;
+  employee_number: string | null;
   full_name: string | null;
   email: string | null;
   phone: string | null;

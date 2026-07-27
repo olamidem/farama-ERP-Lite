@@ -20,6 +20,8 @@ interface StaffTabProps {
   onToggleStatus: (id: string) => void;
   onDeleteClick: (emp: Employee) => void;
   onRoleChange: (id: string, role: string) => void;
+  onResendInvitation: (emp: Employee) => void;
+  onResetPassword: (emp: Employee) => void;
   onTabChange: (tab: "employees" | "roles" | "permissions" | "logs") => void;
 }
 
@@ -35,6 +37,8 @@ export const StaffTab = ({
   onToggleStatus,
   onDeleteClick,
   onRoleChange,
+  onResendInvitation,
+  onResetPassword,
   onTabChange,
 }: StaffTabProps) => {
   const {
@@ -111,6 +115,8 @@ export const StaffTab = ({
           onToggleStatus={onToggleStatus}
           onDelete={onDeleteClick}
           onRoleChange={onRoleChange}
+          onResendInvitation={onResendInvitation}
+          onResetPassword={onResetPassword}
         />
 
         <Pagination
@@ -147,7 +153,7 @@ export const StaffTab = ({
                 name: "Administrator",
                 count: employees.filter(
                   (e) =>
-                    e.role?.name === "Administrator" &&
+                    (typeof e.role === "object" ? (e.role as unknown as { name?: string })?.name : e.role) === "Administrator" &&
                     e.status === USER_STATUS.ACTIVE
                 ).length,
                 percent:
@@ -155,7 +161,7 @@ export const StaffTab = ({
                     ? Math.round(
                         (employees.filter(
                           (e) =>
-                            e.role?.name === "Administrator" &&
+                            (typeof e.role === "object" ? (e.role as unknown as { name?: string })?.name : e.role) === "Administrator" &&
                             e.status === USER_STATUS.ACTIVE
                         ).length /
                           employees.length) *
@@ -169,11 +175,11 @@ export const StaffTab = ({
               },
               {
                 name: "Manager",
-                count: employees.filter((e) => e.role?.name === "Manager" && e.status === USER_STATUS.ACTIVE).length,
+                count: employees.filter((e) => (typeof e.role === "object" ? (e.role as unknown as { name?: string })?.name : e.role) === "Manager" && e.status === USER_STATUS.ACTIVE).length,
                 percent:
                   employees.length > 0
                     ? Math.round(
-                        (employees.filter((e) => e.role?.name === "Manager" && e.status === USER_STATUS.ACTIVE).length /
+                        (employees.filter((e) => (typeof e.role === "object" ? (e.role as unknown as { name?: string })?.name : e.role) === "Manager" && e.status === USER_STATUS.ACTIVE).length /
                           employees.length) *
                           100
                       )
@@ -185,11 +191,11 @@ export const StaffTab = ({
               },
               {
                 name: "Cashier",
-                count: employees.filter((e) => e.role?.name === "Cashier" && e.status === USER_STATUS.ACTIVE).length,
+                count: employees.filter((e) => (typeof e.role === "object" ? (e.role as unknown as { name?: string })?.name : e.role) === "Cashier" && e.status === USER_STATUS.ACTIVE).length,
                 percent:
                   employees.length > 0
                     ? Math.round(
-                        (employees.filter((e) => e.role?.name === "Cashier" && e.status === USER_STATUS.ACTIVE).length /
+                        (employees.filter((e) => (typeof e.role === "object" ? (e.role as unknown as { name?: string })?.name : e.role) === "Cashier" && e.status === USER_STATUS.ACTIVE).length /
                           employees.length) *
                           100
                       )
@@ -203,7 +209,7 @@ export const StaffTab = ({
                 name: "Storekeeper",
                 count: employees.filter(
                   (e) =>
-                    e.role?.name === "Storekeeper" &&
+                    (typeof e.role === "object" ? (e.role as unknown as { name?: string })?.name : e.role) === "Storekeeper" &&
                     e.status === USER_STATUS.ACTIVE
                 ).length,
                 percent:
@@ -211,7 +217,7 @@ export const StaffTab = ({
                     ? Math.round(
                         (employees.filter(
                           (e) =>
-                            e.role?.name === "Storekeeper" &&
+                            (typeof e.role === "object" ? (e.role as unknown as { name?: string })?.name : e.role) === "Storekeeper" &&
                             e.status === USER_STATUS.ACTIVE
                         ).length /
                           employees.length) *

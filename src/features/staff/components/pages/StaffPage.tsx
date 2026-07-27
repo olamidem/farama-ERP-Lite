@@ -25,52 +25,81 @@ export const StaffPage = () => {
 
   // Core Data Hooks
   const { employees, roles, logs, isLoading, refetch } = useStaff();
-  const { createEmployee } = useCreateEmployee();
-  const { updateEmployee } = useUpdateEmployee();
-  const { resetPin } = useResetPin();
-  const { deleteEmployee, isDeleting } = useDeleteEmployee();
+const { createEmployee } = useCreateEmployee();
 
-  // Navigation state
-  const [activeTab, setActiveTab] = useState<
-    "employees" | "roles" | "permissions" | "logs"
-  >("employees");
+const { updateEmployee } = useUpdateEmployee();
 
-  // Modal Dialog States
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isResetPinModalOpen, setIsResetPinModalOpen] = useState(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+const { resetPin } = useResetPin();
 
-  // Selected Employee Context
-  const [selectedEmp, setSelectedEmp] = useState<Employee | null>(null);
+const { deleteEmployee, isDeleting } = useDeleteEmployee();
+// Navigation state
+const [activeTab, setActiveTab] = useState<
+  "employees" | "roles" | "permissions" | "logs"
+>("employees");
 
-  // Handlers
-  const handleCreateSubmit = async (data: {
+// Modal Dialog States
+const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+const [isResetPinModalOpen, setIsResetPinModalOpen] = useState(false);
+const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+// Selected Employee Context
+const [selectedEmp, setSelectedEmp] = useState<Employee | null>(null);
+
+// Handlers
+const handleCreateSubmit = async (data: {
+  full_name: string;
+  email: string;
+  phone: string;
+  role: string;
+}) => {
+  const selectedRole = roles.find((r) => r.name === data.role);
+
+  if (!selectedRole) {
+    throw new Error("Selected role does not exist.");
+  }
+
+  await createEmployee({
+    full_name: data.full_name,
+    email: data.email,
+    phone: data.phone,
+    role_id: selectedRole.id,
+    status: USER_STATUS.PENDING,
+    avatar_color: null,
+    avatar_url: null,
+    pin_hash: "",
+  });
+
+  setIsAddModalOpen(false);
+};
+
+const handleEditSubmit = async (
+  id: string,
+  data: {
     full_name: string;
     email: string;
     phone: string;
     role: string;
-    pin: string;
-  }) => {
-    await createEmployee(data);
-    setIsAddModalOpen(false);
-  };
+    status: UserStatus;
+  },
+) => {
+  const roleId = roles.find((r) => r.name === data.role)?.id;
 
-  const handleEditSubmit = async (
-    id: string,
-    data: {
-      full_name: string;
-      email: string;
-      phone: string;
-      role: string;
-      status: UserStatus;
+  await updateEmployee({
+    id,
+    updates: {
+      full_name: data.full_name,
+      email: data.email,
+      phone: data.phone,
+      role_id: roleId,
+      status: data.status,
     },
-  ) => {
-    await updateEmployee(id, data);
-    setIsEditModalOpen(false);
-    setSelectedEmp(null);
-  };
+  });
+
+  setIsEditModalOpen(false);
+  setSelectedEmp(null);
+};
 
   const handleToggleStatus = async (id: string) => {
     const emp = employees.find((e) => e.id === id);
@@ -79,17 +108,34 @@ export const StaffPage = () => {
       emp.status === USER_STATUS.ACTIVE
         ? USER_STATUS.SUSPENDED
         : USER_STATUS.ACTIVE;
-    await updateEmployee(id, { status: newStatus });
+    await updateEmployee({
+      id,
+      updates: {
+        status: newStatus,
+      },
+    });
   };
 
   const handleResetPinSubmit = async (id: string, pin: string) => {
-    await resetPin(id, pin);
+    await resetPin({
+      id,
+      pin_hash: pin,
+    });
     setIsResetPinModalOpen(false);
     setSelectedEmp(null);
   };
 
   const handleRoleChange = async (empId: string, newRole: string) => {
-    await updateEmployee(empId, { role: newRole });
+    const roleId = roles.find((r) => r.name === newRole)?.id;
+
+    if (!roleId) return;
+
+    await updateEmployee({
+      id: empId,
+      updates: {
+        role_id: roleId,
+      },
+    });
   };
 
   const handleDeleteConfirm = async () => {
@@ -98,6 +144,16 @@ export const StaffPage = () => {
       setIsDeleteModalOpen(false);
       setSelectedEmp(null);
     }
+  };
+
+  const handleResendInvitation = async (emp: Employee) => {
+    // TODO: implement resend invitation
+    console.log("Resend invitation to", emp.email);
+  };
+
+  const handleResetPassword = async (emp: Employee) => {
+    // TODO: implement reset password
+    console.log("Reset password for", emp.email);
   };
 
   return (
@@ -185,6 +241,8 @@ export const StaffPage = () => {
                     setIsDeleteModalOpen(true);
                   }}
                   onRoleChange={handleRoleChange}
+                  onResendInvitation={handleResendInvitation}
+                  onResetPassword={handleResetPassword}
                   onTabChange={setActiveTab}
                 />
               )}
