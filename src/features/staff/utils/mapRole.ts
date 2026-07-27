@@ -6,6 +6,7 @@ export const mapRole = (role: RoleQueryResult): RoleData => ({
   name: role.name,
   description: role.description,
   member_count: 0,
+  memberCount: 0,
   permissions: role.role_permissions
     ?.map((rp) => rp.permission?.code)
     .filter(Boolean) as string[],

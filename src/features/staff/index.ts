@@ -1,5 +1,4 @@
-export { StaffPage } from "./pages/StaffPage";
-export { StaffDetailsPage } from "./pages/StaffDetailsPage";
+export { StaffPage } from "./components/pages/StaffPage";
+export { StaffDetailsPage } from "./components/pages/StaffDetailsPage";
 export * from "./types/staff";
-export * from "./store/staffStore";
 export * from "./services/staff.service";

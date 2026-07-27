@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { staffService } from "../services/staff.service";
 import { staffKeys } from "../queryKeys";
+import staffService from "../services/staff.service";
 
 export const useDeleteEmployee = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: (id: string) =>
       staffService.deleteEmployee(id),
 
@@ -26,4 +26,11 @@ export const useDeleteEmployee = () => {
       toast.error(error.message);
     },
   });
+
+  return {
+    deleteEmployee: mutation.mutateAsync,
+    isDeleting: mutation.isPending,
+  };
 };
+
+export default useDeleteEmployee;

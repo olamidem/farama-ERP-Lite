@@ -18,7 +18,7 @@ import { mapAuditLog } from "../utils/mapAuditLog";
 import { mapRole } from "../utils/mapRole";
 
 const getRoles = async (): Promise<RoleData[]> => {
-  const { data, error } = await supabase.from("roles").select(ROLE_SELECT)
+  const { data, error } = await supabase.from("roles").select(ROLE_SELECT);
 
   if (error) {
     throw new Error(error.message);
@@ -41,7 +41,6 @@ const getEmployees = async (): Promise<Employee[]> => {
   return employees.map(mapEmployee);
 };
 
-
 const createEmployee = async (
   payload: CreateEmployeeDto,
 ): Promise<Employee> => {
@@ -55,15 +54,29 @@ const createEmployee = async (
     throw new Error(error.message);
   }
 
- const employee = data as unknown as EmployeeQueryResult;
-
-return mapEmployee(employee);
+  const employee = data as unknown as EmployeeQueryResult;
+  return mapEmployee(employee);
 };
 
 const updateEmployee = async (
   id: string,
   updates: UpdateEmployeeDto,
 ): Promise<Employee> => {
+  if (!updates || Object.keys(updates).length === 0) {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select(EMPLOYEE_SELECT)
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const employee = data as unknown as EmployeeQueryResult;
+    return mapEmployee(employee);
+  }
+
   const { data, error } = await supabase
     .from("profiles")
     .update(updates)
@@ -75,8 +88,8 @@ const updateEmployee = async (
     throw new Error(error.message);
   }
 
- const employee = data as unknown as EmployeeQueryResult;
-return mapEmployee(employee);
+  const employee = data as unknown as EmployeeQueryResult;
+  return mapEmployee(employee);
 };
 
 const deleteEmployee = async (id: string): Promise<void> => {
@@ -99,7 +112,7 @@ const getLogs = async (): Promise<ActivityLog[]> => {
     throw new Error(error.message);
   }
   const logs = (data ?? []) as unknown as AuditLogQueryResult[];
- return logs.map(mapAuditLog);
+  return logs.map(mapAuditLog);
 };
 
 const logActivity = async (payload: CreateActivityLogDto): Promise<void> => {

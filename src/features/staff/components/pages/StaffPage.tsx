@@ -1,288 +1,256 @@
-import { ShieldCheck, Shield, Users, UserMinus, PlusCircle, Edit2, Key, UserCheck } from "lucide-react";
-import type { ActivityLog, Employee, RoleData } from "../../types/staff";
+import { useState } from "react";
+import { Users, Shield, LockOpen, FileClock, RefreshCw } from "lucide-react";
+import useAuthStore from "../../../auth/store/authStore";
+import { useStaff } from "../../hooks/useStaff";
+import { useCreateEmployee } from "../../hooks/useCreateEmployee";
+import { useUpdateEmployee } from "../../hooks/useUpdateEmployee";
+import { useResetPin } from "../../hooks/useResetPin";
+import { useDeleteEmployee } from "../../hooks/useDeleteEmployee";
+import type { Employee } from "../../types/staff";
+import { USER_STATUS, type UserStatus } from "../../../auth/types/enums";
+import { StaffStatsCards } from "../StaffStatusCard";
 import { cn } from "../../../../utils/cn";
-import { useEmployeeFilters } from "../../hooks/useEmployeeFilters";
+import StaffTab from "../StaffTab";
+import RolesTab from "../RolesTab";
+import PermissionTab from "../PermissionTab";
+import { LogsTab } from "../LogsTab";
+import { AddStaffModal } from "../modals/AddStaffModal";
+import { EditStaffModal } from "../modals/EditStaffModal";
+import { ViewStaffModal } from "../modals/ViewStaffModal";
+import { ResetPinModal } from "../modals/ResetPinModal";
+import { DeleteStaffDialog } from "../modals/DeleteStaffDialog";
 
-interface StaffTabProps {
-  employees: Employee[];
-  roles: RoleData[];
-  logs: ActivityLog[];
-  currentUserEmail?: string;
-  onAddClick: () => void;
-  onViewClick: (emp: Employee) => void;
-  onEditClick: (emp: Employee) => void;
-  onResetPinClick: (emp: Employee) => void;
-  onToggleStatus: (id: string) => void;
-  onDeleteClick: (emp: Employee) => void;
-  onRoleChange: (id: string, role: string) => void;
-  onTabChange: (tab: "employees" | "roles" | "permissions" | "logs") => void;
-}
+export const StaffPage = () => {
+  const currentUser = useAuthStore((state) => state.user);
 
-export const StaffTab = ({
-  employees,
-  roles,
-  logs,
-  currentUserEmail,
-  onAddClick,
-  onViewClick,
-  onEditClick,
-  onResetPinClick,
-  onToggleStatus,
-  onDeleteClick,
-  onRoleChange,
-  onTabChange,
-}: StaffTabProps) => {
-  const {
-    searchQuery,
-    statusFilter,
-    currentPage,
-    totalPages,
-    paginatedEmployees,
-    setSearchQuery,
-    setStatusFilter,
-    setCurrentPage,
-  } = useEmployeeFilters(employees);
+  // Core Data Hooks
+  const { employees, roles, logs, isLoading, refetch } = useStaff();
+  const { createEmployee } = useCreateEmployee();
+  const { updateEmployee } = useUpdateEmployee();
+  const { resetPin } = useResetPin();
+  const { deleteEmployee, isDeleting } = useDeleteEmployee();
 
-  const getLogIcon = (action: string) => {
-    const act = action.toLowerCase();
-    if (act.includes("create") || act.includes("register")) return PlusCircle;
-    if (act.includes("edit") || act.includes("update")) return Edit2;
-    if (act.includes("suspend")) return UserMinus;
-    if (act.includes("pin")) return Key;
-    return UserCheck;
+  // Navigation state
+  const [activeTab, setActiveTab] = useState<
+    "employees" | "roles" | "permissions" | "logs"
+  >("employees");
+
+  // Modal Dialog States
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isResetPinModalOpen, setIsResetPinModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  // Selected Employee Context
+  const [selectedEmp, setSelectedEmp] = useState<Employee | null>(null);
+
+  // Handlers
+  const handleCreateSubmit = async (data: {
+    full_name: string;
+    email: string;
+    phone: string;
+    role: string;
+    pin: string;
+  }) => {
+    await createEmployee(data);
+    setIsAddModalOpen(false);
   };
 
-  const getLogColor = (action: string) => {
-    const act = action.toLowerCase();
-    if (act.includes("create") || act.includes("register")) {
-      return { color: "text-emerald-600", bgLight: "bg-emerald-50" };
+  const handleEditSubmit = async (
+    id: string,
+    data: {
+      full_name: string;
+      email: string;
+      phone: string;
+      role: string;
+      status: UserStatus;
+    },
+  ) => {
+    await updateEmployee(id, data);
+    setIsEditModalOpen(false);
+    setSelectedEmp(null);
+  };
+
+  const handleToggleStatus = async (id: string) => {
+    const emp = employees.find((e) => e.id === id);
+    if (!emp) return;
+    const newStatus =
+      emp.status === USER_STATUS.ACTIVE
+        ? USER_STATUS.SUSPENDED
+        : USER_STATUS.ACTIVE;
+    await updateEmployee(id, { status: newStatus });
+  };
+
+  const handleResetPinSubmit = async (id: string, pin: string) => {
+    await resetPin(id, pin);
+    setIsResetPinModalOpen(false);
+    setSelectedEmp(null);
+  };
+
+  const handleRoleChange = async (empId: string, newRole: string) => {
+    await updateEmployee(empId, { role: newRole });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (selectedEmp) {
+      await deleteEmployee(selectedEmp.id);
+      setIsDeleteModalOpen(false);
+      setSelectedEmp(null);
     }
-    if (act.includes("edit") || act.includes("update")) {
-      return { color: "text-blue-600", bgLight: "bg-blue-50" };
-    }
-    if (act.includes("suspend") || act.includes("delete")) {
-      return { color: "text-orange-500", bgLight: "bg-orange-50" };
-    }
-    if (act.includes("pin")) {
-      return { color: "text-purple-600", bgLight: "bg-purple-50" };
-    }
-    return { color: "text-indigo-600", bgLight: "bg-indigo-50" };
   };
 
   return (
-    <div id="employee-tab" className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start text-left">
-      {/* Left Column: Filter & Table */}
-      <div className="lg:col-span-2 space-y-6">
-        <StaffFilters
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          statusFilter={statusFilter}
-          onStatusFilterChange={setStatusFilter}
-          onAddClick={onAddClick}
-        />
+    <div className="flex flex-col gap-6 p-4 md:p-8 font-sans bg-slate-50/50 min-h-[calc(100vh-4.5rem)] select-none">
+      {/* Stats Cards Section */}
+      <StaffStatsCards
+        employeesCount={employees.length}
+        activeCount={
+          employees.filter((e) => e.status === USER_STATUS.ACTIVE).length
+        }
+        suspendedCount={
+          employees.filter((e) => e.status === USER_STATUS.SUSPENDED).length
+        }
+        rolesCount={roles.length}
+      />
 
-        <StaffTable
-          employees={paginatedEmployees}
-          roles={roles}
-          currentUserEmail={currentUserEmail}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          onView={onViewClick}
-          onEdit={onEditClick}
-          onResetPin={onResetPinClick}
-          onToggleStatus={onToggleStatus}
-          onDelete={onDeleteClick}
-          onRoleChange={onRoleChange}
-        />
-      </div>
-
-      {/* Right Column: Roles Overview & Recent Activity */}
-      <div className="space-y-6">
-        {/* Roles Overview Card */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-xs">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="text-sm font-black text-slate-800 tracking-tight">Roles Overview</h3>
-            <button
-              onClick={() => onTabChange("roles")}
-              type="button"
-              className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition cursor-pointer"
-            >
-              View all roles
-            </button>
-          </div>
-
-          <div className="space-y-5">
-            {[
-              {
-                name: "Administrator",
-                count: employees.filter(
-                  (e) =>
-                    (e.role === "Super Admin" ||
-                      e.role === "Administrator" ||
-                      e.role === "Admin") &&
-                    e.status === "active"
-                ).length,
-                percent:
-                  employees.length > 0
-                    ? Math.round(
-                        (employees.filter(
-                          (e) =>
-                            (e.role === "Super Admin" ||
-                              e.role === "Administrator" ||
-                              e.role === "Admin") &&
-                            e.status === "active"
-                        ).length /
-                          employees.length) *
-                          100
-                      )
-                    : 0,
-                icon: ShieldCheck,
-                color: "text-purple-600",
-                bgLight: "bg-purple-50",
-                bgBar: "bg-purple-600",
-              },
-              {
-                name: "Manager",
-                count: employees.filter((e) => e.role === "Manager" && e.status === "active").length,
-                percent:
-                  employees.length > 0
-                    ? Math.round(
-                        (employees.filter((e) => e.role === "Manager" && e.status === "active").length /
-                          employees.length) *
-                          100
-                      )
-                    : 0,
-                icon: Shield,
-                color: "text-blue-600",
-                bgLight: "bg-blue-50",
-                bgBar: "bg-blue-600",
-              },
-              {
-                name: "Cashier",
-                count: employees.filter((e) => e.role === "Cashier" && e.status === "active").length,
-                percent:
-                  employees.length > 0
-                    ? Math.round(
-                        (employees.filter((e) => e.role === "Cashier" && e.status === "active").length /
-                          employees.length) *
-                          100
-                      )
-                    : 0,
-                icon: Users,
-                color: "text-orange-600",
-                bgLight: "bg-orange-50",
-                bgBar: "bg-orange-600",
-              },
-              {
-                name: "Storekeeper",
-                count: employees.filter(
-                  (e) =>
-                    (e.role === "Inventory Clerk" || e.role === "Storekeeper") &&
-                    e.status === "active"
-                ).length,
-                percent:
-                  employees.length > 0
-                    ? Math.round(
-                        (employees.filter(
-                          (e) =>
-                            (e.role === "Inventory Clerk" || e.role === "Storekeeper") &&
-                            e.status === "active"
-                        ).length /
-                          employees.length) *
-                          100
-                      )
-                    : 0,
-                icon: Users,
-                color: "text-cyan-600",
-                bgLight: "bg-cyan-50",
-                bgBar: "bg-cyan-600",
-              },
-              {
-                name: "Inactive",
-                count: employees.filter((e) => e.status === "suspended").length,
-                percent:
-                  employees.length > 0
-                    ? Math.round(
-                        (employees.filter((e) => e.status === "suspended").length /
-                          employees.length) *
-                          100
-                      )
-                    : 0,
-                icon: UserMinus,
-                color: "text-slate-500",
-                bgLight: "bg-slate-100",
-                bgBar: "bg-slate-500",
-              },
-            ].map((r, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className={cn("p-2 rounded-xl shrink-0 h-9 w-9 flex items-center justify-center", r.bgLight)}>
-                  <r.icon size={15} className={r.color} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
-                    <span className="truncate">{r.name}</span>
-                    <span className="text-slate-800 font-extrabold">{r.count}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div
-                        className={cn("h-full rounded-full transition-all duration-500", r.bgBar)}
-                        style={{ width: `${r.percent}%` }}
-                      />
-                    </div>
-                    <span className="text-[10px] font-bold text-slate-400 w-10 text-right">
-                      {r.percent}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Main Container */}
+      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+        {/* Tab Header triggers */}
+        <div className="flex border-b border-slate-100 p-4 md:p-6 gap-2 bg-slate-50/20 overflow-x-auto">
+          {[
+            { id: "employees", label: "Employees", icon: Users },
+            { id: "roles", label: "Roles & Access Matrix", icon: Shield },
+            { id: "permissions", label: "System Permissions", icon: LockOpen },
+            { id: "logs", label: "Staff Activity Audit", icon: FileClock },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() =>
+                  setActiveTab(
+                    tab.id as "employees" | "roles" | "permissions" | "logs",
+                  )
+                }
+                type="button"
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap",
+                  active
+                    ? "bg-slate-900 text-white shadow-md shadow-slate-900/10"
+                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-800",
+                )}
+              >
+                <Icon size={14} />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Recent Activity Card - Linked directly to Database Activity Logs */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-xs">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="text-sm font-black text-slate-800 tracking-tight">Recent Activity</h3>
-            <button
-              onClick={() => onTabChange("logs")}
-              type="button"
-              className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition cursor-pointer"
-            >
-              View all activity
-            </button>
-          </div>
-
-          <div className="space-y-5">
-            {logs.slice(0, 5).map((act) => {
-              const IconComp = getLogIcon(act.action);
-              const colorInfo = getLogColor(act.action);
-              return (
-                <div key={act.id} className="flex gap-3">
-                  <div className={cn("p-2 rounded-full shrink-0 h-9 w-9 flex items-center justify-center", colorInfo.bgLight)}>
-                    <IconComp size={15} className={colorInfo.color} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-black text-slate-700 leading-snug">{act.details}</p>
-                    <p className="text-[10px] font-bold text-slate-400 mt-0.5">by {act.operator}</p>
-                  </div>
-                  <div className="text-[10px] font-bold text-slate-400 shrink-0 self-start mt-0.5">
-                    {act.timestamp.includes(" ") ? act.timestamp.split(" ")[1] || act.timestamp : act.timestamp}
-                  </div>
-                </div>
-              );
-            })}
-
-            {logs.length === 0 && (
-              <p className="text-xs text-center font-bold text-slate-400 py-6 uppercase tracking-wider">
-                No recent activity logged
+        {/* Tab contents block */}
+        <div className="p-4 md:p-8 flex-1">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-4">
+              <RefreshCw className="animate-spin text-indigo-600 h-8 w-8" />
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Synchronizing Staff Directory...
               </p>
-            )}
-          </div>
+            </div>
+          ) : (
+            <>
+              {activeTab === "employees" && (
+                <StaffTab
+                  employees={employees}
+                  roles={roles}
+                  logs={logs}
+                  currentUserEmail={currentUser?.email ?? ""}
+                  onAddClick={() => setIsAddModalOpen(true)}
+                  onViewClick={(emp) => {
+                    setSelectedEmp(emp);
+                    setIsViewModalOpen(true);
+                  }}
+                  onEditClick={(emp) => {
+                    setSelectedEmp(emp);
+                    setIsEditModalOpen(true);
+                  }}
+                  onResetPinClick={(emp) => {
+                    setSelectedEmp(emp);
+                    setIsResetPinModalOpen(true);
+                  }}
+                  onToggleStatus={handleToggleStatus}
+                  onDeleteClick={(emp) => {
+                    setSelectedEmp(emp);
+                    setIsDeleteModalOpen(true);
+                  }}
+                  onRoleChange={handleRoleChange}
+                  onTabChange={setActiveTab}
+                />
+              )}
+
+              {activeTab === "roles" && <RolesTab roles={roles} />}
+
+              {activeTab === "permissions" && <PermissionTab />}
+
+              {activeTab === "logs" && (
+                <LogsTab logs={logs} onRefresh={() => refetch()} />
+              )}
+            </>
+          )}
         </div>
       </div>
+
+      {/* Modal Dialog Mounts */}
+      <AddStaffModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleCreateSubmit}
+        roles={roles}
+      />
+
+      <EditStaffModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setSelectedEmp(null);
+        }}
+        employee={selectedEmp}
+        onSubmit={handleEditSubmit}
+        roles={roles}
+      />
+
+      <ResetPinModal
+        isOpen={isResetPinModalOpen}
+        onClose={() => {
+          setIsResetPinModalOpen(false);
+          setSelectedEmp(null);
+        }}
+        employee={selectedEmp}
+        onSubmit={handleResetPinSubmit}
+      />
+
+      <ViewStaffModal
+        isOpen={isViewModalOpen}
+        onClose={() => {
+          setIsViewModalOpen(false);
+          setSelectedEmp(null);
+        }}
+        employee={selectedEmp}
+      />
+
+      <DeleteStaffDialog
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setSelectedEmp(null);
+        }}
+        employeeName={selectedEmp?.full_name || ""}
+        onConfirm={handleDeleteConfirm}
+        isDeleting={isDeleting}
+      />
     </div>
   );
 };
-export default StaffTab;
+
+export default StaffPage;

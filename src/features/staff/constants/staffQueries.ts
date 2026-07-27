@@ -39,3 +39,6 @@ export const AUDIT_LOG_SELECT = `
   ip_address,
   created_at
 `;
+
+export const DEFAULT_PAGE_SIZE = 10;
+export const QUERY_STALE_TIME = 1000 * 60 * 5; // 5 minutes

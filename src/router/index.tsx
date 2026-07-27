@@ -15,9 +15,9 @@ import ProductDetailsPage from "../features/products/details/ProductDetailsPage"
 import InventoryPage from "../pages/InventoryPage";
 import PurchasesPage from "../features/purchases/pages/PurchasesPage";
 import SuppliersPage from "../features/suppliers/pages/SuppliersPage";
-import StaffPage from "../pages/Staff/StaffPage";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import LockScreenPage from "../features/auth/pages/LockScreenPage";
+import { StaffPage } from "../features/staff";
 
 const rootRoute = createRootRoute();
 const loginRoute = createRoute({

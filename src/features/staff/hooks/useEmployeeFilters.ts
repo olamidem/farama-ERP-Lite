@@ -1,28 +1,38 @@
 import { useMemo, useState } from "react";
 import type { Employee } from "../types/staff";
+import { USER_STATUS } from "../../auth/types/enums";
 
-export const useStaffFilter = (employees: Employee[]) => {
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState<"all" | "active" | "suspended">("all");
+export const useEmployeeFilters = (employees: Employee[]) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "active" | "suspended"
+  >("all");
 
   const filteredEmployees = useMemo(() => {
     return employees.filter((employee) => {
+      const search = searchQuery.toLowerCase();
+
       const matchesSearch =
-        employee.full_name.toLowerCase().includes(search.toLowerCase()) ||
-        employee.email.toLowerCase().includes(search.toLowerCase());
+        employee.full_name.toLowerCase().includes(search) ||
+        employee.email.toLowerCase().includes(search) ||
+        employee.phone?.toLowerCase().includes(search);
 
       const matchesStatus =
-        status === "all" || employee.status === status;
+        statusFilter === "all" ||
+        (employee.status === USER_STATUS.ACTIVE && statusFilter === "active") ||
+        (employee.status === USER_STATUS.SUSPENDED && statusFilter === "suspended");
 
       return matchesSearch && matchesStatus;
     });
-  }, [employees, search, status]);
+  }, [employees, searchQuery, statusFilter]);
 
   return {
-    search,
-    setSearch,
-    status,
-    setStatus,
+    searchQuery,
+    setSearchQuery,
+    statusFilter,
+    setStatusFilter,
     filteredEmployees,
   };
 };
+
+export default useEmployeeFilters;
