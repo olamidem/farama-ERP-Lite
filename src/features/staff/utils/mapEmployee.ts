@@ -19,6 +19,7 @@ export const mapEmployee = (employee: EmployeeQueryResult): Employee => {
     last_login: employee.last_login ?? "",
     created_at: employee.created_at ?? "",
     updated_at: employee.updated_at ?? "",
+    joined_at: employee.created_at ? employee.created_at.substring(0, 10) : "",
     pin_hash: employee.pin_hash ?? "",
   };
 };
