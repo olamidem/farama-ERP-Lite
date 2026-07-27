@@ -18,7 +18,7 @@ import { mapAuditLog } from "../utils/mapAuditLog";
 import { mapRole } from "../utils/mapRole";
 
 const getRoles = async (): Promise<RoleData[]> => {
-  const { data, error } = await supabase.from("roles").select(ROLE_SELECT)
+  const { data, error } = await supabase.from("roles").select(ROLE_SELECT);
 
   if (error) {
     throw new Error(error.message);
@@ -41,7 +41,6 @@ const getEmployees = async (): Promise<Employee[]> => {
   return employees.map(mapEmployee);
 };
 
-
 const createEmployee = async (
   payload: CreateEmployeeDto,
 ): Promise<Employee> => {
@@ -56,8 +55,7 @@ const createEmployee = async (
   }
 
   const employee = data as unknown as EmployeeQueryResult;
-  
-return mapEmployee(employee);
+  return mapEmployee(employee);
 };
 
 const updateEmployee = async (
@@ -75,8 +73,8 @@ const updateEmployee = async (
     throw new Error(error.message);
   }
 
- const employee = data as unknown as EmployeeQueryResult;
-return mapEmployee(employee);
+  const employee = data as unknown as EmployeeQueryResult;
+  return mapEmployee(employee);
 };
 
 const deleteEmployee = async (id: string): Promise<void> => {
@@ -99,7 +97,7 @@ const getLogs = async (): Promise<ActivityLog[]> => {
     throw new Error(error.message);
   }
   const logs = (data ?? []) as unknown as AuditLogQueryResult[];
- return logs.map(mapAuditLog);
+  return logs.map(mapAuditLog);
 };
 
 const logActivity = async (payload: CreateActivityLogDto): Promise<void> => {
@@ -117,10 +115,7 @@ const logActivity = async (payload: CreateActivityLogDto): Promise<void> => {
   }
 };
 
-const resetPin = async (
-  id: string,
-  pin_hash: string,
-): Promise<void> => {
+const resetPin = async (id: string, pin_hash: string): Promise<void> => {
   const { error } = await supabase
     .from("profiles")
     .update({
