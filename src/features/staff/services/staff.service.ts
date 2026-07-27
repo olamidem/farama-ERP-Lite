@@ -1,5 +1,5 @@
 import { supabase } from "../../../api/supabase";
-import type { Employee, ActivityLog, RoleData } from "../types/staff";
+import type { Employee, ActivityLog, RoleData, UserSession, UserPreferences } from "../types/staff";
 import {
   ROLE_SELECT,
   EMPLOYEE_SELECT,
@@ -134,6 +134,32 @@ const resetPin = async (
   }
 };
 
+const getSessions = async (profileId: string): Promise<UserSession[]> => {
+  const { data, error } = await supabase
+    .from("user_sessions")
+    .select("*")
+    .eq("profile_id", profileId)
+    .order("last_active", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return (data ?? []) as unknown as UserSession[];
+};
+
+const getPreferences = async (profileId: string): Promise<UserPreferences | null> => {
+  const { data, error } = await supabase
+    .from("user_preferences")
+    .select("*")
+    .eq("profile_id", profileId)
+    .single();
+
+  if (error && error.code !== "PGRST116") { // Ignore not found error
+    throw new Error(error.message);
+  }
+  return data as unknown as UserPreferences;
+};
+
 export const staffService = {
   getRoles,
   getEmployees,
@@ -143,6 +169,8 @@ export const staffService = {
   getLogs,
   logActivity,
   resetPin,
+  getSessions,
+  getPreferences,
 };
 
 export default staffService;

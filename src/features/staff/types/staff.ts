@@ -39,3 +39,23 @@ export interface RoleData {
   memberCount: number;
   permissions: string[];
 }
+
+export interface UserSession {
+  id: string;
+  profile_id: string;
+  device_name: string;
+  browser: string;
+  location: string | null;
+  is_current: boolean;
+  last_active: string;
+  created_at: string;
+}
+
+export interface UserPreferences {
+  id: string;
+  profile_id: string;
+  theme: string;
+  language: string;
+  email_notifications: boolean;
+  updated_at: string;
+}

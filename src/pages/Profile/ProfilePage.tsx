@@ -1,10 +1,9 @@
+import { StaffDetailsPage } from "../../features/staff";
 
 const ProfilePage = () => {
   return (
-    <div>
-      ProfilePage
-    </div>
-  )
-}
+    <StaffDetailsPage />
+  );  
+};
 
-export default ProfilePage
+export default ProfilePage;
