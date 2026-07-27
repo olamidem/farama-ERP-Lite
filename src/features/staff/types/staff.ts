@@ -1,4 +1,3 @@
-import type { Role } from "../../auth/types/permission";
 import type { UserStatus } from "../../auth/types/enums";
 
 export interface Employee {
@@ -6,13 +5,14 @@ export interface Employee {
   full_name: string;
   email: string;
   phone: string;
-  role: Role | null;
+  role: string;
   status: UserStatus;
   avatar_color: string | null;
   avatar_url: string | null;
   last_login: string | null;
   created_at: string;
   updated_at: string;
+  joined_at: string;
   pin_hash: string | null;
 }
 
@@ -35,5 +35,6 @@ export interface RoleData {
   name: string;
   description: string | null;
   member_count: number;
+  memberCount: number;
   permissions: string[];
 }
