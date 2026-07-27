@@ -73,8 +73,8 @@ export interface CreateEmployeeDto {
   email: string;
   phone: string;
   role_id: string;
-  status: Employee["status"];
-  avatar_color: string | null;
-  avatar_url: string | null;
+  status?: Employee["status"];
+  avatar_color?: string | null;
+  avatar_url?: string | null;
   pin_hash: string;
 }

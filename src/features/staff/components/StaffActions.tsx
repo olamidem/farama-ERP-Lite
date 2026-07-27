@@ -1,6 +1,7 @@
 import { Eye, Pencil, Key, UserX, UserCheck, Trash2 } from "lucide-react";
 import { cn } from "../../../utils/cn";
-import type { Employee } from "../types";
+import type { Employee } from "../types/staff";
+import { USER_STATUS } from "../../auth/types/enums";
 
 interface StaffActionsProps {
   employee: Employee;
@@ -21,7 +22,7 @@ export const StaffActions = ({
   onToggleStatus,
   onDelete,
 }: StaffActionsProps) => {
-  const isActive = employee.status === "active";
+  const isActive = employee.status === USER_STATUS.ACTIVE;
 
   return (
     <div className="flex items-center justify-end gap-2">

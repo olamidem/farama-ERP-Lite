@@ -1,4 +1,4 @@
-import type { Employee } from "../types";
+import type { Employee } from "../types/staff";
 
 interface StaffAvatarProps {
   employee: Employee;
@@ -13,7 +13,7 @@ export const StaffAvatar = ({
     if (employee.full_name) {
       return employee.full_name
         .split(" ")
-        .map((n) => n[0])
+        .map((n: string) => n[0])
         .slice(0, 2)
         .join("")
         .toUpperCase();

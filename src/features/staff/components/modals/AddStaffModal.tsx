@@ -1,5 +1,5 @@
-import { StaffForm } from "../components/StaffForm";
-import type { RoleData } from "../types";
+import type { RoleData } from "../../types/staff";
+import { StaffForm } from "../StaffForm";
 
 interface AddStaffModalProps {
   isOpen: boolean;

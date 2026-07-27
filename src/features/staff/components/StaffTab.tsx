@@ -5,6 +5,7 @@ import { StaffFilters } from "./StaffFilters";
 import { StaffTable } from "./StaffTable";
 import Pagination from "../../../components/ui/pagination/Pagination";
 import type { ActivityLog, Employee, RoleData } from "../types/staff";
+import { USER_STATUS } from "../../auth/types/enums";
 import { useEmployeeFilters } from "../hooks/useEmployeeFilters";
 
 interface StaffTabProps {
@@ -146,20 +147,16 @@ export const StaffTab = ({
                 name: "Administrator",
                 count: employees.filter(
                   (e) =>
-                    (e.role === "Super Admin" ||
-                      e.role === "Administrator" ||
-                      e.role === "Admin") &&
-                    e.status === "active"
+                    e.role?.name === "Administrator" &&
+                    e.status === USER_STATUS.ACTIVE
                 ).length,
                 percent:
                   employees.length > 0
                     ? Math.round(
                         (employees.filter(
                           (e) =>
-                            (e.role === "Super Admin" ||
-                              e.role === "Administrator" ||
-                              e.role === "Admin") &&
-                            e.status === "active"
+                            e.role?.name === "Administrator" &&
+                            e.status === USER_STATUS.ACTIVE
                         ).length /
                           employees.length) *
                           100
@@ -172,11 +169,11 @@ export const StaffTab = ({
               },
               {
                 name: "Manager",
-                count: employees.filter((e) => e.role === "Manager" && e.status === "active").length,
+                count: employees.filter((e) => e.role?.name === "Manager" && e.status === USER_STATUS.ACTIVE).length,
                 percent:
                   employees.length > 0
                     ? Math.round(
-                        (employees.filter((e) => e.role === "Manager" && e.status === "active").length /
+                        (employees.filter((e) => e.role?.name === "Manager" && e.status === USER_STATUS.ACTIVE).length /
                           employees.length) *
                           100
                       )
@@ -188,11 +185,11 @@ export const StaffTab = ({
               },
               {
                 name: "Cashier",
-                count: employees.filter((e) => e.role === "Cashier" && e.status === "active").length,
+                count: employees.filter((e) => e.role?.name === "Cashier" && e.status === USER_STATUS.ACTIVE).length,
                 percent:
                   employees.length > 0
                     ? Math.round(
-                        (employees.filter((e) => e.role === "Cashier" && e.status === "active").length /
+                        (employees.filter((e) => e.role?.name === "Cashier" && e.status === USER_STATUS.ACTIVE).length /
                           employees.length) *
                           100
                       )
@@ -206,16 +203,16 @@ export const StaffTab = ({
                 name: "Storekeeper",
                 count: employees.filter(
                   (e) =>
-                    (e.role === "Inventory Clerk" || e.role === "Storekeeper") &&
-                    e.status === "active"
+                    e.role?.name === "Storekeeper" &&
+                    e.status === USER_STATUS.ACTIVE
                 ).length,
                 percent:
                   employees.length > 0
                     ? Math.round(
                         (employees.filter(
                           (e) =>
-                            (e.role === "Inventory Clerk" || e.role === "Storekeeper") &&
-                            e.status === "active"
+                            e.role?.name === "Storekeeper" &&
+                            e.status === USER_STATUS.ACTIVE
                         ).length /
                           employees.length) *
                           100
@@ -228,11 +225,11 @@ export const StaffTab = ({
               },
               {
                 name: "Inactive",
-                count: employees.filter((e) => e.status === "suspended").length,
+                count: employees.filter((e) => e.status === USER_STATUS.SUSPENDED).length,
                 percent:
                   employees.length > 0
                     ? Math.round(
-                        (employees.filter((e) => e.status === "suspended").length /
+                        (employees.filter((e) => e.status === USER_STATUS.SUSPENDED).length /
                           employees.length) *
                           100
                       )

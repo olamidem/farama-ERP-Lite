@@ -1,6 +1,6 @@
 import { Clock, RefreshCw } from "lucide-react";
 import { cn } from "../../../utils/cn";
-import type { ActivityLog } from "../types";
+import type { ActivityLog } from "../types/staff";
 
 interface LogsTabProps {
   logs: ActivityLog[];

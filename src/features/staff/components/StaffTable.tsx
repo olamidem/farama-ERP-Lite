@@ -1,6 +1,6 @@
 import { AlertTriangle } from "lucide-react";
 import { StaffRow } from "./StaffRow";
-import type { Employee, RoleData } from "../types";
+import type { Employee, RoleData } from "../types/staff";
 
 interface StaffTableProps {
   employees: Employee[];

@@ -1,5 +1,7 @@
 import { useState } from "react";
-import type { Employee, RoleData } from "../types";
+import type { Employee, RoleData } from "../types/staff";
+import { USER_STATUS } from "../../auth/types/enums";
+import type { UserStatus } from "../../auth/types/enums";
 
 interface StaffFormProps {
   initialData?: Partial<Employee>;
@@ -11,7 +13,7 @@ interface StaffFormProps {
     phone: string;
     role: string;
     pin?: string;
-    status?: "active" | "suspended";
+    status?: UserStatus;
   }) => void;
   onCancel: () => void;
   submitButtonText: string;
@@ -29,11 +31,11 @@ export const StaffForm = ({
   const [email, setEmail] = useState(initialData?.email || "");
   const [phone, setPhone] = useState(initialData?.phone || "");
   const [role, setRole] = useState(
-    initialData?.role || roles[0]?.name || "Cashier",
+    initialData?.role?.id || roles[0]?.id || "",
   );
   const [pin, setPin] = useState(initialData?.pin_hash || "");
-  const [status, setStatus] = useState<"active" | "suspended">(
-    initialData?.status === "suspended" ? "suspended" : "active",
+  const [status, setStatus] = useState<UserStatus>(
+    initialData?.status === USER_STATUS.SUSPENDED ? USER_STATUS.SUSPENDED : USER_STATUS.ACTIVE,
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -99,7 +101,7 @@ export const StaffForm = ({
             className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
           >
             {roles.map((r) => (
-              <option key={r.id} value={r.name}>
+              <option key={r.id} value={r.id}>
                 {r.name}
               </option>
             ))}
@@ -133,12 +135,12 @@ export const StaffForm = ({
             <select
               value={status}
               onChange={(e) =>
-                setStatus(e.target.value as "active" | "suspended")
+                setStatus(e.target.value as UserStatus)
               }
               className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 cursor-pointer"
             >
-              <option value="active">Active</option>
-              <option value="suspended">Suspended</option>
+              <option value={USER_STATUS.ACTIVE}>Active</option>
+              <option value={USER_STATUS.SUSPENDED}>Suspended</option>
             </select>
           </div>
         )}

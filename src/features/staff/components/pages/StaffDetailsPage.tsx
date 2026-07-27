@@ -8,10 +8,11 @@ import {
   History,
   RefreshCw,
 } from "lucide-react";
-import { useStaff } from "../hooks/useStaff";
-import { StaffAvatar } from "../components/StaffAvatar";
-import { StaffStatusBadge } from "../components/StaffStatusBadge";
-import type { Employee, ActivityLog } from "../types";
+import { useStaff } from "../../hooks/useStaff";
+import { StaffAvatar } from "../StaffAvatar";
+import { StaffStatusBadge } from "../StaffStatusBadge";
+import type { Employee, ActivityLog } from "../../types/staff";
+import { USER_STATUS } from "../../../auth/types/enums";
 
 export const StaffDetailsPage = () => {
   // Try to read dynamic parameters if registered, or fall back gracefully
@@ -95,14 +96,12 @@ export const StaffDetailsPage = () => {
                 {employee.full_name}
               </h3>
               <p className="text-xs font-bold text-indigo-600 uppercase tracking-wider mt-0.5">
-                {employee.role}
+                {employee.role?.name || "N/A"}
               </p>
             </div>
             <div className="pt-1">
               <StaffStatusBadge
-                status={
-                  employee.status === "suspended" ? "suspended" : "active"
-                }
+                status={employee.status === USER_STATUS.SUSPENDED ? "suspended" : "active"}
               />
             </div>
           </div>
@@ -127,7 +126,7 @@ export const StaffDetailsPage = () => {
               <div className="flex items-center gap-3 text-xs">
                 <Calendar size={14} className="text-slate-400 shrink-0" />
                 <span className="font-semibold text-slate-700">
-                  Joined {employee.joined_at}
+                  Joined {employee.created_at}
                 </span>
               </div>
             </div>
@@ -140,11 +139,11 @@ export const StaffDetailsPage = () => {
           <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-xs">
             <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-2 mb-4">
               <Shield size={16} className="text-indigo-600" />
-              <span>Assigned Permissions for {employee.role}</span>
+              <span>Assigned Permissions for {employee.role?.name || "N/A"}</span>
             </h4>
             <p className="text-xs text-slate-500 leading-relaxed">
               Operators assigned to the{" "}
-              <strong className="text-slate-700">{employee.role}</strong> role
+              <strong className="text-slate-700">{employee.role?.name || "N/A"}</strong> role
               have access to system catalog viewing and specific point-of-sale
               operational panels.
             </p>
@@ -164,7 +163,7 @@ export const StaffDetailsPage = () => {
                   className="py-3 flex justify-between items-start text-xs gap-4"
                 >
                   <div>
-                    <p className="font-bold text-slate-700">{log.details}</p>
+                    <p className="text-xs font-bold text-slate-800">{log.details}</p>
                     <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
                       Action: {log.action} &bull; IP: {log.ipAddress}
                     </p>

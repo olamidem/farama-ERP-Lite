@@ -1,4 +1,5 @@
 import type { Employee } from "../types/staff";
+import { USER_STATUS } from "../../auth/types/enums";
 
 export interface RoleStat {
   name: string;
@@ -14,25 +15,25 @@ export const calculateRoleStats = (employees: Employee[]): RoleStat[] => {
 
   const administrators = employees.filter(
     (e) =>
-      ["Super Admin", "Administrator", "Admin"].includes(e.role) &&
-      e.status === "ACTIVE",
+      ["Super Admin", "Administrator", "Admin"].includes(e.role?.name || "") &&
+      e.status === USER_STATUS.ACTIVE,
   ).length;
 
   const managers = employees.filter(
-    (e) => e.role === "Manager" && e.status === "ACTIVE",
+    (e) => e.role?.name === "Manager" && e.status === USER_STATUS.ACTIVE,
   ).length;
 
   const cashiers = employees.filter(
-    (e) => e.role === "Cashier" && e.status === "ACTIVE",
+    (e) => e.role?.name === "Cashier" && e.status === USER_STATUS.ACTIVE,
   ).length;
 
   const storekeepers = employees.filter(
     (e) =>
-      ["Inventory Clerk", "Storekeeper"].includes(e.role) &&
-      e.status === "ACTIVE",
+      ["Inventory Clerk", "Storekeeper"].includes(e.role?.name || "") &&
+      e.status === USER_STATUS.ACTIVE,
   ).length;
 
-  const inactive = employees.filter((e) => e.status === "SUSPENDED").length;
+  const inactive = employees.filter((e) => e.status === USER_STATUS.SUSPENDED).length;
 
   return [
     {

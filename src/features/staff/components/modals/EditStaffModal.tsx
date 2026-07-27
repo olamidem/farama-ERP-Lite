@@ -1,7 +1,7 @@
-import { StaffForm } from "../components/StaffForm";
-import type { Employee, RoleData } from "../types";
-import { USER_STATUS } from "../../auth/types/enums";
-import type { UserStatus } from "../../auth/types/enums";
+import { StaffForm } from "../StaffForm";
+import type { Employee, RoleData } from "../../types/staff";
+import { USER_STATUS } from "../../../auth/types/enums";
+import type { UserStatus } from "../../../auth/types/enums";
 
 interface EditStaffModalProps {
   isOpen: boolean;
@@ -51,7 +51,7 @@ export const EditStaffModal = ({
           initialData={employee}
           roles={roles}
           mode="edit"
-          onSubmit={(data) => {
+          onSubmit={(data: any) => {
             onSubmit(employee.id, {
               full_name: data.full_name,
               email: data.email,

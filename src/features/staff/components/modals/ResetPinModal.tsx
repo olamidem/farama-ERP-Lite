@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Employee } from "../types";
+import type { Employee } from "../../types/staff";
 
 interface ResetPinModalProps {
   isOpen: boolean;
@@ -40,7 +40,7 @@ export const ResetPinModal = ({
           <div className="p-3.5 bg-indigo-50 rounded-2xl border border-indigo-100/50 text-center">
             <p className="text-xs font-bold text-slate-700">Updating Terminal PIN for:</p>
             <p className="text-xs font-black text-indigo-700 mt-0.5">{employee.full_name}</p>
-            <p className="text-[10px] font-bold text-slate-400">({employee.role})</p>
+            <p className="text-[10px] font-bold text-slate-400">({employee.role?.name || "N/A"})</p>
           </div>
 
           <div className="space-y-1">
