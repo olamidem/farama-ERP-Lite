@@ -1,6 +1,6 @@
 import { cn } from "../../../../utils/cn";
-import type { Employee } from "../../types/staff";
 import { USER_STATUS } from "../../../auth/types/enums";
+import type { Employee } from "../../types/staff";
 
 interface ViewStaffModalProps {
   isOpen: boolean;
@@ -36,7 +36,7 @@ export const ViewStaffModal = ({
             >
               {employee.full_name
                 .split(" ")
-                .map((n: string) => n[0])
+                .map((n) => n[0])
                 .slice(0, 2)
                 .join("")
                 .toUpperCase()}
@@ -46,7 +46,7 @@ export const ViewStaffModal = ({
                 {employee.full_name}
               </h4>
               <p className="text-xs font-semibold text-indigo-600 uppercase tracking-wider">
-                {employee.role?.name || "N/A"}
+                {employee.role}
               </p>
             </div>
           </div>
@@ -76,14 +76,14 @@ export const ViewStaffModal = ({
                     : "bg-rose-50 text-rose-700 border border-rose-100"
                 )}
               >
-                {employee.status}
+                {employee.status.toLowerCase()}
               </span>
             </div>
             <div className="flex justify-between py-1.5 text-xs">
               <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
                 Joined Date
               </span>
-              <span className="font-semibold text-slate-700">{employee.created_at}</span>
+              <span className="font-semibold text-slate-700">{employee.joined_at}</span>
             </div>
             <div className="flex justify-between py-1.5 text-xs">
               <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
