@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { Employee, RoleData } from "../types/staff";
 import { USER_STATUS } from "../../auth/types/enums";
 import type { UserStatus } from "../../auth/types/enums";
+import type { Employee, RoleData } from "../types/staff";
 
 interface StaffFormProps {
   initialData?: Partial<Employee>;
@@ -31,12 +31,27 @@ export const StaffForm = ({
   const [email, setEmail] = useState(initialData?.email || "");
   const [phone, setPhone] = useState(initialData?.phone || "");
   const [role, setRole] = useState(
-    initialData?.role?.id || roles[0]?.id || "",
+    initialData?.role || roles[0]?.name || "Cashier",
   );
   const [pin, setPin] = useState(initialData?.pin_hash || "");
   const [status, setStatus] = useState<UserStatus>(
-    initialData?.status === USER_STATUS.SUSPENDED ? USER_STATUS.SUSPENDED : USER_STATUS.ACTIVE,
+    initialData?.status === USER_STATUS.SUSPENDED
+      ? USER_STATUS.SUSPENDED
+      : USER_STATUS.ACTIVE,
   );
+
+  const [prevRoles, setPrevRoles] = useState(roles);
+  if (roles !== prevRoles) {
+    setPrevRoles(roles);
+    if (roles.length > 0) {
+      const hasCurrentRole = roles.some(
+        (r) => r.name.toLowerCase() === role.toLowerCase() || r.id === role,
+      );
+      if (!hasCurrentRole) {
+        setRole(initialData?.role || roles[0]?.name || "");
+      }
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,7 +116,7 @@ export const StaffForm = ({
             className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
           >
             {roles.map((r) => (
-              <option key={r.id} value={r.id}>
+              <option key={r.id} value={r.name}>
                 {r.name}
               </option>
             ))}
@@ -134,9 +149,7 @@ export const StaffForm = ({
             </label>
             <select
               value={status}
-              onChange={(e) =>
-                setStatus(e.target.value as UserStatus)
-              }
+              onChange={(e) => setStatus(e.target.value as UserStatus)}
               className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 cursor-pointer"
             >
               <option value={USER_STATUS.ACTIVE}>Active</option>

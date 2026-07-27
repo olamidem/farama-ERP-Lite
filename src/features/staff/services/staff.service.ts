@@ -62,6 +62,21 @@ const updateEmployee = async (
   id: string,
   updates: UpdateEmployeeDto,
 ): Promise<Employee> => {
+  if (!updates || Object.keys(updates).length === 0) {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select(EMPLOYEE_SELECT)
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const employee = data as unknown as EmployeeQueryResult;
+    return mapEmployee(employee);
+  }
+
   const { data, error } = await supabase
     .from("profiles")
     .update(updates)
@@ -115,7 +130,10 @@ const logActivity = async (payload: CreateActivityLogDto): Promise<void> => {
   }
 };
 
-const resetPin = async (id: string, pin_hash: string): Promise<void> => {
+const resetPin = async (
+  id: string,
+  pin_hash: string,
+): Promise<void> => {
   const { error } = await supabase
     .from("profiles")
     .update({

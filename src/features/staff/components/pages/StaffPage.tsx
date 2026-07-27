@@ -1,31 +1,24 @@
 import { useState } from "react";
 import { Users, Shield, LockOpen, FileClock, RefreshCw } from "lucide-react";
-import { useAuthStore } from "../../../store/authStore";
-import { cn } from "../../../utils/cn";
-
-// Hooks
-import { useStaff } from "../hooks/useStaff";
-import { useCreateEmployee } from "../hooks/useCreateEmployee";
-import { useUpdateEmployee } from "../hooks/useUpdateEmployee";
-import { useDeleteEmployee } from "../hooks/useDeleteEmployee";
-import { useResetPin } from "../hooks/useResetPin";
-
-// Components
-import { StaffStatsCards } from "../components/StaffStatsCards";
-import { StaffTab } from "../components/StaffTab";
-import { RolesTab } from "../components/RolesTab";
-import { PermissionTab } from "../components/PermissionTab";
-import { LogsTab } from "../components/LogsTab";
-
-// Modals
+import useAuthStore from "../../../auth/store/authStore";
+import { useStaff } from "../../hooks/useStaff";
+import { useCreateEmployee } from "../../hooks/useCreateEmployee";
+import { useUpdateEmployee } from "../../hooks/useUpdateEmployee";
+import { useResetPin } from "../../hooks/useResetPin";
+import { useDeleteEmployee } from "../../hooks/useDeleteEmployee";
+import type { Employee } from "../../types/staff";
+import { USER_STATUS, type UserStatus } from "../../../auth/types/enums";
+import { StaffStatsCards } from "../StaffStatusCard";
+import { cn } from "../../../../utils/cn";
+import StaffTab from "../StaffTab";
+import RolesTab from "../RolesTab";
+import PermissionTab from "../PermissionTab";
+import { LogsTab } from "../LogsTab";
 import { AddStaffModal } from "../modals/AddStaffModal";
 import { EditStaffModal } from "../modals/EditStaffModal";
-import { ResetPinModal } from "../modals/ResetPinModal";
 import { ViewStaffModal } from "../modals/ViewStaffModal";
+import { ResetPinModal } from "../modals/ResetPinModal";
 import { DeleteStaffDialog } from "../modals/DeleteStaffDialog";
-import type { Employee } from "../types";
-import { USER_STATUS } from "../../auth/types/enums";
-import type { UserStatus } from "../../auth/types/enums";
 
 export const StaffPage = () => {
   const currentUser = useAuthStore((state) => state.user);

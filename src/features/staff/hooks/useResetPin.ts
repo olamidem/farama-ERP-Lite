@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { staffService } from "../services/staff.service";
 import { staffKeys } from "../queryKeys";
+import staffService from "../services/staff.service";
 
 interface ResetPinPayload {
   id: string;
@@ -11,7 +11,7 @@ interface ResetPinPayload {
 export const useResetPin = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: ({ id, pin_hash }: ResetPinPayload) =>
       staffService.resetPin(id, pin_hash),
 
@@ -27,4 +27,13 @@ export const useResetPin = () => {
       toast.error(error.message);
     },
   });
+
+  return {
+    resetPin: async (id: string, pin_hash: string) => {
+      return mutation.mutateAsync({ id, pin_hash });
+    },
+    isResetting: mutation.isPending,
+  };
 };
+
+export default useResetPin;

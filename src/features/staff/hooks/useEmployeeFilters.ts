@@ -34,3 +34,5 @@ export const useEmployeeFilters = (employees: Employee[]) => {
     filteredEmployees,
   };
 };
+
+export default useEmployeeFilters;

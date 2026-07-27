@@ -8,10 +8,11 @@ import {
   History,
   RefreshCw,
 } from "lucide-react";
-import { useStaff } from "../hooks/useStaff";
-import { StaffAvatar } from "../components/StaffAvatar";
-import { StaffStatusBadge } from "../components/StaffStatusBadge";
-import type { Employee, ActivityLog } from "../types";
+import { useStaff } from "../../hooks/useStaff";
+import type { ActivityLog, Employee } from "../../types/staff";
+import { StaffAvatar } from "../StaffAvatar";
+import { StaffStatusBadge } from "../StaffStatusBadge";
+
 
 export const StaffDetailsPage = () => {
   // Try to read dynamic parameters if registered, or fall back gracefully
