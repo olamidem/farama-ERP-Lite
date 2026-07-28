@@ -16,11 +16,33 @@ export const login = async ({
     password,
   });
 
-  if (error) {
-    throw new Error(error.message);
+  if (!error && data?.session) {
+    return data;
   }
 
-  return data;
+  // Fallback: If user exists in profiles but not yet registered in Supabase Auth
+  try {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("id, email")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (profile) {
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (!signUpError && signUpData?.session) {
+        return signUpData as LoginResponse;
+      }
+    }
+  } catch {
+    // Ignore fallback failure
+  }
+
+  throw new Error(error?.message || "Invalid login credentials");
 };
 
 export const logout = async (): Promise<void> => {
