@@ -1,5 +1,3 @@
-export * from "./wallet";
-
 export interface Customer {
   id: string;
   name: string;
