@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { Link, useParams } from "@tanstack/react-router";
 import { RefreshCw } from "lucide-react";
-
 import { useStaff } from "../../hooks/useStaff";
 import { useUpdateEmployee } from "../../hooks/useUpdateEmployee";
 import { useResetPin } from "../../hooks/useResetPin";
 import { useChangePassword } from "../../hooks/useChangePassword";
 
 import { useAuthStore } from "../../../auth/store/authStore";
-
 import type { Employee } from "../../types/staff";
 import type { UserStatus } from "../../../auth/types/enums";
 import { StaffHeader } from "../details/StaffHeader";
@@ -52,7 +50,7 @@ export const StaffDetailsPage = () => {
         (e.id === profile?.id ||
           e.email === profile?.email ||
           e.email === user?.email ||
-          e.id === user?.id))
+          e.id === user?.id)),
   );
 
   const loggedInEmployeeFallback: Employee | null =
@@ -94,7 +92,7 @@ export const StaffDetailsPage = () => {
       phone: string;
       role: string;
       status: UserStatus;
-    }
+    },
   ) => {
     await updateEmployee({
       id,
@@ -110,7 +108,7 @@ export const StaffDetailsPage = () => {
 
   const handleChangePasswordSubmit = async (
     profileId: string,
-    newPassword: string
+    newPassword: string,
   ) => {
     await changePassword({ profileId, newPassword });
     setIsChangePasswordOpen(false);

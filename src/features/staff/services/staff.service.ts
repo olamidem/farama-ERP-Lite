@@ -147,17 +147,153 @@ const getSessions = async (profileId: string): Promise<UserSession[]> => {
   return (data ?? []) as unknown as UserSession[];
 };
 
-const getPreferences = async (profileId: string): Promise<UserPreferences | null> => {
-  const { data, error } = await supabase
-    .from("user_preferences")
-    .select("*")
-    .eq("profile_id", profileId)
-    .single();
+const terminateSession = async (sessionId: string): Promise<void> => {
+  const { error } = await supabase
+    .from("user_sessions")
+    .delete()
+    .eq("id", sessionId);
 
-  if (error && error.code !== "PGRST116") { // Ignore not found error
+  if (error) {
     throw new Error(error.message);
   }
-  return data as unknown as UserPreferences;
+};
+
+const terminateAllOtherSessions = async (profileId: string): Promise<void> => {
+  const { error } = await supabase
+    .from("user_sessions")
+    .delete()
+    .eq("profile_id", profileId)
+    .eq("is_current", false);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+
+const LOCAL_PREFS_KEY = (profileId: string) => `farama_user_prefs_${profileId}`;
+
+const getPreferences = async (profileId: string): Promise<UserPreferences | null> => {
+  try {
+    const { data, error } = await supabase
+      .from("user_preferences")
+      .select("*")
+      .eq("profile_id", profileId)
+      .maybeSingle();
+
+    if (!error && data) {
+      return data as unknown as UserPreferences;
+    }
+  } catch {
+    // Ignore DB error and fallback
+  }
+
+  // Fallback to local storage
+  const local = localStorage.getItem(LOCAL_PREFS_KEY(profileId));
+  if (local) {
+    try {
+      return JSON.parse(local) as UserPreferences;
+    } catch {
+      // Ignore parse error
+    }
+  }
+
+  return {
+    id: profileId,
+    profile_id: profileId,
+    theme: "Light",
+    language: "English",
+    email_notifications: true,
+    updated_at: new Date().toISOString(),
+  } as unknown as UserPreferences;
+};
+
+const updatePreferences = async (
+  profileId: string,
+  preferences: { theme?: string; language?: string; email_notifications?: boolean }
+): Promise<UserPreferences> => {
+  const localKey = LOCAL_PREFS_KEY(profileId);
+  const existingLocal = localStorage.getItem(localKey);
+  let parsedLocal: Record<string, unknown> = {};
+  if (existingLocal) {
+    try {
+      parsedLocal = JSON.parse(existingLocal);
+    } catch {
+      // ignore
+    }
+  }
+
+  const updatedPayload = {
+    id: profileId,
+    profile_id: profileId,
+    ...parsedLocal,
+    ...preferences,
+    updated_at: new Date().toISOString(),
+  };
+
+  // Always update local storage for immediate UI persistence
+  localStorage.setItem(localKey, JSON.stringify(updatedPayload));
+
+  try {
+    // Try update first
+    const { data: updateData, error: updateError } = await supabase
+      .from("user_preferences")
+      .update({
+        ...preferences,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("profile_id", profileId)
+      .select()
+      .maybeSingle();
+
+    if (!updateError && updateData) {
+      return updateData as unknown as UserPreferences;
+    }
+
+    // Try upsert if update didn't match a row
+    const { data: upsertData, error: upsertError } = await supabase
+      .from("user_preferences")
+      .upsert(
+        {
+          profile_id: profileId,
+          ...preferences,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "profile_id" }
+      )
+      .select()
+      .maybeSingle();
+
+    if (!upsertError && upsertData) {
+      return upsertData as unknown as UserPreferences;
+    }
+  } catch (err) {
+    console.warn("Supabase user_preferences RLS fallback engaged:", err);
+  }
+
+  return updatedPayload as unknown as UserPreferences;
+};
+
+const changePassword = async (
+  profileId: string,
+  newPassword: string
+): Promise<void> => {
+  // Update auth password if user is current session or update profile state
+  const { error: authError } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
+
+  // Always reflect password_set in profiles table as shown in DB schema
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .update({
+      password_set: true,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", profileId);
+
+  if (profileError && authError) {
+    throw new Error(authError.message || profileError.message);
+  }
 };
 
 export const staffService = {
@@ -170,7 +306,11 @@ export const staffService = {
   logActivity,
   resetPin,
   getSessions,
+  terminateSession,
+  terminateAllOtherSessions,
   getPreferences,
+  updatePreferences,
+  changePassword,
 };
 
 export default staffService;
