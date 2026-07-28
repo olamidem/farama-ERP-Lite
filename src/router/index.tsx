@@ -17,6 +17,8 @@ import PurchasesPage from "../features/purchases/pages/PurchasesPage";
 import SuppliersPage from "../features/suppliers/pages/SuppliersPage";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import LockScreenPage from "../features/auth/pages/LockScreenPage";
+import SetPasswordPage from "../features/auth/pages/SetPasswordPage";
+import AcceptInvitationPage from "../features/auth/pages/AcceptInvitationPage";
 import { StaffPage } from "../features/staff";
 
 const rootRoute = createRootRoute();
@@ -27,6 +29,26 @@ const loginRoute = createRoute({
   staticData: {
     title: "Sign In",
     subtitle: "Access your ERP account",
+  },
+});
+
+const setPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/auth/set-password",
+  component: SetPasswordPage,
+  staticData: {
+    title: "Set Password",
+    subtitle: "Activate your account",
+  },
+});
+
+const acceptInviteRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/auth/accept-invite",
+  component: AcceptInvitationPage,
+  staticData: {
+    title: "Accept Invitation",
+    subtitle: "Join your team",
   },
 });
 
@@ -173,6 +195,8 @@ const lockScreenRoute = createRoute({
  */
 const routeTree = rootRoute.addChildren([
   loginRoute,
+  setPasswordRoute,
+  acceptInviteRoute,
   lockScreenRoute,
   appLayoutRoute.addChildren([
     dashboardRoute,

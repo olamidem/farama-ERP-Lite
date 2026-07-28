@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { useAuthStore } from "../store/authStore";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -19,14 +20,25 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const loginMutation = useLogin();
 
- const onSubmit = async (data: LoginFormData) => {
-  await loginMutation.mutateAsync(data);
-  toast.success("Welcome back!");
-  navigate({
-    to: "/dashboard",
-    replace: true,
-  });
-};
+  const onSubmit = async (data: LoginFormData) => {
+    await loginMutation.mutateAsync(data);
+    const profile = useAuthStore.getState().profile;
+
+    if (profile && profile.password_set === false) {
+      toast.info("Please set your new password to continue.");
+      navigate({
+        to: "/auth/set-password",
+        replace: true,
+      });
+    } else {
+      toast.success("Welcome back!");
+      navigate({
+        to: "/dashboard",
+        replace: true,
+      });
+    }
+  };
+
   
   return (
     <div>

@@ -9,8 +9,17 @@ export const useCreateEmployee = () => {
   const mutation = useMutation({
     mutationFn: inviteEmployee,
 
-    onSuccess: () => {
-      toast.success("Invitation sent successfully.");
+    onSuccess: (result) => {
+      if (result?.temp_password) {
+        // Dev mode: show the temp password so admin can share it
+        toast.success(
+          `Employee created! Temp password: ${result.temp_password}`,
+          { duration: 10000 }
+        );
+      } else {
+        // Production mode: invitation email was sent
+        toast.success("Invitation email sent successfully.");
+      }
 
       queryClient.invalidateQueries({
         queryKey: staffKeys.employees,

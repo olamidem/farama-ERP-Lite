@@ -2,142 +2,131 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { corsHeaders } from "../_shared/cors.ts";
 
+const TEMP_PASSWORD = "TempPassword123!";
+const PROD_REDIRECT_URL = "https://ts-farama-store.vercel.app/auth/accept-invite";
+
 serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === "OPTIONS") {
-    return new Response("ok", {
-      headers: corsHeaders,
-    });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    console.log("Invite Employee Function Started");
-
     const body = await req.json();
+    const { full_name, email, phone, role_id } = body;
 
-    console.log("Incoming Payload:", body);
-
-    const {
-      full_name,
-      email,
-      phone,
-      role_id,
-      status,
-      avatar_color,
-      avatar_url,
-    } = body;
+    if (!email || !full_name || !role_id) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Missing required fields: full_name, email, role_id" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    console.log("Inviting user:", email);
+    // Determine environment — defaults to "production" if not set
+    const appEnv = Deno.env.get("APP_ENV") ?? "production";
+    const isDev = appEnv === "development";
 
-    const { data: authUser, error: authError } =
-      await supabase.auth.admin.inviteUserByEmail(email, {
-        data: {
-          full_name,
-        },
+    let userId: string;
+
+    if (isDev) {
+      // -------------------------------------------------------
+      // DEVELOPMENT: Create user with known temporary password
+      // -------------------------------------------------------
+      const { data, error } = await supabase.auth.admin.createUser({
+        email,
+        password: TEMP_PASSWORD,
+        email_confirm: true,
+        user_metadata: { full_name },
       });
 
-    console.log("Auth User:", authUser);
-    console.log("Auth Error:", authError);
+      if (error) {
+        return new Response(
+          JSON.stringify({ success: false, error: error.message }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
 
-    if (authError) {
-      console.error(authError);
+      if (!data?.user) {
+        return new Response(
+          JSON.stringify({ success: false, error: "User creation failed." }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
 
-      return new Response(
-        JSON.stringify(authError),
-        {
-          status: 400,
-          headers: {
-            ...corsHeaders,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      userId = data.user.id;
+    } else {
+      // -------------------------------------------------------
+      // PRODUCTION: Send invitation email — user sets own password
+      // -------------------------------------------------------
+      const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
+        data: { full_name },
+        redirectTo: PROD_REDIRECT_URL,
+      });
+
+      if (error) {
+        return new Response(
+          JSON.stringify({ success: false, error: error.message }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      if (!data?.user) {
+        return new Response(
+          JSON.stringify({ success: false, error: "Invitation failed." }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      userId = data.user.id;
     }
 
-    const userId = authUser.user?.id;
-
-    if (!userId) {
-      return new Response(
-        JSON.stringify({
-          error: "User ID not returned from Supabase Auth.",
-        }),
-        {
-          status: 400,
-          headers: {
-            ...corsHeaders,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    }
-
-    console.log("Creating profile...");
-
+    // Create profile record (same for both environments)
     const { error: profileError } = await supabase
       .from("profiles")
       .insert({
         id: userId,
         full_name,
         email,
-        phone,
+        phone: phone ?? null,
         role_id,
-        status,
-        avatar_color,
-        avatar_url,
+        status: "PENDING",
+        avatar_url: null,
+        avatar_color: null,
+        pin_hash: null,
+        password_set: false,
+        invited_at: new Date().toISOString(),
+        activated_at: null,
+        last_login: null,
       });
 
-    console.log("Profile Error:", profileError);
-
     if (profileError) {
-      console.error(profileError);
-
+      // Clean up orphaned auth user if profile insert fails
+      await supabase.auth.admin.deleteUser(userId);
       return new Response(
-        JSON.stringify(profileError),
-        {
-          status: 400,
-          headers: {
-            ...corsHeaders,
-            "Content-Type": "application/json",
-          },
-        }
+        JSON.stringify({ success: false, error: profileError.message }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
-
-    console.log("Employee invited successfully.");
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Invitation sent successfully.",
-        user: authUser.user,
+        dev_mode: isDev,
+        // Only expose temp password in dev mode for the admin toast
+        temp_password: isDev ? TEMP_PASSWORD : null,
+        user_id: userId,
       }),
-      {
-        status: 200,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
-      }
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-  } catch (error) {
-    console.error(error);
-
+  } catch (e) {
+    console.error(e);
     return new Response(
-      JSON.stringify({
-        error: String(error),
-      }),
-      {
-        status: 500,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
-      }
+      JSON.stringify({ success: false, error: e instanceof Error ? e.message : String(e) }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 });
