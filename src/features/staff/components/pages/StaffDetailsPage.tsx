@@ -4,18 +4,16 @@ import { RefreshCw } from "lucide-react";
 import { useStaff } from "../../hooks/useStaff";
 import { useUpdateEmployee } from "../../hooks/useUpdateEmployee";
 import { useResetPin } from "../../hooks/useResetPin";
-import { useChangePassword } from "../../hooks/useChangePassword";
-
 import { useAuthStore } from "../../../auth/store/authStore";
 import type { Employee } from "../../types/staff";
 import type { UserStatus } from "../../../auth/types/enums";
-import { StaffHeader } from "../details/StaffHeader";
-import { StaffInfoOverview } from "../details/StaffInfoOverview";
-import { StaffSecurityAndPreferences } from "../details/StaffSecurityAndPreferences";
-
 import { EditStaffModal } from "../modals/EditStaffModal";
 import { ResetPinModal } from "../modals/ResetPinModal";
 import { ChangePasswordModal } from "../modals/ChangePasswordModal";
+import useChangePassword from "../../hooks/useChangePassword";
+import { StaffHeader } from "../details/StaffHeader";
+import { StaffInfoOverview } from "../details/StaffInfoOverview";
+import { StaffSecurityAndPreferences } from "../details/StaffSecurityAndPreferences";
 
 export const StaffDetailsPage = () => {
   let productId = "";
