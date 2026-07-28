@@ -17,29 +17,29 @@ export const UnitSummary = ({ units }: UnitSummaryProps) => {
       title: "Total Units",
       value: total,
       icon: Box,
-      iconColor: "text-indigo-600",
-      bgColor: "bg-indigo-50 border-indigo-100/50",
+      iconColor: "text-indigo-600 dark:text-indigo-400",
+      bgColor: "bg-indigo-50 dark:bg-indigo-950/60 border-indigo-100/50 dark:border-indigo-900/50",
     },
     {
       title: "Active Units",
       value: active,
       icon: CheckCircle2,
-      iconColor: "text-emerald-600",
-      bgColor: "bg-emerald-50 border-emerald-100/50",
+      iconColor: "text-emerald-600 dark:text-emerald-400",
+      bgColor: "bg-emerald-50 dark:bg-emerald-950/60 border-emerald-100/50 dark:border-emerald-900/50",
     },
     {
       title: "System Units",
       value: system,
       icon: Shield,
-      iconColor: "text-blue-600",
-      bgColor: "bg-blue-50 border-blue-100/50",
+      iconColor: "text-blue-600 dark:text-blue-400",
+      bgColor: "bg-blue-50 dark:bg-blue-950/60 border-blue-100/50 dark:border-blue-900/50",
     },
     {
       title: "Custom Units",
       value: custom,
       icon: User,
-      iconColor: "text-orange-600",
-      bgColor: "bg-orange-50 border-orange-100/50",
+      iconColor: "text-orange-600 dark:text-orange-400",
+      bgColor: "bg-orange-50 dark:bg-orange-950/60 border-orange-100/50 dark:border-orange-900/50",
     },
   ];
 
@@ -53,7 +53,7 @@ export const UnitSummary = ({ units }: UnitSummaryProps) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: idx * 0.05 }}
-            className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition duration-200"
+            className="flex items-center gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm hover:shadow-md transition duration-200"
           >
             <div
               className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border ${card.bgColor}`}
@@ -61,10 +61,10 @@ export const UnitSummary = ({ units }: UnitSummaryProps) => {
               <Icon className={`h-6 w-6 ${card.iconColor}`} />
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                 {card.title}
               </p>
-              <p className="mt-1 text-2xl font-black text-slate-800 leading-none">
+              <p className="mt-1 text-2xl font-black text-slate-800 dark:text-slate-100 leading-none">
                 {card.value}
               </p>
             </div>

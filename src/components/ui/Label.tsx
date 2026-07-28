@@ -8,7 +8,10 @@ const Label = ({
 }: LabelHTMLAttributes<HTMLLabelElement>) => {
   return (
     <label
-      className={cn("mb-2 block text-sm font-medium text-gray-700", className)}
+      className={cn(
+        "mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300",
+        className,
+      )}
       {...props}
     >
       {children}

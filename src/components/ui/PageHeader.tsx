@@ -11,11 +11,11 @@ const PageHeader = ({ title, description, children }: PageHeaderProps) => {
     <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
       {/* Left */}
       <div>
-        <h1 className="text-xl font-bold uppercase tracking-tight text-slate-900">
+        <h1 className="text-xl font-bold uppercase tracking-tight text-slate-900 dark:text-slate-100">
           {title}
         </h1>
         {description && (
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
             {description}
           </p>
         )}

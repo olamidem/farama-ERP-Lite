@@ -23,21 +23,21 @@ export const CategoryToolbar = ({
   filteredCount,
 }: CategoryToolbarProps) => {
   return (
-    <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+    <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between transition-colors">
       {/* Search and Filters */}
       <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
         {/* Search Input */}
         <div className="relative w-full sm:w-64">
           <Search
             size={15}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"
           />
           <input
             type="text"
             placeholder="Search categories..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            className="h-10 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 pl-10 pr-4 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
           />
         </div>
 
@@ -71,8 +71,11 @@ export const CategoryToolbar = ({
       </div>
 
       {/* Item Counter */}
-      <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 self-start lg:self-auto">
-        <FolderKanban size={14} className="text-slate-400" />
+      <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700 self-start lg:self-auto">
+        <FolderKanban
+          size={14}
+          className="text-slate-400 dark:text-slate-500"
+        />
         <span>
           {filteredCount === totalCount
             ? `Total: ${totalCount}`

@@ -29,18 +29,18 @@ const ProductToolbar = ({
   exportMenu,
 }: ProductToolbarProps) => {
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+    <div className="flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between transition-colors">
       {/* Left Filters */}
       <div className="flex flex-wrap items-center gap-3">
         {/* Search bar */}
         <div className="relative w-64">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Search products..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="h-9 w-full pl-9 pr-4 rounded-lg border border-slate-200 bg-white text-xs outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400 shadow-sm placeholder:text-slate-400"
+            className="h-9 w-full pl-9 pr-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 text-xs outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
