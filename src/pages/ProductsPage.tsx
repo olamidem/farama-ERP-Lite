@@ -227,12 +227,12 @@ const ProductsPage = () => {
       className="space-y-6"
     >
       {/* High-Fidelity Header Row */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-slate-100 pb-5">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-slate-100 dark:border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
             Products
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Manage and view all products in your store.
           </p>
         </div>
@@ -241,7 +241,7 @@ const ProductsPage = () => {
           {/* Add Product Button */}
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-1.5 h-10 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-sm transition duration-150"
+            className="flex items-center gap-1.5 h-10 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-sm transition duration-150 cursor-pointer"
           >
             <Plus size={16} />
             <span>Add Product</span>
@@ -254,7 +254,7 @@ const ProductsPage = () => {
       <div className="flex flex-wrap items-center justify-end gap-3">
         <button
           onClick={() => setIsImportModalOpen(true)}
-          className="flex items-center gap-1.5 h-9 px-4 rounded-xl border border-blue-200 bg-blue-50/15 hover:bg-blue-50/60 text-blue-600 text-xs font-bold transition shadow-sm"
+          className="flex items-center gap-1.5 h-9 px-4 rounded-xl border border-blue-200 dark:border-blue-900/60 bg-blue-50/15 dark:bg-blue-950/40 hover:bg-blue-50/60 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 text-xs font-bold transition shadow-sm cursor-pointer"
         >
           <Upload size={14} />
           <span>Import Products</span>
@@ -262,7 +262,7 @@ const ProductsPage = () => {
 
         <button
           onClick={handleExportAll}
-          className="flex items-center gap-1.5 h-9 px-4 rounded-xl border border-emerald-200 bg-emerald-50/15 hover:bg-emerald-50/60 text-emerald-600 text-xs font-bold transition shadow-sm"
+          className="flex items-center gap-1.5 h-9 px-4 rounded-xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/15 dark:bg-emerald-950/40 hover:bg-emerald-50/60 dark:hover:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 text-xs font-bold transition shadow-sm cursor-pointer"
         >
           <Download size={14} />
           <span>Export Products</span>
@@ -270,7 +270,7 @@ const ProductsPage = () => {
 
         <button
           onClick={handleDownloadTemplateXlsx}
-          className="flex items-center gap-1.5 h-9 px-4 rounded-xl border border-purple-200 bg-purple-50/15 hover:bg-purple-50/60 text-purple-600 text-xs font-bold transition shadow-sm"
+          className="flex items-center gap-1.5 h-9 px-4 rounded-xl border border-purple-200 dark:border-purple-900/60 bg-purple-50/15 dark:bg-purple-950/40 hover:bg-purple-50/60 dark:hover:bg-purple-900/50 text-purple-600 dark:text-purple-400 text-xs font-bold transition shadow-sm cursor-pointer"
         >
           <FileText size={14} />
           <span>Download Template</span>

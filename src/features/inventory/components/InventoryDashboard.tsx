@@ -143,20 +143,24 @@ export const InventoryDashboard = () => {
   return (
     <div className="space-y-6 py-2 w-full">
       {/* Top Main Banner Header matching the picture */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 text-left">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800 text-left">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
             Inventory
           </h1>
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 mt-1">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 dark:text-slate-500 mt-1">
             <span
-              className="hover:text-indigo-600 transition cursor-pointer"
+              className="hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer"
               onClick={() => setActiveSection("dashboard")}
             >
               Dashboard
             </span>
-            <span className="text-slate-300 font-normal">/</span>
-            <span className="text-slate-600">Inventory</span>
+            <span className="text-slate-300 dark:text-slate-700 font-normal">
+              /
+            </span>
+            <span className="text-slate-600 dark:text-slate-300">
+              Inventory
+            </span>
           </div>
         </div>
 
@@ -184,13 +188,13 @@ export const InventoryDashboard = () => {
                   className="fixed inset-0 z-40"
                   onClick={() => setIsDropdownOpen(false)}
                 />
-                <div className="absolute right-0 mt-2 w-52 rounded-xl border border-slate-100 bg-white p-1.5 shadow-xl z-50 text-left">
+                <div className="absolute right-0 mt-2 w-52 rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-1.5 shadow-xl z-50 text-left">
                   <button
                     onClick={() => {
                       setIsAdjustModalOpen(true);
                       setIsDropdownOpen(false);
                     }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg transition cursor-pointer"
                   >
                     <Sliders
                       size={14}
@@ -203,7 +207,7 @@ export const InventoryDashboard = () => {
                       setIsTransferModalOpen(true);
                       setIsDropdownOpen(false);
                     }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-950/50 hover:text-purple-600 dark:hover:text-purple-400 rounded-lg transition cursor-pointer"
                   >
                     <ArrowLeftRight
                       size={14}
@@ -216,7 +220,7 @@ export const InventoryDashboard = () => {
                       setIsOpeningModalOpen(true);
                       setIsDropdownOpen(false);
                     }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-amber-50 hover:text-amber-600 rounded-lg transition cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-amber-950/50 hover:text-amber-600 dark:hover:text-amber-400 rounded-lg transition cursor-pointer"
                   >
                     <Play
                       size={14}
@@ -231,7 +235,7 @@ export const InventoryDashboard = () => {
 
           <button
             onClick={handleRefresh}
-            className="p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 transition shadow-xs hover:text-slate-800 cursor-pointer flex items-center justify-center"
+            className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition shadow-xs hover:text-slate-800 dark:hover:text-slate-200 cursor-pointer flex items-center justify-center"
             title="Refresh Real-time Data"
           >
             <RefreshCw size={14} className="animate-hover:spin" />
@@ -240,7 +244,7 @@ export const InventoryDashboard = () => {
       </div>
 
       {/* Modern Top Horizontal Scrollable Tab Bar */}
-      <div className="flex items-center border-b border-slate-100 overflow-x-auto scrollbar-none gap-2 pb-px text-left">
+      <div className="flex items-center border-b border-slate-100 dark:border-slate-800 overflow-x-auto scrollbar-none gap-2 pb-px text-left">
         {SECTIONS.map((sec) => {
           const Icon = sec.icon;
           const isActive = activeSection === sec.id;
@@ -251,19 +255,21 @@ export const InventoryDashboard = () => {
               className={cn(
                 "flex items-center gap-2 px-4 py-3 text-xs font-bold transition-all relative border-b-2 whitespace-nowrap cursor-pointer select-none pb-3.5",
                 isActive
-                  ? "border-indigo-600 text-indigo-600 font-extrabold"
-                  : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300",
+                  ? "border-indigo-600 dark:border-indigo-500 text-indigo-600 dark:text-indigo-400 font-extrabold"
+                  : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700",
               )}
             >
               <Icon
                 className={cn(
                   "h-4 w-4 shrink-0 transition-transform duration-200",
-                  isActive ? "text-indigo-600 scale-110" : "text-slate-400",
+                  isActive
+                    ? "text-indigo-600 dark:text-indigo-400 scale-110"
+                    : "text-slate-400 dark:text-slate-500",
                 )}
               />
               <span>{sec.label}</span>
               {sec.id === "alerts" && lowStockCount > 0 && (
-                <span className="ml-1 bg-amber-500 text-white font-extrabold text-[9px] px-1.5 py-0.5 rounded-full ring-2 ring-amber-100 animate-pulse">
+                <span className="ml-1 bg-amber-500 text-white font-extrabold text-[9px] px-1.5 py-0.5 rounded-full ring-2 ring-amber-100 dark:ring-amber-900/50 animate-pulse">
                   {lowStockCount}
                 </span>
               )}
