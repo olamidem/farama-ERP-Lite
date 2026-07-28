@@ -20,7 +20,7 @@ import {
   useStaffPreferences,
   useUpdateStaffPreferences,
 } from "../../hooks/useStaffPreferences";
-import { useTheme } from "../../../../context/useTheme";
+
 
 interface StaffSecurityAndPreferencesProps {
   employee: Employee;
@@ -33,7 +33,6 @@ export const StaffSecurityAndPreferences = ({
   onOpenResetPin,
   onOpenChangePassword,
 }: StaffSecurityAndPreferencesProps) => {
-  const { theme, setTheme } = useTheme();
   const { data: sessions, isLoading: sessionsLoading } = useStaffSessions(
     employee.id
   );
@@ -43,17 +42,6 @@ export const StaffSecurityAndPreferences = ({
   const { terminateSession } = useTerminateSession();
   const { logoutAllDevices, isLoggingOut } = useLogoutAllDevices();
 
-  const handleThemeChange = (selectedTheme: string) => {
-    if (selectedTheme === "Dark") {
-      setTheme("dark");
-    } else {
-      setTheme("light");
-    }
-    updatePreferences({
-      profileId: employee.id,
-      preferences: { theme: selectedTheme },
-    });
-  };
 
   const handleLanguageChange = (language: string) => {
     updatePreferences({
@@ -229,9 +217,7 @@ export const StaffSecurityAndPreferences = ({
               <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Theme</span>
             </div>
             <select
-              value={theme === "dark" ? "Dark" : (preferences?.theme || "Light")}
               disabled={isUpdatingPrefs}
-              onChange={(e) => handleThemeChange(e.target.value)}
               className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 focus:outline-none cursor-pointer"
             >
               <option value="Light">Light</option>

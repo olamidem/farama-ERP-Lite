@@ -5,7 +5,9 @@ export default function HeaderTitle() {
 
   // Find the current match that has staticData
   const currentMatch = matches[matches.length - 1];
-  const staticData = currentMatch?.staticData as { headerTitle?: string; title?: string; subtitle?: string } | undefined;
+  const staticData = currentMatch?.staticData as
+    | { headerTitle?: string; title?: string; subtitle?: string }
+    | undefined;
 
   const headerTitle = staticData?.headerTitle || staticData?.title || "App";
   const subtitle = staticData?.subtitle;
@@ -17,7 +19,9 @@ export default function HeaderTitle() {
       </h1>
       {subtitle && (
         <div className="flex items-center gap-2">
-          <span className="text-slate-300 dark:text-slate-700 font-bold text-xs hidden sm:inline">/</span>
+          <span className="text-slate-300 dark:text-slate-700 font-bold text-xs hidden sm:inline">
+            /
+          </span>
           <span className="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400">
             {subtitle}
           </span>
