@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useAuthStore } from "../store/authStore";
 import { useLogout } from "./useLogout";
@@ -10,6 +11,7 @@ export const useLockScreen = () => {
   const user = useAuthStore((state) => state.user);
   const setLocked = useAuthStore((state) => state.setLocked);
   const { mutateAsync: logout } = useLogout();
+  const navigate = useNavigate();
 
   const [pin, setPin] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
@@ -40,6 +42,7 @@ export const useLockScreen = () => {
         setPin("");
         setErrorCount(0);
         toast.success("Welcome back.");
+        navigate({ to: "/dashboard" });
         return;
       }
 
