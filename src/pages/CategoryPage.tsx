@@ -109,7 +109,7 @@ const CategoryPage = () => {
       </PageHeader>
 
       {categories.length === 0 && !isLoading ? (
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm py-12 flex flex-col items-center">
+        <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm py-12 flex flex-col items-center">
           <DataTableEmpty
             icon={FolderOpen}
             title="No Categories"

@@ -12,17 +12,17 @@ const Dashboard = () => {
 
   return (
     <section className="space-y-3">
-      <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
-      <p className="text-slate-600">
+      <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Dashboard</h1>
+      <p className="text-slate-600 dark:text-slate-400">
         Welcome back,{" "}
-        <span className="font-semibold text-slate-900">{userName}</span>
+        <span className="font-semibold text-slate-900 dark:text-slate-100">{userName}</span>
         👋
       </p>
-      <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-900">
+      <div className="mt-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 shadow-sm transition-colors">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
           Farama Inventory Management System
         </h2>
-        <p className="mt-2 text-slate-500">
+        <p className="mt-2 text-slate-500 dark:text-slate-400">
           Your dashboard is ready. Business insights, reports, inventory
           statistics, and recent activity will appear here as we build the
           application.

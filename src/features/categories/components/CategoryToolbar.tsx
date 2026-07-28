@@ -72,7 +72,10 @@ export const CategoryToolbar = ({
 
       {/* Item Counter */}
       <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700 self-start lg:self-auto">
-        <FolderKanban size={14} className="text-slate-400 dark:text-slate-500" />
+        <FolderKanban
+          size={14}
+          className="text-slate-400 dark:text-slate-500"
+        />
         <span>
           {filteredCount === totalCount
             ? `Total: ${totalCount}`
