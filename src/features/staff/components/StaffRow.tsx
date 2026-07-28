@@ -1,8 +1,8 @@
-import { StaffStatusBadge } from "./StaffStatusBadge";
-import type { Employee, RoleData } from "../types/staff";
-import { USER_STATUS } from "../../auth/types/enums";
 import { StaffAvatar } from "./StaffAvatar";
+import { StaffStatusBadge } from "./StaffStatusBadge";
 import { StaffActions } from "./StaffActions";
+import { formatDate } from "../../../utils/formatDate";
+import type { Employee, RoleData } from "../types/staff";
 
 interface StaffRowProps {
   employee: Employee;
@@ -14,6 +14,8 @@ interface StaffRowProps {
   onToggleStatus: () => void;
   onDelete: () => void;
   onRoleChange: (empId: string, newRole: string) => void;
+  onResendInvitation: () => void;
+  onResetPassword: () => void;
 }
 
 export const StaffRow = ({
@@ -26,6 +28,8 @@ export const StaffRow = ({
   onToggleStatus,
   onDelete,
   onRoleChange,
+  onResendInvitation,
+  onResetPassword,
 }: StaffRowProps) => {
   const isSelf = currentUserEmail === employee.email;
 
@@ -40,9 +44,7 @@ export const StaffRow = ({
               {employee.full_name}
             </p>
             <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
-              {typeof employee.role === "object"
-                ? (employee.role as unknown as { name?: string })?.name || "N/A"
-                : employee.role || "N/A"}
+              {employee.role}
             </p>
           </div>
         </div>
@@ -66,20 +68,12 @@ export const StaffRow = ({
       <td className="py-4 px-6">
         <select
           disabled={isSelf}
-          value={
-            typeof employee.role === "object"
-              ? (employee.role as unknown as { id?: string })?.id || ""
-              : roles.find(
-                  (r) => r.name === employee.role || r.id === employee.role,
-                )?.id ||
-                employee.role ||
-                ""
-          }
+          value={employee.role}
           onChange={(e) => onRoleChange(employee.id, e.target.value)}
           className="rounded-lg border border-slate-200 bg-white py-1 px-2.5 text-xs font-bold text-slate-700 focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {roles.map((r) => (
-            <option key={r.id} value={r.id}>
+            <option key={r.id} value={r.name}>
               {r.name}
             </option>
           ))}
@@ -89,17 +83,15 @@ export const StaffRow = ({
       {/* Last Login */}
       <td className="py-4 px-6">
         <p className="text-xs font-bold text-slate-500">
-          {employee.last_login}
+          {employee.last_login
+            ? formatDate(employee.last_login, true)
+            : "Never"}
         </p>
       </td>
 
       {/* Access status */}
       <td className="py-4 px-6">
-        <StaffStatusBadge
-          status={
-            employee.status === USER_STATUS.SUSPENDED ? "suspended" : "active"
-          }
-        />
+        <StaffStatusBadge status={employee.status} />
       </td>
 
       {/* Row level operations */}
@@ -112,6 +104,8 @@ export const StaffRow = ({
           onResetPin={onResetPin}
           onToggleStatus={onToggleStatus}
           onDelete={onDelete}
+          onResendInvitation={onResendInvitation}
+          onResetPassword={onResetPassword}
         />
       </td>
     </tr>

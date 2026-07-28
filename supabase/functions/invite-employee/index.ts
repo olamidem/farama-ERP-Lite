@@ -2,8 +2,21 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { corsHeaders } from "../_shared/cors.ts";
 
-const TEMP_PASSWORD = "TempPassword123!";
 const PROD_REDIRECT_URL = "https://ts-farama-store.vercel.app/auth/accept-invite";
+
+function generateTempPassword(): string {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let random = "";
+  for (let i = 0; i < 6; i++) {
+    random += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `Fm!${random}`;
+}
+
+function generateEmployeeNumber(): string {
+  const num = Math.floor(10000 + Math.random() * 90000);
+  return `EMP-${num}`;
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -31,14 +44,16 @@ serve(async (req) => {
     const isDev = appEnv === "development";
 
     let userId: string;
+    let tempPassword: string | null = null;
 
     if (isDev) {
       // -------------------------------------------------------
-      // DEVELOPMENT: Create user with known temporary password
+      // DEVELOPMENT: Create user with dynamic temporary password
       // -------------------------------------------------------
+      tempPassword = generateTempPassword();
       const { data, error } = await supabase.auth.admin.createUser({
         email,
-        password: TEMP_PASSWORD,
+        password: tempPassword,
         email_confirm: true,
         user_metadata: { full_name },
       });
@@ -93,6 +108,7 @@ serve(async (req) => {
         email,
         phone: phone ?? null,
         role_id,
+        employee_number: generateEmployeeNumber(),
         status: "PENDING",
         avatar_url: null,
         avatar_color: null,
@@ -117,7 +133,7 @@ serve(async (req) => {
         success: true,
         dev_mode: isDev,
         // Only expose temp password in dev mode for the admin toast
-        temp_password: isDev ? TEMP_PASSWORD : null,
+        temp_password: isDev ? tempPassword : null,
         user_id: userId,
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }

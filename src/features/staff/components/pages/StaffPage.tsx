@@ -19,6 +19,7 @@ import { EditStaffModal } from "../modals/EditStaffModal";
 import { ViewStaffModal } from "../modals/ViewStaffModal";
 import { ResetPinModal } from "../modals/ResetPinModal";
 import { DeleteStaffDialog } from "../modals/DeleteStaffDialog";
+import { StaffCredentialsModal } from "../modals/StaffCredentialsModal";
 
 export const StaffPage = () => {
   const currentUser = useAuthStore((state) => state.user);
@@ -46,6 +47,10 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
 // Selected Employee Context
 const [selectedEmp, setSelectedEmp] = useState<Employee | null>(null);
+const [createdCredentials, setCreatedCredentials] = useState<{
+  email: string;
+  tempPassword: string;
+} | null>(null);
 
 // Handlers
 const handleCreateSubmit = async (data: {
@@ -60,7 +65,7 @@ const handleCreateSubmit = async (data: {
     throw new Error("Selected role does not exist.");
   }
 
-  await createEmployee({
+  const res = await createEmployee({
     full_name: data.full_name,
     email: data.email,
     phone: data.phone,
@@ -68,6 +73,13 @@ const handleCreateSubmit = async (data: {
   });
 
   setIsAddModalOpen(false);
+
+  if (res?.temp_password) {
+    setCreatedCredentials({
+      email: data.email,
+      tempPassword: res.temp_password,
+    });
+  }
 };
 
 const handleEditSubmit = async (
@@ -302,6 +314,13 @@ const handleEditSubmit = async (
         employeeName={selectedEmp?.full_name || ""}
         onConfirm={handleDeleteConfirm}
         isDeleting={isDeleting}
+      />
+
+      <StaffCredentialsModal
+        isOpen={!!createdCredentials}
+        onClose={() => setCreatedCredentials(null)}
+        email={createdCredentials?.email ?? ""}
+        tempPassword={createdCredentials?.tempPassword ?? ""}
       />
     </div>
   );
