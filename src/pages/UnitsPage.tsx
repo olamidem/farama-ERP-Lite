@@ -132,7 +132,7 @@ const UnitsPage = () => {
           <p className="text-slate-500 font-medium">Loading units...</p>
         </div>
       ) : filteredUnits.length === 0 ? (
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
           <DataTableEmpty
             icon={Scale}
             title={
