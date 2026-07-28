@@ -26,20 +26,20 @@ const Modal = ({ open, title, children, onClose, size = "md" }: ModalProps) => {
       {/* Modal Container */}
       <div
         className={cn(
-          "bg-white rounded-xl shadow-xl w-full flex flex-col max-h-[90vh] overflow-hidden",
+          "bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 w-full flex flex-col max-h-[90vh] overflow-hidden transition-colors",
           sizes[size],
         )}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header (Stays Fixed) */}
-        <div className="bg-slate-50 px-4 py-3.5 border-b border-slate-100 flex justify-between items-center shrink-0">
-          <span className="font-bold text-sm text-slate-800 uppercase tracking-wider">
+        <div className="bg-slate-50 dark:bg-slate-800/80 px-4 py-3.5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center shrink-0">
+          <span className="font-bold text-sm text-slate-800 dark:text-slate-100 uppercase tracking-wider">
             {title}
           </span>
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 cursor-pointer p-0.5 rounded-lg hover:bg-slate-200/60 transition-colors"
+            className="text-slate-400 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-200 cursor-pointer p-0.5 rounded-lg hover:bg-slate-200/60 dark:hover:bg-slate-700 transition-colors"
           >
             <X size={20} />
           </button>

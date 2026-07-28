@@ -64,16 +64,16 @@ const DataTable = <T,>({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-colors">
       <div className="max-h-150 overflow-y-auto overflow-x-auto">
         <table className="min-w-full border-separate border-spacing-0">
-          <thead className="sticky top-0 z-10 bg-slate-50">
+          <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-slate-800/80">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50 border-b border-slate-200"
+                    className="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800"
                   >
                     {header.isPlaceholder
                       ? null
@@ -87,7 +87,7 @@ const DataTable = <T,>({
             ))}
           </thead>
 
-          <tbody className="bg-white">
+          <tbody className="bg-white dark:bg-slate-900">
             {table.getRowModel().rows.map((row, index) => (
               <motion.tr
                 key={row.id}
@@ -98,14 +98,14 @@ const DataTable = <T,>({
                   delay: Math.min(index * 0.02, 0.25),
                 }}
                 className={cn(
-                  "transition-colors hover:bg-slate-50",
+                  "transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50",
                   getRowClassName ? getRowClassName(row.original) : "",
                 )}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className="px-6 py-3 align-middle text-sm text-slate-700 border-b border-slate-100"
+                    className="px-6 py-3 align-middle text-sm text-slate-700 dark:text-slate-200 border-b border-slate-100 dark:border-slate-800/60"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>

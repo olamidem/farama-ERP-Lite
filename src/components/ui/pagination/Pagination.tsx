@@ -54,13 +54,13 @@ const Pagination = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
+    <div className="flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm md:flex-row md:items-center md:justify-between transition-colors">
       {/* Left */}
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
         <div className="flex items-center gap-2">
           <label
             htmlFor="page-size"
-            className="text-xs font-medium text-slate-500"
+            className="text-xs font-medium text-slate-500 dark:text-slate-400"
           >
             Rows per page
           </label>
@@ -69,7 +69,7 @@ const Pagination = ({
             id="page-size"
             value={pageSize}
             onChange={(e) => onPageSizeChange(Number(e.target.value))}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium outline-none transition focus:border-blue-500"
+            className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-3 py-1.5 text-sm font-medium outline-none transition focus:border-indigo-500"
           >
             <option value={10}>10</option>
             <option value={25}>25</option>
@@ -78,11 +78,19 @@ const Pagination = ({
           </select>
         </div>
 
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           Showing{" "}
-          <span className="font-semibold text-slate-800">{startRecord}</span> –
-          <span className="font-semibold text-slate-800">{endRecord}</span> of{" "}
-          <span className="font-semibold text-slate-800">{totalItems}</span>{" "}
+          <span className="font-semibold text-slate-800 dark:text-slate-200">
+            {startRecord}
+          </span>{" "}
+          –
+          <span className="font-semibold text-slate-800 dark:text-slate-200">
+            {endRecord}
+          </span>{" "}
+          of{" "}
+          <span className="font-semibold text-slate-800 dark:text-slate-200">
+            {totalItems}
+          </span>{" "}
           {itemName}
         </p>
       </div>
@@ -93,7 +101,7 @@ const Pagination = ({
           type="button"
           onClick={() => onPageChange(page - 1)}
           disabled={page === 1}
-          className="rounded-lg border border-slate-200 bg-white p-2 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 p-2 transition hover:bg-slate-50 dark:hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <ChevronLeft size={16} />
         </button>
@@ -103,7 +111,7 @@ const Pagination = ({
             return (
               <span
                 key={`ellipsis-${index}`}
-                className="flex h-9 w-9 items-center justify-center text-sm font-medium text-slate-400"
+                className="flex h-9 w-9 items-center justify-center text-sm font-medium text-slate-400 dark:text-slate-500"
               >
                 ...
               </span>
@@ -118,8 +126,8 @@ const Pagination = ({
               onClick={() => onPageChange(num)}
               className={`h-9 min-w-9 rounded-lg text-sm font-semibold transition ${
                 page === num
-                  ? "bg-slate-900 text-white"
-                  : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                  ? "bg-indigo-600 text-white shadow-xs"
+                  : "border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700"
               }`}
             >
               {num}
@@ -131,7 +139,7 @@ const Pagination = ({
           type="button"
           onClick={() => onPageChange(page + 1)}
           disabled={page === totalPages || totalPages === 0}
-          className="rounded-lg border border-slate-200 bg-white p-2 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 p-2 transition hover:bg-slate-50 dark:hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <ChevronRight size={16} />
         </button>
