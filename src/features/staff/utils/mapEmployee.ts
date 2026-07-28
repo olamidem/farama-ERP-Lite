@@ -22,5 +22,6 @@ export const mapEmployee = (employee: EmployeeQueryResult): Employee => {
     updated_at: employee.updated_at ?? "",
     joined_at: employee.created_at ? employee.created_at.substring(0, 10) : "",
     pin_hash: employee.pin_hash ?? "",
+    password_set: Boolean((employee as unknown as Record<string, unknown>).password_set ?? true),
   };
 };
