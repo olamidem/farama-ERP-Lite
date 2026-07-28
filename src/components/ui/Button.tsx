@@ -12,12 +12,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants = {
-  primary: "bg-blue-600 text-white hover:bg-blue-700 shadow-sm",
+  primary: "bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm",
   secondary:
-    "bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200",
-  danger: "bg-red-600 text-white hover:bg-red-700 shadow-sm",
-  success: "bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm", // ✨ Added Success Variant
-  ghost: "bg-transparent text-slate-600 hover:bg-slate-100",
+    "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700",
+  danger: "bg-rose-600 text-white hover:bg-rose-700 shadow-sm",
+  success: "bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm",
+  ghost: "bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800",
 };
 
 const sizes = {
