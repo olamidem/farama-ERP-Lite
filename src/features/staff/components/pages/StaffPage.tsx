@@ -65,10 +65,6 @@ const handleCreateSubmit = async (data: {
     email: data.email,
     phone: data.phone,
     role_id: selectedRole.id,
-    status: USER_STATUS.PENDING,
-    avatar_color: null,
-    avatar_url: null,
-    pin_hash: "",
   });
 
   setIsAddModalOpen(false);

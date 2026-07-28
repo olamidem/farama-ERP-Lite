@@ -12,6 +12,9 @@ export interface Profile {
   status: UserStatus;
   role_id: string | null;
   pin_hash?: string | null;
+  password_set?: boolean | null;
+  invited_at?: string | null;
+  activated_at?: string | null;
   created_at: string;
   updated_at: string;
   role: Role | null;

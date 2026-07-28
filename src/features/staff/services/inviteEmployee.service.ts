@@ -8,7 +8,7 @@ interface InviteEmployeePayload {
 }
 
 export const inviteEmployee = async (
-  payload: InviteEmployeePayload,
+  payload: InviteEmployeePayload
 ) => {
   const {
     data: { session },
@@ -18,28 +18,23 @@ export const inviteEmployee = async (
     throw new Error("You are not authenticated.");
   }
 
-const response = await fetch(
-  `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/invite-employee`,
-  {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${session.access_token}`,
-      apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  }
-);
+  const response = await fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/invite-employee`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  );
 
   const result = await response.json();
 
- console.log("Invite employee response:", result);
-
-throw new Error(
-  result.error ||
-  result.message ||
-  JSON.stringify(result)
-);
+  if (!response.ok) {
+    throw new Error(result.error ?? "Invitation failed.");
+  }
 
   return result;
-};
+};
