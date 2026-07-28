@@ -81,7 +81,7 @@ const ConfirmDialog = ({
             <IconComponent className="w-5 h-5" />
           </span>
           <div className="flex flex-col gap-0.5">
-            <h3 className="text-sm font-extrabold text-slate-900 tracking-tight uppercase">
+            <h3 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 tracking-tight uppercase">
               {title}
             </h3>
             {subtitle && (
@@ -101,10 +101,10 @@ const ConfirmDialog = ({
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.96 }}
           transition={{ duration: 0.18 }}
-          className="overflow-hidden bg-white"
+          className="overflow-hidden bg-white dark:bg-slate-900"
         >
           {description && (
-            <p className="text-xs leading-relaxed text-slate-600">
+            <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
               {description}
             </p>
           )}
@@ -112,21 +112,21 @@ const ConfirmDialog = ({
           {/* Shaded informational box */}
           {infoBoxText && (
             <div className="py-4">
-              <p className="text-[11px] text-slate-500 leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-150">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed bg-slate-50 dark:bg-slate-800 p-2.5 rounded-lg border border-slate-150 dark:border-slate-700">
                 {infoBoxText}
               </p>
             </div>
           )}
 
           {/* Body content slot */}
-          <div className="space-y-5 bg-white">
+          <div className="space-y-5 bg-white dark:bg-slate-900">
             {children}
 
             <div className="space-y-2">
-              <Label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              <Label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Type{" "}
                 <span
-                  className={`font-mono font-extrabold ${variant === "danger" ? "text-rose-600" : "text-emerald-600"}`}
+                  className={`font-mono font-extrabold ${variant === "danger" ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"}`}
                 >
                   {confirmationKeyword}
                 </span>{" "}
@@ -143,7 +143,7 @@ const ConfirmDialog = ({
           </div>
 
           {/* Footer controls (Bleeds perfectly flush down inside Modal) */}
-          <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 px-6 py-4 -mx-6 -mb-5 mt-6">
+          <div className="flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 px-6 py-4 -mx-6 -mb-5 mt-6">
             <Button variant="secondary" onClick={onCancel} disabled={loading}>
               {cancelText}
             </Button>
