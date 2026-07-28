@@ -5,7 +5,7 @@ import HeaderSearch from "./HeaderSearch";
 import { HeaderNotification } from "./HeaderNotification";
 import { UserDropdown } from "./UserDropdown";
 import { useAuthStore } from "../../../features/auth/store/authStore";
-import { useTheme } from "../../../context/useTheme";
+import { useTheme } from "../../../context/useThems";
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -48,7 +48,9 @@ const Header = ({ onMenuToggle }: HeaderProps) => {
         <button
           type="button"
           onClick={toggleTheme}
-          title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          title={
+            theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"
+          }
           className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer shrink-0"
           aria-label="Toggle Dark Mode"
         >

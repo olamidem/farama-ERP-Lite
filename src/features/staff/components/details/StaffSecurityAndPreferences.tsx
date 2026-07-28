@@ -20,7 +20,8 @@ import {
   useStaffPreferences,
   useUpdateStaffPreferences,
 } from "../../hooks/useStaffPreferences";
-import { useTheme } from "../../../../context/useTheme";
+import { useTheme } from "../../../../context/useThems";
+
 
 interface StaffSecurityAndPreferencesProps {
   employee: Employee;
