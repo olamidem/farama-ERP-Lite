@@ -1,3 +1,5 @@
+import { supabase } from "../../../api/supabase";
+import type { CreateCustomerInput, Customer, UpdateCustomerInput } from "../types";
 
 const TABLE = "customers";
 
