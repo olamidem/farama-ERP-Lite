@@ -101,18 +101,18 @@ export default function SupplierForm({
       />
 
       {/* Modal Box */}
-      <div className="relative w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl border border-slate-100 z-10 animate-in fade-in zoom-in duration-200 flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-3xl rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl border border-slate-100 dark:border-slate-800 z-10 animate-in fade-in zoom-in duration-200 flex flex-col max-h-[90vh] transition-colors">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4 shrink-0">
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
               <Users className="h-5 w-5" />
             </div>
             <div className="text-left">
-              <h2 className="text-sm font-extrabold text-slate-800">
+              <h2 className="text-sm font-extrabold text-slate-800 dark:text-slate-100">
                 {supplier ? "Edit Supplier" : "Add Supplier"}
               </h2>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mt-0.5">
                 {supplier
                   ? "Update existing supplier details"
                   : "Register a new vendor in the system"}
@@ -122,7 +122,7 @@ export default function SupplierForm({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1 text-slate-400 hover:bg-slate-50 hover:text-slate-700 transition cursor-pointer"
+            className="rounded-lg p-1 text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-300 transition cursor-pointer"
             title="Close dialog"
           >
             <X className="h-5 w-5" />
@@ -135,13 +135,13 @@ export default function SupplierForm({
           className="flex-1 overflow-y-auto py-5 space-y-6 pr-1"
         >
           {Object.keys(errors).length > 0 && (
-            <div className="rounded-xl bg-red-50 p-3.5 border border-red-100/50 flex gap-2.5 text-left shrink-0">
-              <AlertCircle className="h-4.5 w-4.5 text-red-500 shrink-0 mt-0.5" />
+            <div className="rounded-xl bg-red-50 dark:bg-red-950/50 p-3.5 border border-red-100/50 dark:border-red-900/50 flex gap-2.5 text-left shrink-0">
+              <AlertCircle className="h-4.5 w-4.5 text-red-500 dark:text-red-400 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-xs font-bold text-red-800">
+                <h4 className="text-xs font-bold text-red-800 dark:text-red-300">
                   Please correct the form errors
                 </h4>
-                <p className="text-[10px] text-red-600 mt-1 font-semibold">
+                <p className="text-[10px] text-red-600 dark:text-red-400 mt-1 font-semibold">
                   Ensure all mandatory fields are filled out and email address
                   format is valid.
                 </p>
@@ -159,11 +159,11 @@ export default function SupplierForm({
           <SupplierNotes register={register} />
 
           {/* Footer Actions */}
-          <div className="flex gap-3 pt-5 border-t border-slate-100 shrink-0">
+          <div className="flex gap-3 pt-5 border-t border-slate-100 dark:border-slate-800 shrink-0">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition cursor-pointer"
+              className="flex-1 py-3.5 text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition cursor-pointer"
             >
               Cancel
             </button>
