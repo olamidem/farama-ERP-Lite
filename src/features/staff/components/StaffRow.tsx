@@ -1,8 +1,8 @@
-import { StaffAvatar } from "./StaffAvatar";
 import { StaffStatusBadge } from "./StaffStatusBadge";
-import { StaffActions } from "./StaffActions";
-import { formatDate } from "../../../utils/formatDate";
 import type { Employee, RoleData } from "../types/staff";
+import { USER_STATUS } from "../../auth/types/enums";
+import { StaffAvatar } from "./StaffAvatar";
+import { StaffActions } from "./StaffActions";
 
 interface StaffRowProps {
   employee: Employee;
@@ -14,8 +14,8 @@ interface StaffRowProps {
   onToggleStatus: () => void;
   onDelete: () => void;
   onRoleChange: (empId: string, newRole: string) => void;
-  onResendInvitation: () => void;
-  onResetPassword: () => void;
+  onResendInvitation?: () => void;
+  onResetPassword?: () => void;
 }
 
 export const StaffRow = ({
@@ -34,17 +34,19 @@ export const StaffRow = ({
   const isSelf = currentUserEmail === employee.email;
 
   return (
-    <tr className="hover:bg-slate-50/50 transition">
+    <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition">
       {/* Operator profile card */}
       <td className="py-4 px-6">
         <div className="flex items-center gap-3">
           <StaffAvatar employee={employee} />
           <div>
-            <p className="text-xs font-black text-slate-800 leading-none">
+            <p className="text-xs font-black text-slate-800 dark:text-slate-100 leading-none">
               {employee.full_name}
             </p>
-            <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
-              {employee.role}
+            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-wider">
+              {typeof employee.role === "object"
+                ? (employee.role as unknown as { name?: string })?.name || "N/A"
+                : employee.role || "N/A"}
             </p>
           </div>
         </div>
@@ -53,12 +55,12 @@ export const StaffRow = ({
       {/* Contact info */}
       <td className="py-4 px-6">
         <div className="space-y-0.5">
-          <p className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-            <span className="text-slate-400">✉</span>
+          <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+            <span className="text-slate-400 dark:text-slate-500">✉</span>
             <span>{employee.email}</span>
           </p>
-          <p className="text-[10px] font-bold text-slate-400 flex items-center gap-1.5">
-            <span className="text-slate-400">☎</span>
+          <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+            <span className="text-slate-400 dark:text-slate-500">☎</span>
             <span>{employee.phone}</span>
           </p>
         </div>
@@ -68,12 +70,20 @@ export const StaffRow = ({
       <td className="py-4 px-6">
         <select
           disabled={isSelf}
-          value={employee.role}
+          value={
+            typeof employee.role === "object"
+              ? (employee.role as unknown as { id?: string })?.id || ""
+              : roles.find(
+                  (r) => r.name === employee.role || r.id === employee.role,
+                )?.id ||
+                employee.role ||
+                ""
+          }
           onChange={(e) => onRoleChange(employee.id, e.target.value)}
-          className="rounded-lg border border-slate-200 bg-white py-1 px-2.5 text-xs font-bold text-slate-700 focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+          className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-1 px-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {roles.map((r) => (
-            <option key={r.id} value={r.name}>
+            <option key={r.id} value={r.id}>
               {r.name}
             </option>
           ))}
@@ -82,16 +92,18 @@ export const StaffRow = ({
 
       {/* Last Login */}
       <td className="py-4 px-6">
-        <p className="text-xs font-bold text-slate-500">
-          {employee.last_login
-            ? formatDate(employee.last_login, true)
-            : "Never"}
+        <p className="text-xs font-bold text-slate-500 dark:text-slate-400">
+          {employee.last_login}
         </p>
       </td>
 
       {/* Access status */}
       <td className="py-4 px-6">
-        <StaffStatusBadge status={employee.status} />
+        <StaffStatusBadge
+          status={
+            employee.status === USER_STATUS.SUSPENDED ? "suspended" : employee.status === USER_STATUS.INVITED ? "invited" : "active"
+          }
+        />
       </td>
 
       {/* Row level operations */}
