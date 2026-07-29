@@ -96,11 +96,11 @@ export default function SuppliersPage() {
 
   if (isError) {
     return (
-      <div className="rounded-2xl border border-red-100 bg-red-50/50 p-8 text-center max-w-xl mx-auto my-12">
-        <h3 className="text-sm font-bold text-red-900">
+      <div className="rounded-2xl border border-red-100 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/30 p-8 text-center max-w-xl mx-auto my-12">
+        <h3 className="text-sm font-bold text-red-900 dark:text-red-300">
           Failed to load suppliers
         </h3>
-        <p className="text-xs text-red-600 mt-2">
+        <p className="text-xs text-red-600 dark:text-red-400 mt-2">
           {error instanceof Error
             ? error.message
             : "An unexpected error occurred while loading data."}
@@ -108,7 +108,7 @@ export default function SuppliersPage() {
         <button
           onClick={() => refetch()}
           type="button"
-          className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2.5 text-xs font-bold text-white hover:bg-red-700 transition"
+          className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-red-600 dark:bg-red-700 px-4 py-2.5 text-xs font-bold text-white hover:bg-red-700 dark:hover:bg-red-600 transition cursor-pointer"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           Retry Connection
@@ -146,7 +146,7 @@ export default function SuppliersPage() {
           </div>
 
           {/* Right Column (Supplier Details) */}
-          <div className="flex-1 min-w-0 h-full bg-white rounded-2xl border border-slate-100 shadow-2xs p-6 flex flex-col overflow-hidden">
+          <div className="flex-1 min-w-0 h-full bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xs p-6 flex flex-col overflow-hidden transition-colors">
             {selectedSupplier ? (
               <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar pr-1">
                 <SupplierDetails
@@ -160,7 +160,7 @@ export default function SuppliersPage() {
               </div>
             ) : (
               <div className="flex h-full flex-col items-center justify-center text-center p-8">
-                <p className="text-xs text-slate-400 italic">
+                <p className="text-xs text-slate-400 dark:text-slate-500 italic">
                   Select a supplier from the list on the left to review metrics
                   and history.
                 </p>
