@@ -12,7 +12,10 @@ export const RecievGoodHeader = ({
   return (
     <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
       <div className="flex items-center gap-2">
-        <PackageOpen className="text-indigo-600 dark:text-indigo-400" size={18} />
+        <PackageOpen
+          className="text-indigo-600 dark:text-indigo-400"
+          size={18}
+        />
         <span className="font-extrabold text-slate-800 dark:text-slate-100 text-sm">
           Receive Goods - {purchaseNumber}
         </span>
