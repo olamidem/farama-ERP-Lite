@@ -44,55 +44,42 @@ export const ChangePasswordModal = ({
       setConfirmPassword("");
       onClose();
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to change password.",
-      );
+      setError(err instanceof Error ? err.message : "Failed to change password.");
     }
   };
 
   return (
-    <div
-      id="change-password-modal"
-      className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-100 flex items-center justify-center p-4"
-    >
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl max-w-sm w-full overflow-hidden text-left">
-        <div className="border-b border-slate-50 px-6 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-slate-800">
-            <Key size={18} className="text-indigo-600" />
-            <h3 className="text-sm font-black uppercase tracking-wider">
-              Change Password
-            </h3>
+    <div id="change-password-modal" className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-100 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-2xl max-w-sm w-full overflow-hidden text-left transition-colors">
+        <div className="border-b border-slate-50 dark:border-slate-800 px-6 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-slate-800 dark:text-slate-100">
+            <Key size={18} className="text-indigo-600 dark:text-indigo-400" />
+            <h3 className="text-sm font-black uppercase tracking-wider">Change Password</h3>
           </div>
           <button
             onClick={onClose}
             type="button"
-            className="text-slate-400 hover:text-slate-600 font-black cursor-pointer"
+            className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-black cursor-pointer"
           >
             ✕
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="p-3.5 bg-indigo-50 rounded-2xl border border-indigo-100/50 text-center">
-            <p className="text-xs font-bold text-slate-700">
-              Updating Password for:
-            </p>
-            <p className="text-xs font-black text-indigo-700 mt-0.5">
-              {employee.full_name}
-            </p>
-            <p className="text-[10px] font-bold text-slate-400">
-              ({employee.email})
-            </p>
+          <div className="p-3.5 bg-indigo-50 dark:bg-indigo-950/40 rounded-2xl border border-indigo-100/50 dark:border-indigo-800 text-center">
+            <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Updating Password for:</p>
+            <p className="text-xs font-black text-indigo-700 dark:text-indigo-400 mt-0.5">{employee.full_name}</p>
+            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500">({employee.email})</p>
           </div>
 
           {error && (
-            <div className="p-3 bg-rose-50 border border-rose-100 rounded-xl text-xs font-bold text-rose-600 text-center">
+            <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-800 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 text-center">
               {error}
             </div>
           )}
 
           <div className="space-y-1">
-            <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+            <label className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
               New Password *
             </label>
             <div className="relative">
@@ -102,12 +89,12 @@ export const ChangePasswordModal = ({
                 placeholder="Enter new password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/15 pr-10"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/15 pr-10"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -115,7 +102,7 @@ export const ChangePasswordModal = ({
           </div>
 
           <div className="space-y-1">
-            <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+            <label className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
               Confirm New Password *
             </label>
             <input
@@ -124,22 +111,22 @@ export const ChangePasswordModal = ({
               placeholder="Confirm new password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
+              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
             />
           </div>
 
-          <div className="pt-4 border-t border-slate-50 flex items-center justify-end gap-3">
+          <div className="pt-4 border-t border-slate-50 dark:border-slate-800 flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-slate-800 cursor-pointer"
+              className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-extrabold text-xs uppercase tracking-wider cursor-pointer shadow-md shadow-indigo-200"
+              className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-extrabold text-xs uppercase tracking-wider cursor-pointer shadow-md shadow-indigo-600/10"
             >
               {isSubmitting ? "Updating..." : "Update Password"}
             </button>
