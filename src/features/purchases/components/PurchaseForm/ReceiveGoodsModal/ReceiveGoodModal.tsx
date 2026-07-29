@@ -55,7 +55,9 @@ export const ReceiveGoodModal = ({
 
     const hasAnyQty = Object.values(quantities).some((q) => q > 0);
     if (!hasAnyQty) {
-      toast.error("Please enter a quantity greater than 0 for at least one item.");
+      toast.error(
+        "Please enter a quantity greater than 0 for at least one item.",
+      );
       return;
     }
 
@@ -87,7 +89,10 @@ export const ReceiveGoodModal = ({
         />
 
         {/* Content Form */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5 space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="flex-1 overflow-y-auto p-5 space-y-4"
+        >
           <ReceiveGoodsWarning />
 
           <div className="space-y-3">
@@ -126,7 +131,9 @@ export const ReceiveGoodModal = ({
               disabled={receiveMutation.isPending}
               className="px-5 py-2 text-xs bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-500 disabled:cursor-not-allowed text-white font-extrabold rounded-xl cursor-pointer transition shadow-sm hover:shadow-indigo-500/10"
             >
-              {receiveMutation.isPending ? "Updating Stock..." : "Confirm Receipt"}
+              {receiveMutation.isPending
+                ? "Updating Stock..."
+                : "Confirm Receipt"}
             </button>
           </div>
         </form>

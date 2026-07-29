@@ -155,12 +155,8 @@ export const InventoryDashboard = () => {
             >
               Dashboard
             </span>
-            <span className="text-slate-300 dark:text-slate-700 font-normal">
-              /
-            </span>
-            <span className="text-slate-600 dark:text-slate-300">
-              Inventory
-            </span>
+            <span className="text-slate-300 dark:text-slate-700 font-normal">/</span>
+            <span className="text-slate-600 dark:text-slate-300">Inventory</span>
           </div>
         </div>
 
@@ -262,9 +258,7 @@ export const InventoryDashboard = () => {
               <Icon
                 className={cn(
                   "h-4 w-4 shrink-0 transition-transform duration-200",
-                  isActive
-                    ? "text-indigo-600 dark:text-indigo-400 scale-110"
-                    : "text-slate-400 dark:text-slate-500",
+                  isActive ? "text-indigo-600 dark:text-indigo-400 scale-110" : "text-slate-400 dark:text-slate-500",
                 )}
               />
               <span>{sec.label}</span>
@@ -291,17 +285,17 @@ export const InventoryDashboard = () => {
       <AnimatePresence>
         {isTransferModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-            <div className="relative w-full max-w-2xl rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4 text-left">
+            <div className="relative w-full max-w-2xl rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 text-left">
                 <div className="flex items-center gap-3">
-                  <div className="rounded-xl bg-purple-50 p-2.5 text-purple-600">
+                  <div className="rounded-xl bg-purple-50 dark:bg-purple-950/50 p-2.5 text-purple-600 dark:text-purple-400">
                     <ArrowLeftRight size={20} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                       Inter-Warehouse Stock Transfer
                     </h3>
-                    <p className="text-xs font-semibold text-slate-400 mt-0.5">
+                    <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 mt-0.5">
                       Record inward or outward movements of products between
                       channels.
                     </p>
@@ -309,7 +303,7 @@ export const InventoryDashboard = () => {
                 </div>
                 <button
                   onClick={() => setIsTransferModalOpen(false)}
-                  className="rounded-xl p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer"
+                  className="rounded-xl p-1.5 text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"
                 >
                   <X size={18} />
                 </button>
@@ -339,24 +333,24 @@ export const InventoryDashboard = () => {
       <AnimatePresence>
         {isOpeningModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-            <div className="relative w-full max-w-2xl rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4 text-left">
+            <div className="relative w-full max-w-2xl rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 text-left">
                 <div className="flex items-center gap-3">
-                  <div className="rounded-xl bg-indigo-50 p-2.5 text-indigo-600">
+                  <div className="rounded-xl bg-indigo-50 dark:bg-indigo-950/50 p-2.5 text-indigo-600 dark:text-indigo-400">
                     <Play size={20} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                       Initialize Opening Stock
                     </h3>
-                    <p className="text-xs font-semibold text-slate-400 mt-0.5">
+                    <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 mt-0.5">
                       Establish standard beginning physical counts for products.
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setIsOpeningModalOpen(false)}
-                  className="rounded-xl p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer"
+                  className="rounded-xl p-1.5 text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"
                 >
                   <X size={18} />
                 </button>
@@ -420,10 +414,10 @@ export const InventoryDashboard = () => {
             {activeSection === "sales_history" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-950">
+                  <h2 className="text-lg font-extrabold text-slate-950 dark:text-slate-100">
                     Sales History & Invoices
                   </h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold mt-0.5">
                     Chronological list of all sales completed through client
                     channels.
                   </p>
@@ -435,10 +429,10 @@ export const InventoryDashboard = () => {
             {activeSection === "count" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-950">
+                  <h2 className="text-lg font-extrabold text-slate-950 dark:text-slate-100">
                     Physical Stock Count (Stock Take)
                   </h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold mt-0.5">
                     Input counted values to automatically adjust variances with
                     system values.
                   </p>
@@ -465,10 +459,10 @@ export const InventoryDashboard = () => {
             {activeSection === "ledger" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-950">
+                  <h2 className="text-lg font-extrabold text-slate-950 dark:text-slate-100">
                     Product Ledger Audit
                   </h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold mt-0.5">
                     View chronological stock transaction receipts for a specific
                     product item.
                   </p>
@@ -484,10 +478,10 @@ export const InventoryDashboard = () => {
             {activeSection === "reports" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-950">
+                  <h2 className="text-lg font-extrabold text-slate-950 dark:text-slate-100">
                     Inventory Valuation & Reports
                   </h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold mt-0.5">
                     Visual graphs, metrics, and downloadable spreadsheet
                     templates.
                   </p>
@@ -503,15 +497,15 @@ export const InventoryDashboard = () => {
             {activeSection === "alerts" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-950 flex items-center gap-2">
+                  <h2 className="text-lg font-extrabold text-slate-950 dark:text-slate-100 flex items-center gap-2">
                     <span>Low Stock Alert Center</span>
                     {lowStockCount > 0 && (
-                      <span className="bg-rose-50 text-rose-700 text-[10px] font-extrabold px-2.5 py-0.5 border border-rose-200 rounded-full animate-bounce">
+                      <span className="bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 text-[10px] font-extrabold px-2.5 py-0.5 border border-rose-200 dark:border-rose-900/50 rounded-full animate-bounce">
                         {lowStockCount} alert{lowStockCount > 1 ? "s" : ""}
                       </span>
                     )}
                   </h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold mt-0.5">
                     Catalogued products with physical stock levels below their
                     safety thresholds.
                   </p>
@@ -527,10 +521,10 @@ export const InventoryDashboard = () => {
             {activeSection === "settings" && (
               <div className="max-w-xl mx-auto">
                 <div className="mb-6">
-                  <h2 className="text-lg font-extrabold text-slate-950">
+                  <h2 className="text-lg font-extrabold text-slate-950 dark:text-slate-100">
                     Inventory System Settings
                   </h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold mt-0.5">
                     Set default values for references, reorders, and logging
                     profiles.
                   </p>
@@ -548,81 +542,81 @@ export const InventoryDashboard = () => {
       {/* Slide-over Transaction Detail Card */}
       {selectedTx && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="relative w-full max-w-md rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4 text-left">
+          <div className="relative w-full max-w-md rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl space-y-6 transition-colors">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 text-left">
               <div className="flex items-center gap-3">
-                <div className="rounded-xl bg-indigo-50 p-2 text-indigo-600">
+                <div className="rounded-xl bg-indigo-50 dark:bg-indigo-950/50 p-2 text-indigo-600 dark:text-indigo-400">
                   <FileText size={18} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900">
+                  <h4 className="font-bold text-slate-900 dark:text-slate-100">
                     Transaction Details
                   </h4>
-                  <p className="text-[10px] font-mono text-slate-400 mt-0.5 uppercase tracking-wide">
+                  <p className="text-[10px] font-mono text-slate-400 dark:text-slate-500 mt-0.5 uppercase tracking-wide">
                     REF: {selectedTx.reference}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedTx(null)}
-                className="rounded-xl p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer"
+                className="rounded-xl p-1 text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <div className="space-y-4 text-slate-700 text-left">
-              <div className="flex justify-between items-start py-1 border-b border-slate-50">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+            <div className="space-y-4 text-slate-700 dark:text-slate-300 text-left">
+              <div className="flex justify-between items-start py-1 border-b border-slate-50 dark:border-slate-800">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide">
                   Product
                 </span>
                 <div className="text-right">
-                  <p className="text-xs font-bold text-slate-800">
+                  <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
                     {selectedTx.product?.name || "Unknown Product"}
                   </p>
-                  <p className="text-[10px] font-mono font-semibold text-slate-400 mt-0.5">
+                  <p className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500 mt-0.5">
                     SKU: {selectedTx.product?.sku || "N/A"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center py-1 border-b border-slate-50">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+              <div className="flex justify-between items-center py-1 border-b border-slate-50 dark:border-slate-800">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide">
                   Type
                 </span>
-                <span className="text-xs font-bold text-slate-700 uppercase bg-slate-100 px-2 py-0.5 rounded text-[10px]">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px]">
                   {selectedTx.transaction_type}
                 </span>
               </div>
 
-              <div className="flex justify-between items-center py-1 border-b border-slate-50">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+              <div className="flex justify-between items-center py-1 border-b border-slate-50 dark:border-slate-800">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide">
                   Timestamp
                 </span>
-                <span className="text-xs font-semibold text-slate-600">
+                <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
                   {new Date(selectedTx.created_at).toLocaleString()}
                 </span>
               </div>
 
-              <div className="flex justify-between items-center py-1 border-b border-slate-50">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+              <div className="flex justify-between items-center py-1 border-b border-slate-50 dark:border-slate-800">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide">
                   Product Unit
                 </span>
-                <span className="text-xs font-semibold text-slate-700">
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                   {selectedTx.product_unit?.unit?.name || "Piece"} (
                   {selectedTx.product_unit?.unit?.symbol || "pcs"})
                 </span>
               </div>
 
-              <div className="flex justify-between items-center py-1 border-b border-slate-50">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+              <div className="flex justify-between items-center py-1 border-b border-slate-50 dark:border-slate-800">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide">
                   Quantity Change
                 </span>
                 <span
                   className={`font-mono text-xs font-extrabold ${
                     selectedTx.quantity > 0
-                      ? "text-emerald-600"
-                      : "text-rose-600"
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-rose-600 dark:text-rose-400"
                   }`}
                 >
                   {selectedTx.quantity > 0 ? "+" : ""}
@@ -630,30 +624,30 @@ export const InventoryDashboard = () => {
                 </span>
               </div>
 
-              <div className="flex justify-between items-center py-1 border-b border-slate-50">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+              <div className="flex justify-between items-center py-1 border-b border-slate-50 dark:border-slate-800">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide">
                   Balance After
                 </span>
-                <span className="font-mono text-xs font-bold text-slate-700">
+                <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300">
                   {selectedTx.balance_after}
                 </span>
               </div>
 
-              <div className="flex justify-between items-center py-1 border-b border-slate-50">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+              <div className="flex justify-between items-center py-1 border-b border-slate-50 dark:border-slate-800">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide">
                   Operator
                 </span>
-                <span className="text-xs font-semibold text-slate-600">
+                <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
                   {selectedTx.profiles?.raw_user_meta_data?.name ||
                     "System Admin"}
                 </span>
               </div>
 
               <div className="space-y-1 py-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide block">
                   Remarks / Notes
                 </span>
-                <p className="text-xs font-semibold text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100 leading-relaxed italic">
+                <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 leading-relaxed italic">
                   {selectedTx.remarks || "No supplemental remarks logged."}
                 </p>
               </div>
@@ -661,7 +655,7 @@ export const InventoryDashboard = () => {
 
             <button
               onClick={() => setSelectedTx(null)}
-              className="w-full py-3 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition cursor-pointer"
+              className="w-full py-3 text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition cursor-pointer"
             >
               Dismiss Details
             </button>
