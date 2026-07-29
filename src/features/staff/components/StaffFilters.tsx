@@ -19,13 +19,13 @@ export const StaffFilters = ({
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Search staff..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50/50 py-2 pl-9 pr-4 text-xs text-slate-700 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/15 w-60 transition font-semibold"
+            className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 py-2 pl-9 pr-4 text-xs text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 w-60 transition font-semibold"
           />
         </div>
 
@@ -36,7 +36,7 @@ export const StaffFilters = ({
               e.target.value as "all" | "active" | "suspended",
             )
           }
-          className="rounded-xl border border-slate-200 bg-white py-2 px-3 text-xs font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 cursor-pointer"
+          className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-2 px-3 text-xs font-bold text-slate-600 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 cursor-pointer"
         >
           <option value="all">All Statuses</option>
           <option value="active">Active Only</option>

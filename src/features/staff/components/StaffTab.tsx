@@ -79,18 +79,18 @@ export const StaffTab = ({
   const getLogColor = (action: string) => {
     const act = action.toLowerCase();
     if (act.includes("create") || act.includes("register")) {
-      return { color: "text-emerald-600", bgLight: "bg-emerald-50" };
+      return { color: "text-emerald-600 dark:text-emerald-400", bgLight: "bg-emerald-50 dark:bg-emerald-950/50" };
     }
     if (act.includes("edit") || act.includes("update")) {
-      return { color: "text-blue-600", bgLight: "bg-blue-50" };
+      return { color: "text-blue-600 dark:text-blue-400", bgLight: "bg-blue-50 dark:bg-blue-950/50" };
     }
     if (act.includes("suspend") || act.includes("delete")) {
-      return { color: "text-orange-500", bgLight: "bg-orange-50" };
+      return { color: "text-orange-500 dark:text-orange-400", bgLight: "bg-orange-50 dark:bg-orange-950/50" };
     }
     if (act.includes("pin")) {
-      return { color: "text-purple-600", bgLight: "bg-purple-50" };
+      return { color: "text-purple-600 dark:text-purple-400", bgLight: "bg-purple-50 dark:bg-purple-950/50" };
     }
-    return { color: "text-indigo-600", bgLight: "bg-indigo-50" };
+    return { color: "text-indigo-600 dark:text-indigo-400", bgLight: "bg-indigo-50 dark:bg-indigo-950/50" };
   };
 
   return (
@@ -135,13 +135,13 @@ export const StaffTab = ({
       {/* Right Column: Roles Overview & Recent Activity */}
       <div className="space-y-6">
         {/* Roles Overview Card */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-xs">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xs transition-colors">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-sm font-black text-slate-800 tracking-tight">Roles Overview</h3>
+            <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 tracking-tight">Roles Overview</h3>
             <button
               onClick={() => onTabChange("roles")}
               type="button"
-              className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition cursor-pointer"
+              className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition cursor-pointer"
             >
               View all roles
             </button>
@@ -169,9 +169,9 @@ export const StaffTab = ({
                       )
                     : 0,
                 icon: ShieldCheck,
-                color: "text-purple-600",
-                bgLight: "bg-purple-50",
-                bgBar: "bg-purple-600",
+                color: "text-purple-600 dark:text-purple-400",
+                bgLight: "bg-purple-50 dark:bg-purple-950/50",
+                bgBar: "bg-purple-600 dark:bg-purple-500",
               },
               {
                 name: "Manager",
@@ -185,9 +185,9 @@ export const StaffTab = ({
                       )
                     : 0,
                 icon: Shield,
-                color: "text-blue-600",
-                bgLight: "bg-blue-50",
-                bgBar: "bg-blue-600",
+                color: "text-blue-600 dark:text-blue-400",
+                bgLight: "bg-blue-50 dark:bg-blue-950/50",
+                bgBar: "bg-blue-600 dark:bg-blue-500",
               },
               {
                 name: "Cashier",
@@ -201,9 +201,9 @@ export const StaffTab = ({
                       )
                     : 0,
                 icon: Users,
-                color: "text-orange-600",
-                bgLight: "bg-orange-50",
-                bgBar: "bg-orange-600",
+                color: "text-orange-600 dark:text-orange-400",
+                bgLight: "bg-orange-50 dark:bg-orange-950/50",
+                bgBar: "bg-orange-600 dark:bg-orange-500",
               },
               {
                 name: "Storekeeper",
@@ -225,9 +225,9 @@ export const StaffTab = ({
                       )
                     : 0,
                 icon: Users,
-                color: "text-cyan-600",
-                bgLight: "bg-cyan-50",
-                bgBar: "bg-cyan-600",
+                color: "text-cyan-600 dark:text-cyan-400",
+                bgLight: "bg-cyan-50 dark:bg-cyan-950/50",
+                bgBar: "bg-cyan-600 dark:bg-cyan-500",
               },
               {
                 name: "Inactive",
@@ -241,9 +241,9 @@ export const StaffTab = ({
                       )
                     : 0,
                 icon: UserMinus,
-                color: "text-slate-500",
-                bgLight: "bg-slate-100",
-                bgBar: "bg-slate-500",
+                color: "text-slate-500 dark:text-slate-400",
+                bgLight: "bg-slate-100 dark:bg-slate-800",
+                bgBar: "bg-slate-500 dark:bg-slate-400",
               },
             ].map((r, i) => (
               <div key={i} className="flex items-center gap-3">
@@ -251,18 +251,18 @@ export const StaffTab = ({
                   <r.icon size={15} className={r.color} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                     <span className="truncate">{r.name}</span>
-                    <span className="text-slate-800 font-extrabold">{r.count}</span>
+                    <span className="text-slate-800 dark:text-slate-100 font-extrabold">{r.count}</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                       <div
                         className={cn("h-full rounded-full transition-all duration-500", r.bgBar)}
                         style={{ width: `${r.percent}%` }}
                       />
                     </div>
-                    <span className="text-[10px] font-bold text-slate-400 w-10 text-right">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 w-10 text-right">
                       {r.percent}%
                     </span>
                   </div>
@@ -273,13 +273,13 @@ export const StaffTab = ({
         </div>
 
         {/* Recent Activity Card - Linked directly to Database Activity Logs */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-xs">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xs transition-colors">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-sm font-black text-slate-800 tracking-tight">Recent Activity</h3>
+            <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 tracking-tight">Recent Activity</h3>
             <button
               onClick={() => onTabChange("logs")}
               type="button"
-              className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition cursor-pointer"
+              className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition cursor-pointer"
             >
               View all activity
             </button>
@@ -295,10 +295,10 @@ export const StaffTab = ({
                     <IconComp size={15} className={colorInfo.color} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-black text-slate-700 leading-snug">{act.details}</p>
-                    <p className="text-[10px] font-bold text-slate-400 mt-0.5">by {act.operator}</p>
+                    <p className="text-xs font-black text-slate-700 dark:text-slate-200 leading-snug">{act.details}</p>
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-0.5">by {act.operator}</p>
                   </div>
-                  <div className="text-[10px] font-bold text-slate-400 shrink-0 self-start mt-0.5">
+                  <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 shrink-0 self-start mt-0.5">
                     {act.timestamp.includes(" ") ? act.timestamp.split(" ")[1] || act.timestamp : act.timestamp}
                   </div>
                 </div>
@@ -306,7 +306,7 @@ export const StaffTab = ({
             })}
 
             {logs.length === 0 && (
-              <p className="text-xs text-center font-bold text-slate-400 py-6 uppercase tracking-wider">
+              <p className="text-xs text-center font-bold text-slate-400 dark:text-slate-500 py-6 uppercase tracking-wider">
                 No recent activity logged
               </p>
             )}
