@@ -16,7 +16,9 @@ export const getCustomers = async (): Promise<Customer[]> => {
   return data ?? [];
 };
 
-export const getCustomerById = async (id: string): Promise<Customer> => {
+export const getCustomer = async (
+  id: string
+): Promise<Customer> => {
   const { data, error } = await supabase
     .from("customers")
     .select("*")
@@ -45,7 +47,6 @@ export const createCustomer = async (
 
   if (error) throw error;
 
-  // Automatically create wallet
   const { error: walletError } = await supabase
     .from("customer_wallets")
     .insert({
@@ -79,7 +80,9 @@ export const updateCustomer = async (
   return data;
 };
 
-export const deleteCustomer = async (id: string): Promise<void> => {
+export const deleteCustomer = async (
+  id: string
+): Promise<void> => {
   const { error } = await supabase
     .from("customers")
     .delete()
