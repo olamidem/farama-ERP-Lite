@@ -30,6 +30,8 @@ export const getCustomer = async (
   return data;
 };
 
+export const getCustomerById = getCustomer;
+
 export const createCustomer = async (
   input: CreateCustomerInput
 ): Promise<Customer> => {

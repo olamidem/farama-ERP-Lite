@@ -64,6 +64,14 @@ export const withdrawalSchema = z.object({
 export type WithdrawalFormInput = z.infer<typeof withdrawalSchema>;
 
 
+export const topUpSchema = z.object({
+  type: z.enum(["TOP_UP", "PAYMENT", "DEBIT"]),
+  amount: z.number().positive("Amount must be greater than 0"),
+  remarks: z.string().optional(),
+});
+export type TopUpFormInput = z.infer<typeof topUpSchema>;
+
+
 
 export const salePaymentSchema = z.object({
   wallet_id: z.string().uuid(),

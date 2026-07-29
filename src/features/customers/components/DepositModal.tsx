@@ -99,6 +99,7 @@ export default function DepositModal({
   const onSubmit = async (data: DepositFormInput) => {
     const payload: WalletDepositInput = {
       ...data,
+      customer_id: customer.id,
       reference:
         data.reference ||
         `DEP-${Date.now()}`,

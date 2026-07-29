@@ -1,13 +1,7 @@
 import { Wallet, ArrowDownLeft, ArrowUpRight, ShoppingBag } from "lucide-react";
 import { useWalletOverviewStats } from "../hooks/useCustomerWallet";
 
-interface WalletOverviewHeaderProps {
-  onOpenDeposit?: () => void;
-  onOpenStatement?: () => void;
-  onOpenNewCustomer?: () => void;
-}
-
-export default function WalletOverviewHeader({}: WalletOverviewHeaderProps) {
+export default function WalletOverviewHeader() {
   const { data: stats } = useWalletOverviewStats();
 
   const totalBalance = stats?.total_wallet_balance ?? 0;

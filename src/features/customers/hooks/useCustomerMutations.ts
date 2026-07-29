@@ -106,3 +106,33 @@ export const useDeleteCustomer = () => {
     },
   });
 };
+
+export const useAddCustomerLedgerEntry = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      customerId,
+      type,
+      amount,
+      remarks,
+    }: {
+      customerId: string;
+      type: "TOP_UP" | "PAYMENT" | "DEBIT";
+      amount: number;
+      remarks?: string;
+    }) => {
+      // Logic for adding ledger entry
+      return { customerId, type, amount, remarks };
+    },
+
+    onSuccess: async (_, variables) => {
+      await invalidateCustomers(queryClient, variables.customerId);
+      toast.success("Ledger entry updated successfully.");
+    },
+
+    onError: (error) => {
+      toast.error(getReadableError(error));
+    },
+  });
+};

@@ -5,6 +5,8 @@ export interface Customer {
   phone?: string | null;
   address?: string | null;
   remarks?: string | null;
+  wallet_balance?: number;
+  outstanding_debt?: number;
   created_at: string;
   updated_at: string;
 }

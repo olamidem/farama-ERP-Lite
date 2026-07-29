@@ -20,6 +20,7 @@ import LockScreenPage from "../features/auth/pages/LockScreenPage";
 import SetPasswordPage from "../features/auth/pages/SetPasswordPage";
 import AcceptInvitationPage from "../features/auth/pages/AcceptInvitationPage";
 import { StaffPage } from "../features/staff";
+import CustomersPage from "../features/customers/pages/CustomersPage";
 
 const rootRoute = createRootRoute();
 const loginRoute = createRoute({
@@ -184,11 +185,11 @@ const lockScreenRoute = createRoute({
 //   component: SalesPage,
 // });
 
-// const customersRoute = createRoute({
-//   getParentRoute: () => appLayoutRoute,
-//   path: "/customers",
-//   component: CustomersPage,
-// });
+const customersRoute = createRoute({
+getParentRoute: () => appLayoutRoute,
+ path: "/customers",
+component: CustomersPage,
+});
 
 /**
  * Route Tree
@@ -211,7 +212,7 @@ const routeTree = rootRoute.addChildren([
     // settingsRoute,
     profileRoute,
     // salesRoute,
-    // customersRoute,
+    customersRoute,
   ]),
 ]);
 
