@@ -69,11 +69,11 @@ export const PurchaseOverview = ({
   ] as const;
 
   return (
-    <div className="h-full bg-slate-50 border-l border-slate-200 shadow-xl flex flex-col w-full">
+    <div className="h-full bg-slate-50 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-xl flex flex-col w-full transition-colors">
       {/* Top Header */}
-      <div className="px-5 py-4 border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
+      <div className="px-5 py-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2.5">
-          <span className="text-sm font-extrabold text-slate-800">
+          <span className="text-sm font-extrabold text-slate-800 dark:text-slate-100">
             {purchase.purchase_number}
           </span>
           <span
@@ -88,18 +88,18 @@ export const PurchaseOverview = ({
         <div className="flex items-center gap-2">
           <button
             onClick={() => printPurchaseOrder(purchase)}
-            className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition cursor-pointer flex items-center gap-1.5 border border-slate-200"
+            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200 transition cursor-pointer flex items-center gap-1.5 border border-slate-200 dark:border-slate-800"
             title="Print Purchase Order / Download PDF"
           >
             <Printer size={14} />
-            <span className="text-[10px] font-extrabold text-slate-600">
+            <span className="text-[10px] font-extrabold text-slate-600 dark:text-slate-300">
               Print/PDF
             </span>
           </button>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"
             title="Close details"
           >
             <X size={15} />
@@ -108,7 +108,7 @@ export const PurchaseOverview = ({
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex flex-wrap gap-1 border-b border-slate-200 bg-white px-5 shrink-0">
+      <div className="flex flex-wrap gap-1 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-5 shrink-0">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           return (
@@ -117,8 +117,8 @@ export const PurchaseOverview = ({
               onClick={() => setActiveTab(tab.id)}
               className={`py-3 px-3 text-xs font-bold border-b-2 transition cursor-pointer -mb-px ${
                 isActive
-                  ? "border-indigo-600 text-indigo-600 font-extrabold"
-                  : "border-transparent text-slate-400 hover:text-slate-600"
+                  ? "border-indigo-600 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400 font-extrabold"
+                  : "border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
               }`}
             >
               {tab.label}
@@ -145,26 +145,26 @@ export const PurchaseOverview = ({
 
         {activeTab === PURCHASE_OVERVIEW_TABS.RECEIVE && (
           <div className="space-y-4">
-            <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-2xs">
-              <h4 className="text-xs font-extrabold text-slate-800 mb-2 uppercase tracking-wider flex items-center gap-2">
-                <PackageCheck size={14} className="text-emerald-500" />
+            <div className="rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-2xs transition-colors">
+              <h4 className="text-xs font-extrabold text-slate-800 dark:text-slate-100 mb-2 uppercase tracking-wider flex items-center gap-2">
+                <PackageCheck size={14} className="text-emerald-500 dark:text-emerald-400" />
                 <span>Receive Goods Workflow</span>
               </h4>
-              <p className="text-[10px] font-semibold text-slate-400 leading-relaxed mb-4">
+              <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 leading-relaxed mb-4">
                 Record actual stock arrived at the warehouse. This increments
                 real system stock counts automatically.
               </p>
 
               {purchase.status === "CLOSED" ? (
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 flex gap-3 text-xs">
-                  <Lock size={16} className="shrink-0 text-slate-400 mt-0.5" />
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 flex gap-3 text-xs">
+                  <Lock size={16} className="shrink-0 text-slate-400 dark:text-slate-500 mt-0.5" />
                   <div className="font-semibold leading-relaxed">
                     This purchase order is locked and closed. Further goods
                     reception is disabled.
                   </div>
                 </div>
               ) : purchase.status === "RECEIVED" ? (
-                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-800 flex gap-3 text-xs">
+                <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-900/50 text-emerald-800 dark:text-emerald-300 flex gap-3 text-xs">
                   <PackageCheck size={16} className="shrink-0" />
                   <div className="font-semibold">
                     All items on this purchase order have been fully received.
@@ -173,7 +173,7 @@ export const PurchaseOverview = ({
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="p-3.5 rounded-xl border border-indigo-100 bg-indigo-50/50 flex gap-3 text-indigo-800">
+                  <div className="p-3.5 rounded-xl border border-indigo-100 dark:border-indigo-900/50 bg-indigo-50/50 dark:bg-indigo-950/50 flex gap-3 text-indigo-800 dark:text-indigo-300">
                     <AlertCircle size={15} className="shrink-0 mt-0.5" />
                     <span className="text-[10px] font-semibold leading-relaxed">
                       This purchase is currently{" "}
@@ -195,12 +195,12 @@ export const PurchaseOverview = ({
               )}
 
               {/* Metadata Indicators: Last Received Date & Received By */}
-              <div className="mt-5 grid grid-cols-2 gap-4 border-t border-slate-100 pt-4 text-xs">
+              <div className="mt-5 grid grid-cols-2 gap-4 border-t border-slate-100 dark:border-slate-800 pt-4 text-xs">
                 <div>
-                  <span className="text-slate-400 font-bold block text-[9px] uppercase tracking-wider">
+                  <span className="text-slate-400 dark:text-slate-500 font-bold block text-[9px] uppercase tracking-wider">
                     Last Received Date
                   </span>
-                  <span className="text-slate-700 font-extrabold block mt-1">
+                  <span className="text-slate-700 dark:text-slate-200 font-extrabold block mt-1">
                     {purchase.received_percentage &&
                     purchase.received_percentage > 0
                       ? new Date(purchase.updated_at).toLocaleDateString(
@@ -211,10 +211,10 @@ export const PurchaseOverview = ({
                   </span>
                 </div>
                 <div>
-                  <span className="text-slate-400 font-bold block text-[9px] uppercase tracking-wider">
+                  <span className="text-slate-400 dark:text-slate-500 font-bold block text-[9px] uppercase tracking-wider">
                     Received By
                   </span>
-                  <span className="text-slate-700 font-extrabold block mt-1">
+                  <span className="text-slate-700 dark:text-slate-200 font-extrabold block mt-1">
                     {purchase.received_percentage &&
                     purchase.received_percentage > 0
                       ? "olamXii@gmail.com"
@@ -234,7 +234,7 @@ export const PurchaseOverview = ({
       </div>
 
       {/* Footer sticky actions */}
-      <div className="p-5 bg-white border-t border-slate-200 shrink-0">
+      <div className="p-5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0">
         <PurchaseActions
           purchase={purchase}
           onEdit={() => onEdit(purchase)}
