@@ -51,7 +51,7 @@ const PurchaseItemRow = ({
   const lineTotal = row.quantity * row.cost_price;
 
   return (
-    <tr className="border-b border-slate-100">
+    <tr className="border-b border-slate-100 dark:border-slate-800">
       <td className="py-3 pr-3">
         <Select
           value={row.product_id}
@@ -113,7 +113,7 @@ const PurchaseItemRow = ({
         />
       </td>
 
-      <td className="py-3 pr-3 text-right font-mono font-bold">
+      <td className="py-3 pr-3 text-right font-mono font-bold text-slate-800 dark:text-slate-200">
         {formatCurrency(lineTotal)}
       </td>
 
