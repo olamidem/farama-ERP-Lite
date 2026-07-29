@@ -19,19 +19,19 @@ export const ReceiveGoodsItem = ({
     "pcs";
 
   return (
-    <div className="p-4 rounded-xl border border-slate-100 bg-slate-50/30 flex items-center justify-between gap-4">
+    <div className="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/30 flex items-center justify-between gap-4 transition-colors">
       <div className="min-w-0">
-        <span className="text-xs font-bold text-slate-800 block truncate">
+        <span className="text-xs font-bold text-slate-800 dark:text-slate-100 block truncate">
           {item.product?.name || "Product"}
         </span>
-        <span className="text-[10px] text-slate-400 font-semibold block mt-1">
+        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold block mt-1">
           Ordered: {item.quantity} {unitDisplay} | Previously Received:{" "}
           {prevRec}
         </span>
       </div>
 
       <div className="flex items-center gap-2 shrink-0">
-        <span className="text-[10px] font-bold text-slate-400">
+        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
           Receive Qty:
         </span>
         <input
@@ -40,7 +40,7 @@ export const ReceiveGoodsItem = ({
           max={remaining}
           value={quantity}
           onChange={(e) => onChange(parseInt(e.target.value) || 0)}
-          className="w-20 px-2.5 py-1.5 text-xs text-center border border-slate-200 rounded-lg bg-white font-mono font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500"
+          className="w-20 px-2.5 py-1.5 text-xs text-center border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 font-mono font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500"
         />
       </div>
     </div>
