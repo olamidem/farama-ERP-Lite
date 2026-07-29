@@ -1,21 +1,12 @@
-/*
-|--------------------------------------------------------------------------
-| Wallet Enums
-|--------------------------------------------------------------------------
-*/
+/* -------------------------------------------------------------------------- */
+/* Wallet Enums */
+/* -------------------------------------------------------------------------- */
 
-export type CurrencyCode =
-  | "NGN"
-  | "USD"
-  | "EUR";
+export type CurrencyCode = "NGN" | "USD" | "EUR";
 
-export type WalletStatus =
-  | "ACTIVE"
-  | "SUSPENDED";
+export type WalletStatus = "ACTIVE" | "SUSPENDED";
 
-export type WalletTransactionDirection =
-  | "CREDIT"
-  | "DEBIT";
+export type WalletTransactionDirection = "CREDIT" | "DEBIT";
 
 export type WalletTransactionType =
   | "DEPOSIT"
@@ -35,11 +26,9 @@ export type WalletPaymentMethod =
   | "WALLET"
   | "SYSTEM";
 
-/*
-|--------------------------------------------------------------------------
-| Wallet Models
-|--------------------------------------------------------------------------
-*/
+/* -------------------------------------------------------------------------- */
+/* Wallet */
+/* -------------------------------------------------------------------------- */
 
 export interface CustomerWallet {
   id: string;
@@ -52,9 +41,14 @@ export interface CustomerWallet {
   updated_at: string;
 }
 
+/* -------------------------------------------------------------------------- */
+/* Wallet Transaction */
+/* -------------------------------------------------------------------------- */
+
 export interface WalletTransaction {
   id: string;
   wallet_id: string;
+  customer_id: string;
   reference: string;
   type: WalletTransactionType;
   direction: WalletTransactionDirection;
@@ -68,14 +62,12 @@ export interface WalletTransaction {
   created_at: string;
 }
 
-/*
-|--------------------------------------------------------------------------
-| DTOs
-|--------------------------------------------------------------------------
-*/
+/* -------------------------------------------------------------------------- */
+/* DTOs */
+/* -------------------------------------------------------------------------- */
 
 export interface WalletDepositInput {
-  wallet_id: string;
+  customer_id: string;
   amount: number;
   payment_method: WalletPaymentMethod;
   notes?: string;
@@ -84,7 +76,7 @@ export interface WalletDepositInput {
 }
 
 export interface WalletWithdrawalInput {
-  wallet_id: string;
+  customer_id: string;
   amount: number;
   payment_method: WalletPaymentMethod;
   notes?: string;
@@ -93,7 +85,7 @@ export interface WalletWithdrawalInput {
 }
 
 export interface WalletSalePaymentInput {
-  wallet_id: string;
+  customer_id: string;
   sale_id?: string;
   amount: number;
   reference?: string;
@@ -102,7 +94,7 @@ export interface WalletSalePaymentInput {
 }
 
 export interface WalletRefundInput {
-  wallet_id: string;
+  customer_id: string;
   sale_id?: string;
   amount: number;
   reference?: string;
@@ -111,18 +103,16 @@ export interface WalletRefundInput {
 }
 
 export interface WalletAdjustmentInput {
-  wallet_id: string;
+  customer_id: string;
   amount: number;
   direction: WalletTransactionDirection;
   notes: string;
   performed_by?: string;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Responses
-|--------------------------------------------------------------------------
-*/
+/* -------------------------------------------------------------------------- */
+/* Reports */
+/* -------------------------------------------------------------------------- */
 
 export interface WalletStatement {
   wallet: CustomerWallet;
@@ -146,16 +136,19 @@ export interface WalletTransactionResponse {
   limit: number;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Dashboard
-|--------------------------------------------------------------------------
-*/
+/* -------------------------------------------------------------------------- */
+/* Dashboard */
+/* -------------------------------------------------------------------------- */
 
-export interface WalletDashboardStats {
-  total_wallet_balance: number;
-  deposits_today: number;
-  withdrawals_today: number;
-  wallet_payments_today: number;
-  total_transactions_today: number;
+export interface WalletOverviewStats {
+  totalWalletBalance: number;
+  activeWallets: number;
+  suspendedWallets: number;
+  depositsToday: number;
+  withdrawalsToday: number;
+  walletPaymentsToday: number;
+  refundsToday: number;
+  totalTransactionsToday: number;
+  totalDeposits: number;
+  totalWithdrawals: number;
 }

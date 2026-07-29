@@ -1,20 +1,14 @@
 import { supabase } from "../../../api/supabase";
-import type { CreateCustomerInput, Customer, UpdateCustomerInput } from "../types";
-
-const TABLE = "customers";
+import type {
+  Customer,
+  CreateCustomerInput,
+  UpdateCustomerInput,
+} from "../types/customer";
 
 export const getCustomers = async (): Promise<Customer[]> => {
   const { data, error } = await supabase
-    .from(TABLE)
-    .select(`
-      *,
-      customer_wallets (
-        id,
-        balance,
-        currency,
-        status
-      )
-    `)
+    .from("customers")
+    .select("*")
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -22,20 +16,10 @@ export const getCustomers = async (): Promise<Customer[]> => {
   return data ?? [];
 };
 
-export const getCustomerById = async (
-  id: string
-): Promise<Customer> => {
+export const getCustomerById = async (id: string): Promise<Customer> => {
   const { data, error } = await supabase
-    .from(TABLE)
-    .select(`
-      *,
-      customer_wallets (
-        id,
-        balance,
-        currency,
-        status
-      )
-    `)
+    .from("customers")
+    .select("*")
     .eq("id", id)
     .single();
 
@@ -45,16 +29,16 @@ export const getCustomerById = async (
 };
 
 export const createCustomer = async (
-  payload: CreateCustomerInput
+  input: CreateCustomerInput
 ): Promise<Customer> => {
   const { data, error } = await supabase
-    .from(TABLE)
+    .from("customers")
     .insert({
-      name: payload.name,
-      email: payload.email,
-      phone: payload.phone,
-      address: payload.address,
-      remarks: payload.remarks,
+      name: input.name,
+      email: input.email || null,
+      phone: input.phone || null,
+      address: input.address || null,
+      remarks: input.remarks || null,
     })
     .select()
     .single();
@@ -75,16 +59,16 @@ export const createCustomer = async (
 
 export const updateCustomer = async (
   id: string,
-  payload: UpdateCustomerInput
+  input: UpdateCustomerInput
 ): Promise<Customer> => {
   const { data, error } = await supabase
-    .from(TABLE)
+    .from("customers")
     .update({
-      name: payload.name,
-      email: payload.email,
-      phone: payload.phone,
-      address: payload.address,
-      remarks: payload.remarks,
+      name: input.name,
+      email: input.email || null,
+      phone: input.phone || null,
+      address: input.address || null,
+      remarks: input.remarks || null,
     })
     .eq("id", id)
     .select()
@@ -95,53 +79,11 @@ export const updateCustomer = async (
   return data;
 };
 
-export const deleteCustomer = async (
-  id: string
-): Promise<void> => {
+export const deleteCustomer = async (id: string): Promise<void> => {
   const { error } = await supabase
-    .from(TABLE)
+    .from("customers")
     .delete()
     .eq("id", id);
 
   if (error) throw error;
-};
-
-export const searchCustomers = async (
-  search: string
-): Promise<Customer[]> => {
-  const { data, error } = await supabase
-    .from(TABLE)
-    .select(`
-      *,
-      customer_wallets (
-        id,
-        balance,
-        currency,
-        status
-      )
-    `)
-    .or(
-      `name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%`
-    )
-    .order("created_at", {
-      ascending: false,
-    });
-
-  if (error) throw error;
-
-  return data ?? [];
-};
-
-export const getCustomerWallet = async (
-  customerId: string
-) => {
-  const { data, error } = await supabase
-    .from("customer_wallets")
-    .select("*")
-    .eq("customer_id", customerId)
-    .single();
-
-  if (error) throw error;
-
-  return data;
 };
