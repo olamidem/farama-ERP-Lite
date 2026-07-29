@@ -80,7 +80,7 @@ export const ReceiveGoodModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh] transition-colors">
         <RecievGoodHeader
           purchaseNumber={purchase.purchase_number}
           onClose={onClose}
@@ -91,7 +91,7 @@ export const ReceiveGoodModal = ({
           <ReceiveGoodsWarning />
 
           <div className="space-y-3">
-            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">
+            <span className="text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
               Items to Receive
             </span>
 
@@ -113,18 +113,18 @@ export const ReceiveGoodModal = ({
           </div>
 
           {/* Buttons */}
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
+          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2">
             <button
               onClick={onClose}
               type="button"
-              className="px-4 py-2 text-xs border border-slate-200 bg-white text-slate-600 font-bold rounded-xl hover:bg-slate-50 cursor-pointer transition shadow-3xs"
+              className="px-4 py-2 text-xs border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition shadow-3xs"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={receiveMutation.isPending}
-              className="px-5 py-2 text-xs bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-extrabold rounded-xl cursor-pointer transition shadow-sm hover:shadow-indigo-500/10"
+              className="px-5 py-2 text-xs bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-500 disabled:cursor-not-allowed text-white font-extrabold rounded-xl cursor-pointer transition shadow-sm hover:shadow-indigo-500/10"
             >
               {receiveMutation.isPending ? "Updating Stock..." : "Confirm Receipt"}
             </button>
