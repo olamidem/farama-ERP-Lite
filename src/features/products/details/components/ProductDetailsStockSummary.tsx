@@ -14,9 +14,9 @@ export const ProductDetailsStockSummary = ({
   const isLowStock = stock <= minStockAlert;
 
   return (
-    <div className="relative overflow-hidden p-6 rounded-2xl border border-slate-200 bg-white shadow-sm h-full">
+    <div className="relative overflow-hidden p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm h-full">
       {/* Background Graphic Box (isometric cube sketch) */}
-      <div className="absolute right-4 bottom-4 w-32 h-32 opacity-15 pointer-events-none text-slate-400">
+      <div className="absolute right-4 bottom-4 w-32 h-32 opacity-15 pointer-events-none text-slate-400 dark:text-slate-600">
         <svg
           viewBox="0 0 100 100"
           className="w-full h-full fill-none stroke-current stroke-[1.5]"
@@ -36,54 +36,54 @@ export const ProductDetailsStockSummary = ({
       </div>
 
       <div className="relative z-10 space-y-4">
-        <h3 className="text-base font-bold text-slate-800 border-b border-slate-100 pb-2">
+        <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2">
           Stock Summary
         </h3>
 
         <div className="space-y-3 pt-2">
           {/* Current Stock */}
           <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-slate-500">
+            <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
               Current Stock
             </span>
-            <span className="text-sm font-extrabold text-emerald-600 font-mono">
+            <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
               {stock} units
             </span>
           </div>
 
           {/* Reserved Stock */}
           <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-slate-500">
+            <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
               Reserved Stock
             </span>
-            <span className="text-sm font-extrabold text-slate-800 font-mono">
+            <span className="text-sm font-extrabold text-slate-800 dark:text-slate-200 font-mono">
               {reservedStock} units
             </span>
           </div>
 
           {/* Available Stock */}
           <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-slate-500">
+            <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
               Available Stock
             </span>
-            <span className="text-sm font-extrabold text-emerald-600 font-mono">
+            <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
               {availableStock} units
             </span>
           </div>
 
           {/* Min Stock Alert */}
           <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-slate-500">
+            <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
               Min. Stock Alert
             </span>
-            <span className="text-sm font-extrabold text-rose-600 font-mono">
+            <span className="text-sm font-extrabold text-rose-600 dark:text-rose-400 font-mono">
               {minStockAlert} units
             </span>
           </div>
         </div>
 
         {isLowStock && (
-          <div className="mt-4 p-2 rounded bg-rose-50 border border-rose-100 text-rose-700 text-xs font-bold text-center animate-pulse">
+          <div className="mt-4 p-2 rounded bg-rose-50 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-800 text-rose-700 dark:text-rose-400 text-xs font-bold text-center animate-pulse">
             ⚠️ Low Stock Alert: Reorder immediately!
           </div>
         )}
