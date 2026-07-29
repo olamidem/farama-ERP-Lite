@@ -66,11 +66,11 @@ export const ProductDetailsActivity = ({
   const totalRevenue = totalSalesUnits * sellingPrice;
 
   return (
-    <div className="p-6 rounded-2xl border border-slate-200 bg-white shadow-sm space-y-4">
+    <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-        <h3 className="text-base font-bold text-slate-800">Product Activity</h3>
-        <button className="text-slate-400 hover:text-slate-600 transition">
+      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+        <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Product Activity</h3>
+        <button className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition">
           <Calendar size={15} />
         </button>
       </div>
@@ -79,61 +79,61 @@ export const ProductDetailsActivity = ({
       <div className="space-y-4 pt-2">
         {/* Created */}
         <div className="flex justify-between items-start text-sm">
-          <span className="font-semibold text-slate-500">Created</span>
+          <span className="font-semibold text-slate-500 dark:text-slate-400">Created</span>
           <div className="text-right">
-            <span className="block font-bold text-slate-800">
+            <span className="block font-bold text-slate-800 dark:text-slate-200">
               {createdTime}
             </span>
-            <span className="text-xs text-slate-400">by Admin User</span>
+            <span className="text-xs text-slate-400 dark:text-slate-500">by Admin User</span>
           </div>
         </div>
 
         {/* Last Updated */}
         <div className="flex justify-between items-start text-sm">
-          <span className="font-semibold text-slate-500">Last Updated</span>
+          <span className="font-semibold text-slate-500 dark:text-slate-400">Last Updated</span>
           <div className="text-right">
-            <span className="block font-bold text-slate-800">
+            <span className="block font-bold text-slate-800 dark:text-slate-200">
               {updatedTime}
             </span>
-            <span className="text-xs text-slate-400">by Admin User</span>
+            <span className="text-xs text-slate-400 dark:text-slate-500">by Admin User</span>
           </div>
         </div>
 
         {/* Last Stock Update */}
         <div className="flex justify-between items-center text-sm">
-          <span className="font-semibold text-slate-500">
+          <span className="font-semibold text-slate-500 dark:text-slate-400">
             Last Stock Update
           </span>
-          <span className="font-bold text-slate-800">{lastStockUpdateTime}</span>
+          <span className="font-bold text-slate-800 dark:text-slate-200">{lastStockUpdateTime}</span>
         </div>
 
         {/* Last Sale */}
         <div className="flex justify-between items-center text-sm">
-          <span className="font-semibold text-slate-500">Last Sale</span>
-          <span className="font-bold text-slate-800">{lastSaleTime}</span>
+          <span className="font-semibold text-slate-500 dark:text-slate-400">Last Sale</span>
+          <span className="font-bold text-slate-800 dark:text-slate-200">{lastSaleTime}</span>
         </div>
 
         {/* Last Purchase */}
         <div className="flex justify-between items-center text-sm">
-          <span className="font-semibold text-slate-500">Last Purchase</span>
-          <span className="font-bold text-slate-800">{lastPurchaseTime}</span>
+          <span className="font-semibold text-slate-500 dark:text-slate-400">Last Purchase</span>
+          <span className="font-bold text-slate-800 dark:text-slate-200">{lastPurchaseTime}</span>
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-slate-100" />
+        <div className="h-px bg-slate-100 dark:bg-slate-800" />
 
         {/* Total Sales */}
         <div className="flex justify-between items-center text-sm">
-          <span className="font-semibold text-slate-500">Total Sales</span>
-          <span className="font-extrabold text-slate-800 font-mono">
+          <span className="font-semibold text-slate-500 dark:text-slate-400">Total Sales</span>
+          <span className="font-extrabold text-slate-800 dark:text-slate-200 font-mono">
             {totalSalesUnits} units
           </span>
         </div>
 
         {/* Total Revenue */}
         <div className="flex justify-between items-center text-sm">
-          <span className="font-semibold text-slate-500">Total Revenue</span>
-          <span className="font-extrabold text-emerald-600 font-mono">
+          <span className="font-semibold text-slate-500 dark:text-slate-400">Total Revenue</span>
+          <span className="font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
             {formatCurrency(totalRevenue)}
           </span>
         </div>
