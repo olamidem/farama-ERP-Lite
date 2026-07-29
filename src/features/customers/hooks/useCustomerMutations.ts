@@ -1,15 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
 import {
   createCustomer,
   updateCustomer,
   deleteCustomer,
 } from "../services/customer.service";
+
 import type {
   CreateCustomerInput,
   UpdateCustomerInput,
 } from "../types/customer";
-import { QUERY_KEYS } from "../lib/queryKey";
+
+import { QUERY_KEYS } from "../../../lib/queryKey";
 import { getReadableError } from "../../../utils/error";
 
 const invalidateCustomers = async (
@@ -17,30 +20,41 @@ const invalidateCustomers = async (
   customerId?: string
 ) => {
   await queryClient.invalidateQueries({
-    queryKey: QUERY_KEYS.customers,
+    queryKey: QUERY_KEYS.customers.all,
   });
 
   if (customerId) {
     await queryClient.invalidateQueries({
-      queryKey: [...QUERY_KEYS.customers, customerId],
+      queryKey: QUERY_KEYS.customers.detail(customerId),
     });
 
     await queryClient.invalidateQueries({
-      queryKey: [...QUERY_KEYS.customerWallet, customerId],
+      queryKey: QUERY_KEYS.customers.ledger(customerId),
     });
 
     await queryClient.invalidateQueries({
-      queryKey: [...QUERY_KEYS.walletTransactions, customerId],
+      queryKey: QUERY_KEYS.wallets.detail(customerId),
+    });
+
+    await queryClient.invalidateQueries({
+      queryKey: QUERY_KEYS.wallets.transactions(customerId),
     });
   }
+
+  await queryClient.invalidateQueries({
+    queryKey: QUERY_KEYS.wallets.all,
+  });
+
+  await queryClient.invalidateQueries({
+    queryKey: QUERY_KEYS.wallets.overview,
+  });
 };
 
 export const useCreateCustomer = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: CreateCustomerInput) =>
-      createCustomer(input),
+    mutationFn: (input: CreateCustomerInput) => createCustomer(input),
 
     onSuccess: async () => {
       await invalidateCustomers(queryClient);
@@ -66,11 +80,7 @@ export const useUpdateCustomer = () => {
     }) => updateCustomer(id, input),
 
     onSuccess: async (_, variables) => {
-      await invalidateCustomers(
-        queryClient,
-        variables.id
-      );
-
+      await invalidateCustomers(queryClient, variables.id);
       toast.success("Customer updated successfully.");
     },
 
@@ -88,7 +98,6 @@ export const useDeleteCustomer = () => {
 
     onSuccess: async (_, id) => {
       await invalidateCustomers(queryClient, id);
-
       toast.success("Customer deleted successfully.");
     },
 
