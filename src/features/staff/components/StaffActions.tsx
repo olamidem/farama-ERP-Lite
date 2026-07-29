@@ -20,8 +20,8 @@ interface StaffActionsProps {
   onResetPin: () => void;
   onToggleStatus: () => void;
   onDelete: () => void;
-  onResendInvitation: () => void;
-  onResetPassword: () => void;
+  onResendInvitation?: () => void;
+  onResetPassword?: () => void;
 }
 
 export const StaffActions = ({
@@ -45,7 +45,7 @@ export const StaffActions = ({
         onClick={onView}
         type="button"
         title="View staff profile details"
-        className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition cursor-pointer border border-transparent hover:border-emerald-100"
+        className="p-2 text-slate-400 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 rounded-xl transition cursor-pointer border border-transparent hover:border-emerald-100 dark:hover:border-emerald-800"
       >
         <Eye size={13} />
       </button>
@@ -55,7 +55,7 @@ export const StaffActions = ({
         onClick={onEdit}
         type="button"
         title="Edit staff operator profile"
-        className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition cursor-pointer border border-transparent hover:border-amber-100"
+        className="p-2 text-slate-400 dark:text-slate-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/50 rounded-xl transition cursor-pointer border border-transparent hover:border-amber-100 dark:hover:border-amber-800"
       >
         <Pencil size={13} />
       </button>
@@ -66,7 +66,7 @@ export const StaffActions = ({
           onClick={onResendInvitation}
           type="button"
           title="Resend invitation link"
-          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition cursor-pointer border border-transparent hover:border-blue-100"
+          className="p-2 text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 rounded-xl transition cursor-pointer border border-transparent hover:border-blue-100 dark:hover:border-blue-800"
         >
           <Send size={13} />
         </button>
@@ -76,7 +76,7 @@ export const StaffActions = ({
             onClick={onResetPassword}
             type="button"
             title="Send password reset email"
-            className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition cursor-pointer border border-transparent hover:border-purple-100"
+            className="p-2 text-slate-400 dark:text-slate-500 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/50 rounded-xl transition cursor-pointer border border-transparent hover:border-purple-100 dark:hover:border-purple-800"
           >
             <ShieldAlert size={13} />
           </button>
@@ -85,7 +85,7 @@ export const StaffActions = ({
             onClick={onResetPin}
             type="button"
             title="Reset terminal access PIN"
-            className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition cursor-pointer border border-transparent hover:border-indigo-100"
+            className="p-2 text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 rounded-xl transition cursor-pointer border border-transparent hover:border-indigo-100 dark:hover:border-indigo-800"
           >
             <Key size={13} />
           </button>
@@ -106,8 +106,8 @@ export const StaffActions = ({
           className={cn(
             "p-2 rounded-xl transition cursor-pointer border border-transparent disabled:opacity-40 disabled:cursor-not-allowed",
             isActive
-              ? "text-slate-400 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-100"
-              : "text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 hover:border-emerald-100",
+              ? "text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 hover:border-rose-100 dark:hover:border-rose-800"
+              : "text-slate-400 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:border-emerald-100 dark:hover:border-emerald-800",
           )}
         >
           {isActive ? <UserX size={13} /> : <UserCheck size={13} />}
@@ -120,7 +120,7 @@ export const StaffActions = ({
         type="button"
         onClick={onDelete}
         title="Delete staff account"
-        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition cursor-pointer border border-transparent hover:border-rose-100 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="p-2 text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-xl transition cursor-pointer border border-transparent hover:border-rose-100 dark:hover:border-rose-800 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         <Trash2 size={13} />
       </button>

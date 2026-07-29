@@ -70,12 +70,12 @@ export const getUnitTableColumns = ({
             {firstLetter}
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="font-bold text-slate-900 text-sm">
+            <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">
               {unit.name}
             </span>
             {unit.is_system && (
               <span title="System unit - Read-only">
-                <Lock size={12} className="text-slate-400 shrink-0" />
+                <Lock size={12} className="text-slate-400 dark:text-slate-500 shrink-0" />
               </span>
             )}
           </div>
@@ -95,7 +95,7 @@ export const getUnitTableColumns = ({
       />
     ),
     cell: ({ row }) => (
-      <span className="rounded-md font-mono text-xs font-semibold text-slate-600 bg-slate-100 border border-slate-200/60 px-2 py-0.5">
+      <span className="rounded-md font-mono text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 px-2 py-0.5">
         {row.original.symbol}
       </span>
     ),
@@ -104,7 +104,7 @@ export const getUnitTableColumns = ({
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => (
-      <span className="text-xs text-slate-500 font-medium">
+      <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
         {row.original.description || "No description provided"}
       </span>
     ),
@@ -115,12 +115,12 @@ export const getUnitTableColumns = ({
     cell: ({ row }) => {
       const isSystem = row.original.is_system;
       return isSystem ? (
-        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 bg-blue-50 border border-blue-100 rounded px-1.5 py-0.5">
+        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/50 rounded px-1.5 py-0.5">
           <ShieldCheck size={12} />
           <span>System</span>
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5">
+        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-1.5 py-0.5">
           <Layers size={12} />
           <span>Custom</span>
         </span>
@@ -158,7 +158,7 @@ export const getUnitTableColumns = ({
           <button
             id={`unit-edit-btn-${unit.id}`}
             onClick={() => onEdit(unit)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50 hover:text-slate-700 transition duration-150 disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition duration-150 disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer"
             title={isSystem ? "System units cannot be edited" : "Edit Unit"}
             disabled={isSystem}
           >
@@ -169,7 +169,7 @@ export const getUnitTableColumns = ({
             <button
               id={`unit-archive-btn-${unit.id}`}
               onClick={() => onArchive(unit)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition duration-150 disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:border-rose-200 dark:hover:border-rose-900/50 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-600 dark:hover:text-rose-400 transition duration-150 disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer"
               title={
                 isSystem ? "System units cannot be archived" : "Archive Unit"
               }
@@ -181,7 +181,7 @@ export const getUnitTableColumns = ({
             <button
               id={`unit-restore-btn-${unit.id}`}
               onClick={() => onRestore(unit)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-600 transition duration-150 cursor-pointer"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:border-emerald-200 dark:hover:border-emerald-900/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-600 dark:hover:text-emerald-400 transition duration-150 cursor-pointer"
               title="Restore Unit"
             >
               <RotateCcw size={14} />

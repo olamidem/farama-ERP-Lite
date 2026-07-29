@@ -12,22 +12,22 @@ export default function SupplierBasicInformation({
 }: SupplierBasicInformationProps) {
   return (
     <div className="space-y-4 text-left">
-      <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3 border-b border-slate-50 pb-1.5">
+      <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3 border-b border-slate-50 dark:border-slate-800 pb-1.5">
         Basic Information
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Supplier Name */}
         <div className="space-y-1.5">
-          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+          <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Supplier Name *
           </label>
           <input
             type="text"
             placeholder="e.g. Golden Foods Ltd"
             {...register("name")}
-            className={`w-full rounded-xl border bg-slate-50 px-3 py-2.5 text-xs font-semibold text-slate-700 focus:outline-hidden focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition ${
-              errors.name ? "border-red-500" : "border-slate-200"
+            className={`w-full rounded-xl border bg-slate-50 dark:bg-slate-800 px-3 py-2.5 text-xs font-semibold text-slate-700 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:bg-white dark:focus:bg-slate-800 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition ${
+              errors.name ? "border-red-500" : "border-slate-200 dark:border-slate-700"
             }`}
           />
           {errors.name && (
@@ -39,14 +39,14 @@ export default function SupplierBasicInformation({
 
         {/* Status */}
         <div className="space-y-1.5">
-          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+          <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Physical Address
           </label>
           <input
             type="text"
             placeholder="e.g. 123 Trade St, Manila, Philippines"
             {...register("address")}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-xs font-semibold text-slate-700 focus:outline-hidden focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
+            className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2.5 text-xs font-semibold text-slate-700 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:bg-white dark:focus:bg-slate-800 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
           />
         </div>
       </div>

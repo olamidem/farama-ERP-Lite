@@ -53,39 +53,39 @@ const permissionsList = [
 export const PermissionTab = () => {
   return (
     <div id="permissions-tab" className="space-y-6 text-left">
-      <div className="rounded-2xl border border-slate-100 overflow-hidden">
-        <table className="w-full text-left border-collapse bg-white">
+      <div className="rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden transition-colors">
+        <table className="w-full text-left border-collapse bg-white dark:bg-slate-900">
           <thead>
-            <tr className="bg-slate-50 border-b border-slate-100">
-              <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+            <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+              <th className="py-4 px-6 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 Module
               </th>
-              <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+              <th className="py-4 px-6 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 System Identifier
               </th>
-              <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+              <th className="py-4 px-6 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 Display Title
               </th>
-              <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+              <th className="py-4 px-6 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 Description
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs text-slate-700 dark:text-slate-300">
             {permissionsList.map((perm) => (
-              <tr key={perm.code} className="hover:bg-slate-50/50 transition">
-                <td className="py-4 px-6 font-black text-indigo-600 uppercase tracking-wider">
+              <tr key={perm.code} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition">
+                <td className="py-4 px-6 font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
                   {perm.module}
                 </td>
                 <td className="py-4 px-6">
-                  <code className="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px] font-mono font-bold text-slate-600">
+                  <code className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-[11px] font-mono font-bold text-slate-600 dark:text-slate-300">
                     {perm.code}
                   </code>
                 </td>
-                <td className="py-4 px-6 font-bold text-slate-800">
+                <td className="py-4 px-6 font-bold text-slate-800 dark:text-slate-100">
                   {perm.name}
                 </td>
-                <td className="py-4 px-6 font-medium text-slate-400">
+                <td className="py-4 px-6 font-medium text-slate-400 dark:text-slate-500">
                   {perm.description}
                 </td>
               </tr>

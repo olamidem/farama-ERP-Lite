@@ -44,18 +44,18 @@ export default function SupplierOverview({ supplier }: SupplierOverviewProps) {
         return (
           <div
             key={idx}
-            className="rounded-2xl border border-slate-100 bg-slate-50/40 p-4"
+            className="rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/40 p-4"
           >
             <div className="flex items-start gap-2.5">
-              <Icon className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
+              <Icon className="h-4 w-4 text-slate-400 dark:text-slate-500 mt-0.5 shrink-0" />
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                   {card.label}
                 </p>
-                <p className="text-xs font-extrabold text-slate-800 tracking-tight mt-1.5 truncate">
+                <p className="text-xs font-extrabold text-slate-800 dark:text-slate-200 tracking-tight mt-1.5 truncate">
                   {card.value}
                 </p>
-                <p className="text-[10px] font-semibold text-slate-400 mt-0.5">
+                <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mt-0.5">
                   {card.subtext}
                 </p>
               </div>

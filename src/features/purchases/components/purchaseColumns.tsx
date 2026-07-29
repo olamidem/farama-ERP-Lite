@@ -44,7 +44,7 @@ export const createPurchaseColumns = ({
         return (
           <button
             onClick={() => onView(purchase)}
-            className="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left transition"
+            className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left transition"
             id={`btn-view-${purchase.id}`}
           >
             {purchase.purchase_number}
@@ -57,7 +57,7 @@ export const createPurchaseColumns = ({
       header: "SUPPLIER",
       cell: ({ row }) => {
         return (
-          <span className="text-xs font-bold text-slate-800">
+          <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
             {row.original.supplier?.name || "Unknown Supplier"}
           </span>
         );
@@ -84,7 +84,7 @@ export const createPurchaseColumns = ({
       header: "TOTAL",
       cell: ({ row }) => {
         return (
-          <span className="font-sans text-xs font-extrabold text-slate-800">
+          <span className="font-sans text-xs font-extrabold text-slate-800 dark:text-slate-200">
             {formatNaira(row.original.total_amount)}
           </span>
         );
@@ -95,7 +95,7 @@ export const createPurchaseColumns = ({
       header: "DATE",
       cell: ({ row }) => {
         return (
-          <span className="text-xs font-semibold text-slate-500">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
             {formatDate(row.original.purchase_date)}
           </span>
         );
@@ -106,19 +106,19 @@ export const createPurchaseColumns = ({
       header: "RECEIVED",
       cell: ({ row }) => {
         const pct = row.original.received_percentage || 0;
-        let barColor = "bg-slate-200";
+        let barColor = "bg-slate-200 dark:bg-slate-700";
         if (pct === 100) {
           barColor = "bg-emerald-500";
         } else if (pct > 0) {
-          barColor = "bg-blue-600";
+          barColor = "bg-blue-600 dark:bg-blue-500";
         }
 
         return (
           <div className="flex items-center gap-2.5 max-w-28" id={`pct-col-${row.original.id}`}>
-            <span className="text-[10px] font-extrabold text-slate-600 min-w-8">
+            <span className="text-[10px] font-extrabold text-slate-600 dark:text-slate-400 min-w-8">
               {pct}%
             </span>
-            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-300 ${barColor}`}
                 style={{ width: `${pct}%` }}
@@ -137,7 +137,7 @@ export const createPurchaseColumns = ({
           <div className="flex items-center gap-1" id={`actions-col-${p.id}`}>
             <button
               onClick={() => onView(p)}
-              className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-50 hover:text-slate-600 cursor-pointer transition"
+              className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition"
               title="View Details"
               id={`btn-eye-${p.id}`}
             >
@@ -145,7 +145,7 @@ export const createPurchaseColumns = ({
             </button>
             <button
               onClick={() => onEdit(p)}
-              className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-50 hover:text-blue-600 cursor-pointer transition"
+              className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer transition"
               title="Edit PO"
               id={`btn-edit-${p.id}`}
             >
@@ -154,7 +154,7 @@ export const createPurchaseColumns = ({
             {p.status === "PENDING" && (
               <button
                 onClick={() => onDelete(p.id)}
-                className="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 cursor-pointer transition"
+                className="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer transition"
                 title="Delete PO"
                 id={`btn-delete-${p.id}`}
               >

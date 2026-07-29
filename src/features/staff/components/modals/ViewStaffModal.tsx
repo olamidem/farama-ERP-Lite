@@ -17,12 +17,12 @@ export const ViewStaffModal = ({
 
   return (
     <div id="view-employee-modal" className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl max-w-md w-full overflow-hidden text-left">
-        <div className="border-b border-slate-50 px-6 py-5 flex items-center justify-between">
-          <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">Employee Details</h3>
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-2xl max-w-md w-full overflow-hidden text-left transition-colors">
+        <div className="border-b border-slate-50 dark:border-slate-800 px-6 py-5 flex items-center justify-between">
+          <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-wider">Employee Details</h3>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 font-black cursor-pointer"
+            className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-black cursor-pointer"
           >
             ✕
           </button>
@@ -42,62 +42,62 @@ export const ViewStaffModal = ({
                 .toUpperCase()}
             </div>
             <div>
-              <h4 className="text-base font-black text-slate-800 tracking-tight">
+              <h4 className="text-base font-black text-slate-800 dark:text-slate-100 tracking-tight">
                 {employee.full_name}
               </h4>
-              <p className="text-xs font-semibold text-indigo-600 uppercase tracking-wider">
+              <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
                 {employee.role}
               </p>
             </div>
           </div>
 
-          <div className="divide-y divide-slate-50 border-t border-b border-slate-100 py-2 space-y-2.5">
+          <div className="divide-y divide-slate-50 dark:divide-slate-800 border-t border-b border-slate-100 dark:border-slate-800 py-2 space-y-2.5">
             <div className="flex justify-between py-1.5 text-xs">
-              <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
+              <span className="font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[10px]">
                 Email Address
               </span>
-              <span className="font-semibold text-slate-700">{employee.email}</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">{employee.email}</span>
             </div>
             <div className="flex justify-between py-1.5 text-xs">
-              <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
+              <span className="font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[10px]">
                 Phone Number
               </span>
-              <span className="font-semibold text-slate-700">{employee.phone || "N/A"}</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">{employee.phone || "N/A"}</span>
             </div>
             <div className="flex justify-between py-1.5 text-xs">
-              <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
+              <span className="font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[10px]">
                 Account Status
               </span>
               <span
                 className={cn(
                   "font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full text-[10px]",
                   employee.status === USER_STATUS.ACTIVE
-                    ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
-                    : "bg-rose-50 text-rose-700 border border-rose-100"
+                    ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-800"
+                    : "bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-100 dark:border-rose-800"
                 )}
               >
                 {employee.status.toLowerCase()}
               </span>
             </div>
             <div className="flex justify-between py-1.5 text-xs">
-              <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
+              <span className="font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[10px]">
                 Joined Date
               </span>
-              <span className="font-semibold text-slate-700">{employee.joined_at}</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">{employee.joined_at}</span>
             </div>
             <div className="flex justify-between py-1.5 text-xs">
-              <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
+              <span className="font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[10px]">
                 Last Terminal Login
               </span>
-              <span className="font-semibold text-slate-700">
+              <span className="font-semibold text-slate-700 dark:text-slate-300">
                 {employee.last_login || "Never"}
               </span>
             </div>
             <div className="flex justify-between py-1.5 text-xs">
-              <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
+              <span className="font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[10px]">
                 Terminal Access PIN
               </span>
-              <span className="font-mono font-bold text-indigo-600">•••••• (Protected)</span>
+              <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">•••••• (Protected)</span>
             </div>
           </div>
 
@@ -105,7 +105,7 @@ export const ViewStaffModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs uppercase tracking-wider cursor-pointer shadow-md"
+              className="px-6 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 font-extrabold text-xs uppercase tracking-wider cursor-pointer shadow-md"
             >
               Close View
             </button>

@@ -19,28 +19,28 @@ export const StaffStatsCards = ({
       label: "Total Staff",
       value: employeesCount,
       icon: Users,
-      bgColor: "bg-indigo-50 text-indigo-600",
+      bgColor: "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400",
     },
     {
       id: "active_accounts",
       label: "Active Accounts",
       value: activeCount,
       icon: UserCheck,
-      bgColor: "bg-emerald-50 text-emerald-600",
+      bgColor: "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400",
     },
     {
       id: "suspended_accounts",
       label: "Suspended Accounts",
       value: suspendedCount,
       icon: UserX,
-      bgColor: "bg-rose-50 text-rose-600",
+      bgColor: "bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400",
     },
     {
       id: "roles_assigned",
       label: "Roles Assigned",
       value: rolesCount,
       icon: Shield,
-      bgColor: "bg-amber-50 text-amber-600",
+      bgColor: "bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400",
     },
   ];
 
@@ -55,16 +55,16 @@ export const StaffStatsCards = ({
           <div
             key={stat.id}
             id={`stat-card-${stat.id}`}
-            className="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs flex items-center gap-4 text-left"
+            className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs flex items-center gap-4 text-left transition-colors"
           >
             <div className={`p-3 rounded-xl ${stat.bgColor}`}>
               <Icon size={20} />
             </div>
             <div>
-              <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+              <p className="text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                 {stat.label}
               </p>
-              <h3 className="text-xl font-black text-slate-900">
+              <h3 className="text-xl font-black text-slate-900 dark:text-slate-100">
                 {stat.value}
               </h3>
             </div>

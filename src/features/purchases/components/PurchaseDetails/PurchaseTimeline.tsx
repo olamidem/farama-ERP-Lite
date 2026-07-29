@@ -51,22 +51,22 @@ const PurchaseTimeline = ({ purchase }: PurchaseTimelineProps) => {
   ];
 
   return (
-    <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-3xs">
-      <h4 className="mb-6 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-slate-800">
-        <Calendar size={14} className="text-blue-500" />
+    <div className="rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-3xs transition-colors">
+      <h4 className="mb-6 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-slate-800 dark:text-slate-100">
+        <Calendar size={14} className="text-blue-500 dark:text-blue-400" />
         <span>Purchase Timeline</span>
       </h4>
 
-      <div className="relative ml-2.5 border-l-2 border-slate-100 pl-6 space-y-6">
+      <div className="relative ml-2.5 border-l-2 border-slate-100 dark:border-slate-800 pl-6 space-y-6">
         {steps.map((step) => {
-          let iconContainer = "bg-slate-100 text-slate-300 ring-4 ring-white";
-          let icon = <div className="h-2 w-2 rounded-full bg-slate-300" />;
+          let iconContainer = "bg-slate-100 dark:bg-slate-800 text-slate-300 dark:text-slate-600 ring-4 ring-white dark:ring-slate-900";
+          let icon = <div className="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />;
 
           if (step.isCompleted) {
-            iconContainer = "bg-emerald-500 text-white ring-4 ring-emerald-50";
+            iconContainer = "bg-emerald-500 text-white ring-4 ring-emerald-50 dark:ring-emerald-950/40";
             icon = <Check size={11} strokeWidth={3} />;
           } else if (step.isActive) {
-            iconContainer = "bg-blue-600 text-white ring-4 ring-blue-50";
+            iconContainer = "bg-blue-600 dark:bg-blue-500 text-white ring-4 ring-blue-50 dark:ring-blue-950/40";
             icon = <div className="h-2 w-2 rounded-full bg-white" />;
           }
 
@@ -80,11 +80,11 @@ const PurchaseTimeline = ({ purchase }: PurchaseTimelineProps) => {
               </div>
 
               <div>
-                <h5 className="text-xs font-bold text-slate-800 leading-none">
+                <h5 className="text-xs font-bold text-slate-800 dark:text-slate-200 leading-none">
                   {step.title}
                 </h5>
 
-                <p className="mt-1 text-[10px] font-semibold text-slate-400">
+                <p className="mt-1 text-[10px] font-semibold text-slate-400 dark:text-slate-500">
                   {step.description}
                 </p>
               </div>

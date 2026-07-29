@@ -114,10 +114,10 @@ export const ProductUnitsForm = ({
     <form
       id="product-unit-form"
       onSubmit={handleSubmit(onSubmit)}
-      className="p-5 border border-blue-100 bg-blue-50/20 rounded-2xl space-y-4 shadow-sm animate-in fade-in slide-in-from-top-2 duration-200"
+      className="p-5 border border-blue-100 dark:border-blue-900/40 bg-blue-50/20 dark:bg-blue-950/20 rounded-2xl space-y-4 shadow-sm animate-in fade-in slide-in-from-top-2 duration-200"
     >
-      <div className="flex items-center justify-between border-b border-blue-50 pb-2.5">
-        <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+      <div className="flex items-center justify-between border-b border-blue-50 dark:border-blue-900/30 pb-2.5">
+        <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
           <Sparkles className="h-4 w-4 text-blue-500 animate-pulse" />
           {editingUnit ? "Edit Selling Unit" : "New Selling Unit Configuration"}
         </h4>
@@ -127,7 +127,7 @@ export const ProductUnitsForm = ({
             type="button"
             onClick={handleAutoSuggest}
             disabled={!watchedUnitId}
-            className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold bg-white text-blue-600 border border-blue-200 rounded-md hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed select-none transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 rounded-md hover:bg-blue-50 dark:hover:bg-blue-950/50 disabled:opacity-50 disabled:cursor-not-allowed select-none transition-colors cursor-pointer"
             title="Automatically calculate prices based on conversion factor and base product price"
           >
             <Calculator size={12} />
@@ -139,7 +139,7 @@ export const ProductUnitsForm = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Unit Selection */}
         <div className="space-y-1">
-          <Label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <Label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Selling Unit Of Measure
           </Label>
           <Select
@@ -147,7 +147,7 @@ export const ProductUnitsForm = ({
             id="unit_id_select"
             placeholder="Select unit..."
             options={selectOptions}
-            className="w-full h-10 px-3 text-sm font-medium text-slate-800"
+            className="w-full h-10 px-3 text-sm font-medium text-slate-800 dark:text-slate-200 dark:bg-slate-800 dark:border-slate-700"
           />
           {errors.unit_id && (
             <p className="text-xs text-red-500 mt-0.5">
@@ -158,7 +158,7 @@ export const ProductUnitsForm = ({
 
         {/* Conversion Factor */}
         <div className="space-y-1">
-          <Label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <Label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Conversion Factor
           </Label>
           <div className="relative">
@@ -168,9 +168,9 @@ export const ProductUnitsForm = ({
               step="any"
               {...register("conversion_factor", { valueAsNumber: true })}
               placeholder="e.g. 12"
-              className="w-full pr-10 font-mono"
+              className="w-full pr-10 font-mono dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
             />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 dark:text-slate-500">
               {selectedUnit ? selectedUnit.symbol : "pcs"}
             </span>
           </div>
@@ -183,7 +183,7 @@ export const ProductUnitsForm = ({
 
         {/* SKU */}
         <div className="space-y-1">
-          <Label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <Label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Selling Unit SKU
           </Label>
           <Input
@@ -191,7 +191,7 @@ export const ProductUnitsForm = ({
             type="text"
             {...register("sku")}
             placeholder="e.g. BEV-COK-CTN"
-            className="w-full font-mono uppercase"
+            className="w-full font-mono uppercase dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
           />
           {errors.sku && (
             <p className="text-xs text-red-500 mt-0.5">{errors.sku.message}</p>
@@ -202,11 +202,11 @@ export const ProductUnitsForm = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Cost Price */}
         <div className="space-y-1">
-          <Label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <Label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Cost Price
           </Label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 dark:text-slate-500">
               ₦
             </span>
             <Input
@@ -215,7 +215,7 @@ export const ProductUnitsForm = ({
               step="any"
               {...register("cost_price", { valueAsNumber: true })}
               placeholder="0.00"
-              className="w-full pl-7 font-mono"
+              className="w-full pl-7 font-mono dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
             />
           </div>
           {errors.cost_price && (
@@ -227,11 +227,11 @@ export const ProductUnitsForm = ({
 
         {/* Selling Price */}
         <div className="space-y-1">
-          <Label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <Label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Selling Price
           </Label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 dark:text-slate-500">
               ₦
             </span>
             <Input
@@ -240,7 +240,7 @@ export const ProductUnitsForm = ({
               step="any"
               {...register("selling_price", { valueAsNumber: true })}
               placeholder="0.00"
-              className="w-full pl-7 font-mono"
+              className="w-full pl-7 font-mono dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
             />
           </div>
           {errors.selling_price && (
@@ -252,7 +252,7 @@ export const ProductUnitsForm = ({
 
         {/* Barcode */}
         <div className="space-y-1">
-          <Label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <Label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Barcode (Optional)
           </Label>
           <div className="relative">
@@ -261,7 +261,7 @@ export const ProductUnitsForm = ({
               type="text"
               {...register("barcode")}
               placeholder="e.g. 615110001"
-              className="w-full pr-28 font-mono"
+              className="w-full pr-28 font-mono dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
             />
             <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
               <button
@@ -271,12 +271,12 @@ export const ProductUnitsForm = ({
                   const generated = generateBarcode();
                   setValue("barcode", generated);
                 }}
-                className="px-2 py-1 text-[10px] font-bold text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded border border-blue-200 transition-colors bg-white flex items-center gap-1 shadow-xs cursor-pointer"
+                className="px-2 py-1 text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/50 rounded border border-blue-200 dark:border-blue-800 transition-colors bg-white dark:bg-slate-800 flex items-center gap-1 shadow-xs cursor-pointer"
               >
                 <Sparkles className="h-3 w-3 text-blue-500 animate-pulse" />
                 <span>Generate</span>
               </button>
-              <Barcode className="h-4 w-4 text-slate-400 mr-2" />
+              <Barcode className="h-4 w-4 text-slate-400 dark:text-slate-500 mr-2" />
             </div>
           </div>
           {errors.barcode && (
@@ -302,12 +302,12 @@ export const ProductUnitsForm = ({
       )}
 
       {/* Action buttons */}
-      <div className="flex justify-end items-center gap-3 border-t border-slate-100 pt-3">
+      <div className="flex justify-end items-center gap-3 border-t border-slate-100 dark:border-slate-800 pt-3">
         <button
           id="cancel-unit-form-btn"
           type="button"
           onClick={onCancel}
-          className="px-4 h-9 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
+          className="px-4 h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-slate-100 transition"
         >
           Cancel
         </button>

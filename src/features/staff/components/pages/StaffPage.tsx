@@ -19,7 +19,6 @@ import { EditStaffModal } from "../modals/EditStaffModal";
 import { ViewStaffModal } from "../modals/ViewStaffModal";
 import { ResetPinModal } from "../modals/ResetPinModal";
 import { DeleteStaffDialog } from "../modals/DeleteStaffDialog";
-import { StaffCredentialsModal } from "../modals/StaffCredentialsModal";
 
 export const StaffPage = () => {
   const currentUser = useAuthStore((state) => state.user);
@@ -47,10 +46,6 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
 // Selected Employee Context
 const [selectedEmp, setSelectedEmp] = useState<Employee | null>(null);
-const [createdCredentials, setCreatedCredentials] = useState<{
-  email: string;
-  tempPassword: string;
-} | null>(null);
 
 // Handlers
 const handleCreateSubmit = async (data: {
@@ -65,7 +60,7 @@ const handleCreateSubmit = async (data: {
     throw new Error("Selected role does not exist.");
   }
 
-  const res = await createEmployee({
+  await createEmployee({
     full_name: data.full_name,
     email: data.email,
     phone: data.phone,
@@ -73,13 +68,6 @@ const handleCreateSubmit = async (data: {
   });
 
   setIsAddModalOpen(false);
-
-  if (res?.temp_password) {
-    setCreatedCredentials({
-      email: data.email,
-      tempPassword: res.temp_password,
-    });
-  }
 };
 
 const handleEditSubmit = async (
@@ -165,7 +153,7 @@ const handleEditSubmit = async (
   };
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-8 font-sans bg-slate-50/50 min-h-[calc(100vh-4.5rem)] select-none">
+    <div className="flex flex-col gap-6 p-4 md:p-8 font-sans bg-slate-50/50 dark:bg-slate-950 min-h-[calc(100vh-4.5rem)] select-none transition-colors">
       {/* Stats Cards Section */}
       <StaffStatsCards
         employeesCount={employees.length}
@@ -179,9 +167,9 @@ const handleEditSubmit = async (
       />
 
       {/* Main Container */}
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col transition-colors">
         {/* Tab Header triggers */}
-        <div className="flex border-b border-slate-100 p-4 md:p-6 gap-2 bg-slate-50/20 overflow-x-auto">
+        <div className="flex border-b border-slate-100 dark:border-slate-800 p-4 md:p-6 gap-2 bg-slate-50/20 dark:bg-slate-900/50 overflow-x-auto">
           {[
             { id: "employees", label: "Employees", icon: Users },
             { id: "roles", label: "Roles & Access Matrix", icon: Shield },
@@ -202,8 +190,8 @@ const handleEditSubmit = async (
                 className={cn(
                   "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap",
                   active
-                    ? "bg-slate-900 text-white shadow-md shadow-slate-900/10"
-                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-800",
+                    ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-md shadow-slate-900/10"
+                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200",
                 )}
               >
                 <Icon size={14} />
@@ -217,8 +205,8 @@ const handleEditSubmit = async (
         <div className="p-4 md:p-8 flex-1">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
-              <RefreshCw className="animate-spin text-indigo-600 h-8 w-8" />
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <RefreshCw className="animate-spin text-indigo-600 dark:text-indigo-400 h-8 w-8" />
+              <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 Synchronizing Staff Directory...
               </p>
             </div>
@@ -314,13 +302,6 @@ const handleEditSubmit = async (
         employeeName={selectedEmp?.full_name || ""}
         onConfirm={handleDeleteConfirm}
         isDeleting={isDeleting}
-      />
-
-      <StaffCredentialsModal
-        isOpen={!!createdCredentials}
-        onClose={() => setCreatedCredentials(null)}
-        email={createdCredentials?.email ?? ""}
-        tempPassword={createdCredentials?.tempPassword ?? ""}
       />
     </div>
   );

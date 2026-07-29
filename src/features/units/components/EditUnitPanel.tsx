@@ -40,21 +40,21 @@ export const EditUnitPanel = ({ open, onClose, unit }: EditUnitPanelProps) => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 z-50 h-full w-full max-w-md bg-white p-6 shadow-2xl flex flex-col border-l border-slate-100"
+            className="fixed right-0 top-0 z-50 h-full w-full max-w-md bg-white dark:bg-slate-900 p-6 shadow-2xl flex flex-col border-l border-slate-100 dark:border-slate-800"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
               <div>
-                <h3 className="text-base font-extrabold text-slate-800 tracking-tight uppercase">
+                <h3 className="text-base font-extrabold text-slate-800 dark:text-slate-100 tracking-tight uppercase">
                   Edit Unit: {unit.name}
                 </h3>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
                   Modify the configuration of this unit of measurement.
                 </p>
               </div>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition"
+                className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition"
               >
                 <X size={18} />
               </button>

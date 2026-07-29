@@ -46,7 +46,9 @@ export const StaffForm = ({
       );
 
       if (!hasCurrentRole) {
-        setRole(initialData?.role || roles[0].name);
+        queueMicrotask(() => {
+          setRole(initialData?.role || roles[0].name);
+        });
       }
     }
   }, [roles, initialData?.role, role]);
@@ -63,7 +65,7 @@ export const StaffForm = ({
   return (
     <form onSubmit={handleSubmit} className="p-6 space-y-4">
       <div className="space-y-1 text-left">
-        <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+        <label className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
           Full Name *
         </label>
         <input
@@ -72,12 +74,12 @@ export const StaffForm = ({
           placeholder="Employee's Name"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
+          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 px-3.5 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
         />
       </div>
 
       <div className="space-y-1 text-left">
-        <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+        <label className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
           Email Address *
         </label>
         <input
@@ -86,12 +88,12 @@ export const StaffForm = ({
           placeholder="staff@farama.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
+          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 px-3.5 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
         />
       </div>
 
       <div className="space-y-1 text-left">
-        <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+        <label className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
           Phone Number
         </label>
         <input
@@ -99,20 +101,20 @@ export const StaffForm = ({
           placeholder="+44 7911 123456"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
+          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 px-3.5 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/15"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4 text-left">
         <div className="space-y-1">
-          <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+          <label className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
             Role Assignment
           </label>
 
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 bg-white"
+            className="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800"
           >
             {roles.map((r) => (
               <option key={r.id} value={r.name}>
@@ -123,22 +125,22 @@ export const StaffForm = ({
         </div>
 
         {mode === "create" ? (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-center">
-            <p className="text-xs font-medium text-amber-800">
+          <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-4 flex items-center">
+            <p className="text-xs font-medium text-amber-800 dark:text-amber-300">
               An invitation email will be sent to this employee. They will
               create their own password after accepting the invitation.
             </p>
           </div>
         ) : (
           <div className="space-y-1">
-            <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+            <label className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
               Access Status
             </label>
 
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as UserStatus)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700"
+              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200"
             >
               <option value={USER_STATUS.ACTIVE}>Active</option>
               <option value={USER_STATUS.SUSPENDED}>Suspended</option>
@@ -147,11 +149,11 @@ export const StaffForm = ({
         )}
       </div>
 
-      <div className="pt-4 border-t border-slate-50 flex items-center justify-end gap-3">
+      <div className="pt-4 border-t border-slate-50 dark:border-slate-800 flex items-center justify-end gap-3">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-slate-800 cursor-pointer"
+          className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 cursor-pointer"
         >
           Cancel
         </button>

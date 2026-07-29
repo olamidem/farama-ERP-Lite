@@ -25,14 +25,14 @@ export const ProductDetailsPage = () => {
   if (isProductLoading) {
     return (
       <div className="space-y-6 animate-pulse w-full">
-        <div className="h-10 bg-slate-200 rounded-xl w-1/4" />
+        <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-xl w-1/4" />
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="h-28 bg-slate-200 rounded-2xl" />
-          <div className="h-28 bg-slate-200 rounded-2xl" />
-          <div className="h-28 bg-slate-200 rounded-2xl" />
-          <div className="h-28 bg-slate-200 rounded-2xl" />
+          <div className="h-28 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+          <div className="h-28 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+          <div className="h-28 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+          <div className="h-28 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
         </div>
-        <div className="h-96 bg-slate-200 rounded-2xl" />
+        <div className="h-96 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
       </div>
     );
   }
@@ -40,16 +40,16 @@ export const ProductDetailsPage = () => {
   if (isError || !product) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 mb-4 border border-rose-100 shadow-sm">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 mb-4 border border-rose-100 dark:border-rose-800 shadow-xs">
           <AlertTriangle size={32} />
         </div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Product Not Found</h2>
-        <p className="text-base text-slate-500 mt-2">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Product Not Found</h2>
+        <p className="text-base text-slate-500 dark:text-slate-400 mt-2">
           We couldn't find the product details you requested. The item may have been deleted.
         </p>
         <button
           onClick={() => navigate({ to: "/products" })}
-          className="inline-flex items-center gap-2 h-10 px-4 rounded-xl border border-slate-200 bg-white text-base font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition shadow-sm mt-6"
+          className="inline-flex items-center gap-2 h-10 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-base font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-xs mt-6 cursor-pointer"
         >
           <ArrowLeft size={16} />
           <span>Back to Products</span>
@@ -106,43 +106,43 @@ export const ProductDetailsPage = () => {
       {/* KPI Cards Header: Basic Unit Financials & Inventory */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {/* Cost Price */}
-        <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm flex items-center gap-4 hover:shadow-md transition duration-200">
-          <div className="p-3.5 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+        <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex items-center gap-4 hover:shadow-md transition duration-200">
+          <div className="p-3.5 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 shrink-0">
             <Landmark size={24} />
           </div>
           <div>
-            <span className="block text-sm font-bold text-slate-500 uppercase tracking-wide">Cost Price</span>
-            <span className="text-xl md:text-2xl font-extrabold text-slate-900 font-mono block mt-1">
+            <span className="block text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Cost Price</span>
+            <span className="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-slate-100 font-mono block mt-1">
               {formatCurrency(costPrice)}
             </span>
           </div>
         </div>
 
         {/* Selling Price */}
-        <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm flex items-center gap-4 hover:shadow-md transition duration-200">
-          <div className="p-3.5 rounded-xl bg-emerald-50 text-emerald-600 shrink-0">
+        <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex items-center gap-4 hover:shadow-md transition duration-200">
+          <div className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 shrink-0">
             <Tag size={24} />
           </div>
           <div>
-            <span className="block text-sm font-bold text-slate-500 uppercase tracking-wide">Selling Price</span>
-            <span className="text-xl md:text-2xl font-extrabold text-slate-900 font-mono block mt-1">
+            <span className="block text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Selling Price</span>
+            <span className="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-slate-100 font-mono block mt-1">
               {formatCurrency(sellingPrice)}
             </span>
           </div>
         </div>
 
         {/* Profit */}
-        <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm flex items-center gap-4 hover:shadow-md transition duration-200">
-          <div className="p-3.5 rounded-xl bg-amber-50 text-amber-600 shrink-0">
+        <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex items-center gap-4 hover:shadow-md transition duration-200">
+          <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 shrink-0">
             <TrendingUp size={24} />
           </div>
           <div>
-            <span className="block text-sm font-bold text-slate-500 uppercase tracking-wide">Est. Unit Profit</span>
+            <span className="block text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Est. Unit Profit</span>
             <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-xl md:text-2xl font-extrabold text-slate-900 font-mono">
+              <span className="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-slate-100 font-mono">
                 {formatCurrency(profit)}
               </span>
-              <span className="text-xs font-extrabold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">
+              <span className="text-xs font-extrabold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded-md">
                 {profitMargin.toFixed(1)}%
               </span>
             </div>
@@ -150,13 +150,13 @@ export const ProductDetailsPage = () => {
         </div>
 
         {/* Current Stock */}
-        <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm flex items-center gap-4 hover:shadow-md transition duration-200">
-          <div className="p-3.5 rounded-xl bg-violet-50 text-violet-600 shrink-0">
+        <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex items-center gap-4 hover:shadow-md transition duration-200">
+          <div className="p-3.5 rounded-xl bg-violet-50 dark:bg-violet-950/50 text-violet-600 dark:text-violet-400 shrink-0">
             <Package size={24} />
           </div>
           <div>
-            <span className="block text-sm font-bold text-slate-500 uppercase tracking-wide">Current Stock</span>
-            <span className="text-xl md:text-2xl font-extrabold text-slate-900 block mt-1">
+            <span className="block text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Current Stock</span>
+            <span className="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-slate-100 block mt-1">
               {stock} units
             </span>
           </div>

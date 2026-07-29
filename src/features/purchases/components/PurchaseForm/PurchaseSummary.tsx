@@ -1,5 +1,4 @@
 import { Calendar, FileText } from "lucide-react";
-
 import Button from "../../../../components/ui/Button";
 import Input from "../../../../components/ui/Input";
 import Label from "../../../../components/ui/Label";
@@ -31,8 +30,8 @@ const PurchaseSummary = ({
   buttonText = "Create Purchase Order",
 }: PurchaseSummaryProps) => {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h3 className="mb-6 text-base font-bold text-slate-800">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm transition-colors">
+      <h3 className="mb-6 text-base font-bold text-slate-800 dark:text-slate-100">
         Logistics & Metadata
       </h3>
 
@@ -78,7 +77,7 @@ const PurchaseSummary = ({
               setRemarks(e.target.value)
             }
             placeholder="Additional notes..."
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 px-4 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900"
           />
         </div>
 

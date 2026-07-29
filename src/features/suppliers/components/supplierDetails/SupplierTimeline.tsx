@@ -52,7 +52,7 @@ export default function SupplierTimeline({ supplier }: SupplierTimelineProps) {
     description: `Registered "${supplier.name}" as an active supplier in the directory.`,
     date: supplier.supplierSince || supplier.created_at,
     icon: UserPlus,
-    color: "bg-indigo-50 text-indigo-600 border-indigo-100",
+    color: "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border-indigo-100 dark:border-indigo-900/50",
   });
 
   // 2. Add purchase events
@@ -72,7 +72,7 @@ export default function SupplierTimeline({ supplier }: SupplierTimelineProps) {
       ).format(p.total_amount || 0)}.`,
       date: p.purchase_date || p.created_at,
       icon: ShoppingBag,
-      color: "bg-blue-50 text-blue-600 border-blue-100",
+      color: "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/50",
     });
 
     // Purchase completion/receiving
@@ -83,7 +83,7 @@ export default function SupplierTimeline({ supplier }: SupplierTimelineProps) {
         description: `Successfully received all goods and updated stock for purchase order ${poNum}.`,
         date: p.updated_at || p.created_at,
         icon: CheckCircle2,
-        color: "bg-emerald-50 text-emerald-600 border-emerald-100",
+        color: "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/50",
       });
     }
   });
@@ -103,7 +103,7 @@ export default function SupplierTimeline({ supplier }: SupplierTimelineProps) {
               <div className="relative pb-8">
                 {idx !== events.length - 1 ? (
                   <span
-                    className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-slate-100"
+                    className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-slate-100 dark:bg-slate-800"
                     aria-hidden="true"
                   />
                 ) : null}
@@ -117,14 +117,14 @@ export default function SupplierTimeline({ supplier }: SupplierTimelineProps) {
                   </div>
                   <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
                     <div>
-                      <p className="text-xs font-bold text-slate-800">
+                      <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
                         {event.title}
                       </p>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         {event.description}
                       </p>
                     </div>
-                    <div className="whitespace-nowrap text-right text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                    <div className="whitespace-nowrap text-right text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                       <time dateTime={event.date}>
                         {formatDate(event.date)}
                       </time>

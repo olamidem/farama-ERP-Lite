@@ -76,8 +76,9 @@ export const ProductUnitsTable = ({
               </div>
               <span
                 className={cn(
-                  "truncate max-w-37.5 text-sm font-bold text-slate-800",
-                  !isActive && "text-slate-400 line-through font-medium",
+                  "truncate max-w-37.5 text-sm font-bold text-slate-800 dark:text-slate-100",
+                  !isActive &&
+                    "text-slate-400 dark:text-slate-500 line-through font-medium",
                 )}
                 title={uomName}
               >
@@ -98,7 +99,7 @@ export const ProductUnitsTable = ({
           return (
             <div
               className={cn(
-                "flex items-center gap-1.5 text-sm font-medium text-slate-600 font-sans",
+                "flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 font-sans",
                 !isActive && "opacity-60",
               )}
             >
@@ -106,8 +107,9 @@ export const ProductUnitsTable = ({
               <ArrowRight size={12} className="text-slate-400" />
               <span
                 className={cn(
-                  "font-bold font-mono text-blue-600 bg-blue-50/50 px-1.5 py-0.5 rounded text-xs",
-                  !isActive && "text-slate-400 bg-slate-100",
+                  "font-bold font-mono text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-950/50 px-1.5 py-0.5 rounded text-xs",
+                  !isActive &&
+                    "text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800",
                 )}
               >
                 {row.original.conversion_factor} {baseUnitSymbol}
@@ -126,14 +128,15 @@ export const ProductUnitsTable = ({
             <div className={cn("font-sans text-sm", !isActive && "opacity-60")}>
               <span
                 className={cn(
-                  "font-mono text-xs font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/50",
-                  !isActive && "text-slate-400 border-slate-200 bg-slate-50",
+                  "font-mono text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200/50 dark:border-slate-700/50",
+                  !isActive &&
+                    "text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900",
                 )}
               >
                 {row.original.sku}
               </span>
               {row.original.barcode && (
-                <div className="text-[11px] text-slate-500 flex items-center gap-0.5 font-mono mt-1">
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-0.5 font-mono mt-1">
                   <Barcode size={12} className="text-slate-400 shrink-0" />
                   <span>{row.original.barcode}</span>
                 </div>
@@ -150,8 +153,8 @@ export const ProductUnitsTable = ({
           return (
             <span
               className={cn(
-                "font-semibold font-mono text-sm text-slate-600 block text-right",
-                !isActive && "text-slate-400 opacity-60",
+                "font-semibold font-mono text-sm text-slate-600 dark:text-slate-300 block text-right",
+                !isActive && "text-slate-400 dark:text-slate-500 opacity-60",
               )}
             >
               {formatCurrency(row.original.cost_price)}
@@ -167,8 +170,9 @@ export const ProductUnitsTable = ({
           return (
             <span
               className={cn(
-                "font-extrabold font-mono text-sm text-slate-800 block text-right",
-                !isActive && "text-slate-400 line-through opacity-60",
+                "font-extrabold font-mono text-sm text-slate-800 dark:text-slate-100 block text-right",
+                !isActive &&
+                  "text-slate-400 dark:text-slate-500 line-through opacity-60",
               )}
             >
               {formatCurrency(row.original.selling_price)}
@@ -213,12 +217,12 @@ export const ProductUnitsTable = ({
                 className={cn(
                   "inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-bold",
                   !isActive
-                    ? "bg-slate-100 text-slate-400 border border-slate-200 opacity-60"
+                    ? "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 opacity-60"
                     : margin > 20
-                      ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
+                      ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800"
                       : margin > 5
-                        ? "bg-amber-50 text-amber-600 border border-amber-100"
-                        : "bg-rose-50 text-rose-600 border border-rose-100",
+                        ? "bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-800"
+                        : "bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800",
                 )}
               >
                 {margin.toFixed(2)}%
@@ -238,14 +242,16 @@ export const ProductUnitsTable = ({
                 className={cn(
                   "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold",
                   isActive
-                    ? "bg-emerald-50 border border-emerald-200 text-emerald-700"
-                    : "bg-slate-100 border border-slate-200 text-slate-600",
+                    ? "bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400"
+                    : "bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400",
                 )}
               >
                 <span
                   className={cn(
                     "h-1.5 w-1.5 rounded-full",
-                    isActive ? "bg-emerald-500" : "bg-slate-400",
+                    isActive
+                      ? "bg-emerald-500"
+                      : "bg-slate-400 dark:bg-slate-500",
                   )}
                 />
                 {isActive ? "Active" : "Archived"}
@@ -264,7 +270,7 @@ export const ProductUnitsTable = ({
               <button
                 type="button"
                 onClick={() => onEdit(pu)}
-                className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50/10 transition shadow-sm cursor-pointer"
+                className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-200 dark:hover:border-indigo-800 hover:bg-indigo-50/10 transition shadow-sm cursor-pointer"
                 title="Edit Unit"
               >
                 <Edit2 size={13} />
@@ -273,10 +279,10 @@ export const ProductUnitsTable = ({
                 type="button"
                 onClick={() => onToggleActive(pu)}
                 className={cn(
-                  "p-1.5 rounded-lg border bg-white transition shadow-sm cursor-pointer",
+                  "p-1.5 rounded-lg border bg-white dark:bg-slate-800 transition shadow-sm cursor-pointer",
                   pu.is_active
-                    ? "border-slate-200 text-amber-600 hover:text-amber-700 hover:border-amber-200 hover:bg-amber-50/10"
-                    : "border-slate-200 text-emerald-600 hover:text-emerald-700 hover:border-emerald-200 hover:bg-emerald-50/10",
+                    ? "border-slate-200 dark:border-slate-700 text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:border-amber-200 dark:hover:border-amber-800 hover:bg-amber-50/10"
+                    : "border-slate-200 dark:border-slate-700 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:border-emerald-200 dark:hover:border-emerald-800 hover:bg-emerald-50/10",
                 )}
                 title={pu.is_active ? "Archive Unit" : "Restore Unit"}
               >
@@ -293,14 +299,14 @@ export const ProductUnitsTable = ({
   return (
     <div
       id="product-units-table-container"
-      className="border border-slate-200 rounded-2xl bg-white overflow-hidden shadow-sm font-sans"
+      className="border border-slate-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 overflow-hidden shadow-xs font-sans"
     >
       {/* Table Header Section */}
-      <div className="p-4 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
-        <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wide">
+      <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/30 flex items-center justify-between">
+        <h4 className="text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">
           Existing Selling Units
         </h4>
-        <span className="text-[10px] text-slate-400 font-semibold">
+        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold">
           {productUnits.length} variants configured
         </span>
       </div>
@@ -314,7 +320,7 @@ export const ProductUnitsTable = ({
           getRowId={(pu: ProductUnit) => pu.id}
           getRowClassName={(pu) =>
             !pu.is_active
-              ? "bg-slate-50/60 text-slate-400/80 italic opacity-75"
+              ? "bg-slate-50/60 dark:bg-slate-800/40 text-slate-400/80 italic opacity-75"
               : ""
           }
         />
@@ -336,10 +342,10 @@ export const ProductUnitsTable = ({
             <div
               key={pu.id}
               className={cn(
-                "bg-white border rounded-xl p-4 shadow-xs space-y-3 transition-all duration-150",
+                "bg-white dark:bg-slate-900 border rounded-xl p-4 shadow-xs space-y-3 transition-all duration-150",
                 pu.is_active
-                  ? "border-slate-200"
-                  : "border-slate-100 bg-slate-50/50 opacity-75",
+                  ? "border-slate-200 dark:border-slate-800"
+                  : "border-slate-100 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-800/30 opacity-75",
               )}
             >
               {/* Header: Unit, SKU and Status */}
@@ -347,9 +353,9 @@ export const ProductUnitsTable = ({
                 <div className="flex items-center gap-2 min-w-0">
                   <div
                     className={cn(
-                      "h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-extrabold text-xs uppercase tracking-wide border border-blue-100/50 shrink-0",
+                      "h-8 w-8 rounded-lg bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center font-extrabold text-xs uppercase tracking-wide border border-blue-100/50 dark:border-blue-900/50 shrink-0",
                       !pu.is_active &&
-                        "bg-slate-100 text-slate-400 border-slate-200",
+                        "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700",
                     )}
                   >
                     {unitSymbol}
@@ -357,18 +363,21 @@ export const ProductUnitsTable = ({
                   <div className="min-w-0">
                     <h5
                       className={cn(
-                        "font-bold text-slate-800 text-xs leading-snug truncate",
-                        !pu.is_active && "text-slate-400 line-through",
+                        "font-bold text-slate-800 dark:text-slate-100 text-xs leading-snug truncate",
+                        !pu.is_active &&
+                          "text-slate-400 dark:text-slate-500 line-through",
                       )}
                     >
                       {uomName}
                     </h5>
-                    <div className="flex flex-wrap items-center gap-1 text-[10px] text-slate-500 mt-0.5 font-mono">
+                    <div className="flex flex-wrap items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 font-mono">
                       <span>SKU: {pu.sku}</span>
                       {pu.barcode && (
                         <>
-                          <span className="text-slate-300">•</span>
-                          <span className="flex items-center gap-0.5 text-slate-400">
+                          <span className="text-slate-300 dark:text-slate-600">
+                            •
+                          </span>
+                          <span className="flex items-center gap-0.5 text-slate-400 dark:text-slate-500">
                             <Barcode size={10} />
                             {pu.barcode}
                           </span>
@@ -381,8 +390,8 @@ export const ProductUnitsTable = ({
                   className={cn(
                     "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0",
                     pu.is_active
-                      ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
-                      : "bg-slate-100 text-slate-600 border border-slate-200",
+                      ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700",
                   )}
                 >
                   <span
@@ -396,21 +405,21 @@ export const ProductUnitsTable = ({
               </div>
 
               {/* Data panel: Conversion Factor, Costs, Margin */}
-              <div className="grid grid-cols-2 gap-3 bg-slate-50/50 p-3 rounded-lg border border-slate-100/50 text-xs">
+              <div className="grid grid-cols-2 gap-3 bg-slate-50/50 dark:bg-slate-800/40 p-3 rounded-lg border border-slate-100/50 dark:border-slate-700/50 text-xs">
                 <div>
-                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
+                  <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-0.5">
                     Conversion
                   </span>
-                  <div className="flex items-center gap-1 font-semibold text-slate-700">
+                  <div className="flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-300">
                     <span>1 {unitSymbol}</span>
                     <ArrowRight size={10} className="text-slate-400" />
-                    <span className="text-blue-600 font-bold font-mono">
+                    <span className="text-blue-600 dark:text-blue-400 font-bold font-mono">
                       {pu.conversion_factor} {baseUnitSymbol}
                     </span>
                   </div>
                 </div>
                 <div>
-                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
+                  <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-0.5">
                     Margin
                   </span>
                   <div>
@@ -418,12 +427,12 @@ export const ProductUnitsTable = ({
                       className={cn(
                         "inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[10px] font-extrabold",
                         !pu.is_active
-                          ? "bg-slate-100 text-slate-400 border border-slate-200 opacity-60"
+                          ? "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 opacity-60"
                           : margin > 20
-                            ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
+                            ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800"
                             : margin > 5
-                              ? "bg-amber-50 text-amber-600 border border-amber-100"
-                              : "bg-rose-50 text-rose-600 border border-rose-100",
+                              ? "bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-800"
+                              : "bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800",
                       )}
                     >
                       {margin.toFixed(1)}%
@@ -431,21 +440,22 @@ export const ProductUnitsTable = ({
                   </div>
                 </div>
                 <div>
-                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
+                  <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-0.5">
                     Cost Price
                   </span>
-                  <span className="font-bold font-mono text-slate-600">
+                  <span className="font-bold font-mono text-slate-600 dark:text-slate-300">
                     {formatCurrency(pu.cost_price)}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
+                  <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-0.5">
                     Selling Price
                   </span>
                   <span
                     className={cn(
-                      "font-extrabold font-mono text-slate-800",
-                      !pu.is_active && "text-slate-400 line-through",
+                      "font-extrabold font-mono text-slate-800 dark:text-slate-100",
+                      !pu.is_active &&
+                        "text-slate-400 dark:text-slate-500 line-through",
                     )}
                   >
                     {formatCurrency(pu.selling_price)}
@@ -454,11 +464,11 @@ export const ProductUnitsTable = ({
               </div>
 
               {/* Mobile Actions: touch target aligned h-9 */}
-              <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+              <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => onEdit(pu)}
-                  className="flex-1 h-9 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800 flex items-center justify-center gap-1.5 text-xs font-semibold cursor-pointer shadow-xs transition"
+                  className="flex-1 h-9 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-slate-100 flex items-center justify-center gap-1.5 text-xs font-semibold cursor-pointer shadow-xs transition"
                 >
                   <Edit2 size={13} />
                   <span>Edit</span>
@@ -469,8 +479,8 @@ export const ProductUnitsTable = ({
                   className={cn(
                     "flex-1 h-9 rounded-lg border flex items-center justify-center gap-1.5 text-xs font-semibold cursor-pointer shadow-xs transition",
                     pu.is_active
-                      ? "border-amber-200 bg-amber-50/20 text-amber-700 hover:bg-amber-50 hover:text-amber-800"
-                      : "border-emerald-200 bg-emerald-50/20 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800",
+                      ? "border-amber-200 dark:border-amber-900/50 bg-amber-50/20 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-800 dark:hover:text-amber-300"
+                      : "border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/20 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-800 dark:hover:text-emerald-300",
                   )}
                 >
                   {pu.is_active ? (
@@ -493,7 +503,7 @@ export const ProductUnitsTable = ({
 
       {/* Pagination Controls */}
       {totalItems > 10 && (
-        <div className="p-4 border-t border-slate-100 bg-slate-50/20">
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-slate-800/20">
           <Pagination
             page={page}
             pageSize={pageSize}

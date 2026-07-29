@@ -15,50 +15,50 @@ interface PurchaseTableProps {
 
 const PurchaseTableSkeleton = () => {
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-150 bg-white shadow-3xs animate-pulse">
+    <div className="overflow-hidden rounded-2xl border border-slate-150 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-3xs animate-pulse transition-colors">
       <div className="overflow-x-auto">
         <table className="min-w-full border-separate border-spacing-0">
-          <thead className="bg-slate-50">
+          <thead className="bg-slate-50 dark:bg-slate-800/50">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-200">PO Number</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-200">Supplier</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-200">Date</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-200">Expected Delivery</th>
-              <th className="px-6 py-4 text-right text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-200">Total Amount</th>
-              <th className="px-6 py-4 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-200">Status</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-200">Received %</th>
-              <th className="px-6 py-4 border-b border-slate-200"></th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">PO Number</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">Supplier</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">Date</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">Expected Delivery</th>
+              <th className="px-6 py-4 text-right text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">Total Amount</th>
+              <th className="px-6 py-4 text-center text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">Status</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">Received %</th>
+              <th className="px-6 py-4 border-b border-slate-200 dark:border-slate-800"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 bg-white">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
             {Array.from({ length: 5 }).map((_, idx) => (
-              <tr key={idx} className="hover:bg-slate-50/50">
+              <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50">
                 <td className="px-6 py-4.5">
-                  <div className="h-4.5 w-24 bg-slate-200 rounded-lg" />
+                  <div className="h-4.5 w-24 bg-slate-200 dark:bg-slate-800 rounded-lg" />
                 </td>
                 <td className="px-6 py-4.5">
-                  <div className="h-4.5 w-36 bg-slate-200 rounded-md" />
+                  <div className="h-4.5 w-36 bg-slate-200 dark:bg-slate-800 rounded-md" />
                 </td>
                 <td className="px-6 py-4.5">
-                  <div className="h-4 w-20 bg-slate-150 rounded" />
+                  <div className="h-4 w-20 bg-slate-150 dark:bg-slate-800 rounded" />
                 </td>
                 <td className="px-6 py-4.5">
-                  <div className="h-4 w-24 bg-slate-150 rounded" />
+                  <div className="h-4 w-24 bg-slate-150 dark:bg-slate-800 rounded" />
                 </td>
                 <td className="px-6 py-4.5 text-right">
-                  <div className="h-4 w-20 bg-slate-200 rounded ml-auto" />
+                  <div className="h-4 w-20 bg-slate-200 dark:bg-slate-800 rounded ml-auto" />
                 </td>
                 <td className="px-6 py-4.5">
-                  <div className="h-6 w-20 bg-slate-200 rounded-full mx-auto" />
+                  <div className="h-6 w-20 bg-slate-200 dark:bg-slate-800 rounded-full mx-auto" />
                 </td>
                 <td className="px-6 py-4.5">
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-16 bg-slate-200 rounded-full" />
-                    <div className="h-3 w-6 bg-slate-150 rounded" />
+                    <div className="h-2 w-16 bg-slate-200 dark:bg-slate-800 rounded-full" />
+                    <div className="h-3 w-6 bg-slate-150 dark:bg-slate-800 rounded" />
                   </div>
                 </td>
                 <td className="px-6 py-4.5 text-right">
-                  <div className="h-8 w-8 bg-slate-100 rounded-lg ml-auto" />
+                  <div className="h-8 w-8 bg-slate-100 dark:bg-slate-800 rounded-lg ml-auto" />
                 </td>
               </tr>
             ))}

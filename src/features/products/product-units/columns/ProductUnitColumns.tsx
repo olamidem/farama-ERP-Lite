@@ -25,10 +25,10 @@ export const getProductUnitColumns = ({
 
       return (
         <div>
-          <p className="font-medium text-slate-800">
+          <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">
             {unit?.name ?? "Unknown"}
           </p>
-          <p className="text-xs text-slate-500">{unit?.symbol ?? "--"}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{unit?.symbol ?? "--"}</p>
         </div>
       );
     },
@@ -38,7 +38,7 @@ export const getProductUnitColumns = ({
     accessorKey: "conversion_factor",
     header: "Conversion",
     cell: ({ row }) => (
-      <span className="font-mono">{row.original.conversion_factor}</span>
+      <span className="font-mono text-slate-700 dark:text-slate-200">{row.original.conversion_factor}</span>
     ),
   },
 
@@ -47,9 +47,9 @@ export const getProductUnitColumns = ({
     header: "SKU",
     cell: ({ row }) => (
       <div>
-        <p className="font-mono text-xs">{row.original.sku}</p>
+        <p className="font-mono text-xs text-slate-800 dark:text-slate-200">{row.original.sku}</p>
         {row.original.barcode && (
-          <p className="text-xs text-slate-400">{row.original.barcode}</p>
+          <p className="text-xs text-slate-400 dark:text-slate-500">{row.original.barcode}</p>
         )}
       </div>
     ),
@@ -58,13 +58,21 @@ export const getProductUnitColumns = ({
   {
     accessorKey: "cost_price",
     header: "Cost",
-    cell: ({ row }) => formatCurrency(row.original.cost_price),
+    cell: ({ row }) => (
+      <span className="font-mono text-slate-600 dark:text-slate-300 font-medium">
+        {formatCurrency(row.original.cost_price)}
+      </span>
+    ),
   },
 
   {
     accessorKey: "selling_price",
     header: "Selling",
-    cell: ({ row }) => formatCurrency(row.original.selling_price),
+    cell: ({ row }) => (
+      <span className="font-mono font-bold text-slate-800 dark:text-slate-100">
+        {formatCurrency(row.original.selling_price)}
+      </span>
+    ),
   },
 
   {

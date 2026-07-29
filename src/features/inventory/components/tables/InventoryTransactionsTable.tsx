@@ -123,13 +123,13 @@ export const InventoryTransactionsTable = ({
   };
 
   return (
-    <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm space-y-6">
+    <div className="rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm space-y-6 transition-colors">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <span>Recent Inventory Transactions</span>
           </h3>
-          <p className="text-xs font-semibold text-slate-400 mt-0.5">
+          <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 mt-0.5">
             Audit logs and transactional history of physical stock changes.
           </p>
         </div>
@@ -139,23 +139,23 @@ export const InventoryTransactionsTable = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 items-end pb-2">
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Search product, reference..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full text-xs font-medium text-slate-700 bg-white border border-slate-200 rounded-xl pl-9 pr-3 h-10 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all placeholder:text-slate-400"
+            className="w-full text-xs font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3 h-10 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
         {/* Type Filter */}
         <div className="space-y-1">
-          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Type</label>
+          <label className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Type</label>
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="w-full text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl px-3 h-10 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.5rem_center] bg-[length:1.25rem_1.25rem] bg-no-repeat pr-8"
+            className="w-full text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 h-10 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.5rem_center] bg-[length:1.25rem_1.25rem] bg-no-repeat pr-8"
           >
             <option value="All">All</option>
             <option value="PURCHASE">PURCHASE</option>
@@ -170,11 +170,11 @@ export const InventoryTransactionsTable = ({
 
         {/* Product Filter */}
         <div className="space-y-1">
-          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Product</label>
+          <label className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Product</label>
           <select
             value={selectedProduct}
             onChange={(e) => setSelectedProduct(e.target.value)}
-            className="w-full text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl px-3 h-10 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.5rem_center] bg-[length:1.25rem_1.25rem] bg-no-repeat pr-8"
+            className="w-full text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 h-10 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.5rem_center] bg-[length:1.25rem_1.25rem] bg-no-repeat pr-8"
           >
             <option value="All">All</option>
             {productsList.map((p) => (
@@ -187,11 +187,11 @@ export const InventoryTransactionsTable = ({
 
         {/* Date Range Filter */}
         <div className="space-y-1">
-          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Date Range</label>
+          <label className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Date Range</label>
           <select
             value={selectedDateRange}
             onChange={(e) => setSelectedDateRange(e.target.value)}
-            className="w-full text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl px-3 h-10 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.5rem_center] bg-[length:1.25rem_1.25rem] bg-no-repeat pr-8"
+            className="w-full text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 h-10 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.5rem_center] bg-[length:1.25rem_1.25rem] bg-no-repeat pr-8"
           >
             <option value="All">All Time</option>
             <option value="Today">Today</option>
@@ -202,11 +202,11 @@ export const InventoryTransactionsTable = ({
 
         {/* User Filter */}
         <div className="space-y-1">
-          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">User</label>
+          <label className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">User</label>
           <select
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
-            className="w-full text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl px-3 h-10 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.5rem_center] bg-[length:1.25rem_1.25rem] bg-no-repeat pr-8"
+            className="w-full text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 h-10 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.5rem_center] bg-[length:1.25rem_1.25rem] bg-no-repeat pr-8"
           >
             <option value="All">All</option>
             {usersList.map((usr) => (
@@ -222,9 +222,9 @@ export const InventoryTransactionsTable = ({
           <button
             onClick={handleExport}
             disabled={filteredTransactions.length === 0}
-            className="w-full flex items-center justify-center gap-2 h-10 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 h-10 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-slate-100 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Download size={14} className="text-slate-500" />
+            <Download size={14} className="text-slate-500 dark:text-slate-400" />
             <span>Export</span>
           </button>
         </div>

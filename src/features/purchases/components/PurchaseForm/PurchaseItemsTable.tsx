@@ -36,11 +36,11 @@ const PurchaseItemsTable = ({
   );
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm transition-colors">
       <div className="mb-6 flex items-center gap-2">
-        <ShoppingBasket size={18} className="text-indigo-600" />
+        <ShoppingBasket size={18} className="text-indigo-600 dark:text-indigo-400" />
 
-        <Label className="mb-0 text-base font-bold text-slate-800">
+        <Label className="mb-0 text-base font-bold text-slate-800 dark:text-slate-100">
           Purchase Items
         </Label>
       </div>
@@ -48,7 +48,7 @@ const PurchaseItemsTable = ({
       <div className="overflow-x-auto">
         <table className="min-w-175 w-full border-collapse text-left">
           <thead>
-            <tr className="border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <tr className="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               <th className="pb-3 pr-3">Product</th>
 
               <th className="pb-3 pr-3">Unit</th>
@@ -79,7 +79,7 @@ const PurchaseItemsTable = ({
         </table>
       </div>
 
-      <div className="mt-6 flex flex-col gap-4 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-6 flex flex-col gap-4 border-t border-slate-100 dark:border-slate-800 pt-5 sm:flex-row sm:items-center sm:justify-between">
         <Button
           type="button"
           variant="secondary"
@@ -91,20 +91,20 @@ const PurchaseItemsTable = ({
         </Button>
 
         <div className="flex gap-10 text-sm">
-          <div className="space-y-1 text-slate-500">
+          <div className="space-y-1 text-slate-500 dark:text-slate-400">
             <p>Total Items</p>
             <p>Total Quantity</p>
-            <p className="pt-2 font-bold uppercase text-slate-700">
+            <p className="pt-2 font-bold uppercase text-slate-700 dark:text-slate-300">
               Grand Total
             </p>
           </div>
 
           <div className="space-y-1 text-right font-mono">
-            <p className="font-semibold text-slate-800">{totalItems}</p>
+            <p className="font-semibold text-slate-800 dark:text-slate-200">{totalItems}</p>
 
-            <p className="font-semibold text-slate-800">{totalQuantity}</p>
+            <p className="font-semibold text-slate-800 dark:text-slate-200">{totalQuantity}</p>
 
-            <p className="pt-2 text-lg font-bold text-indigo-600">
+            <p className="pt-2 text-lg font-bold text-indigo-600 dark:text-indigo-400">
               {formatCurrency(grandTotal)}
             </p>
           </div>

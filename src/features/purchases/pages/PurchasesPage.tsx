@@ -224,7 +224,7 @@ export const PurchasesPage = () => {
             onExport={handleExport}
           />
 
-          <div className="bg-white rounded-2xl border border-slate-100 p-4.5 shadow-3xs">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-4.5 shadow-3xs transition-colors">
             <PurchaseTable
               purchases={purchases}
               isLoading={isLoading}
@@ -241,7 +241,7 @@ export const PurchasesPage = () => {
 
         {/* Right Column: Selected Purchase Order Detail view or loading skeleton */}
         {(isLoading || activeSelected) && (
-          <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-md lg:h-[calc(100vh-140px)] lg:sticky lg:top-4 z-20 flex flex-col">
+          <div className="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-md lg:h-[calc(100vh-140px)] lg:sticky lg:top-4 z-20 flex flex-col transition-colors">
             {isLoading ? (
               <PurchaseOverviewSkeleton />
             ) : activeSelected ? (
@@ -268,17 +268,17 @@ export const PurchasesPage = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="relative bg-slate-50 w-full max-w-6xl rounded-2xl border border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+              className="relative bg-slate-50 dark:bg-slate-900 w-full max-w-6xl rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] transition-colors"
             >
               {/* Modal Sticky Header */}
-              <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white z-10 shrink-0">
+              <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 z-10 shrink-0">
                 <div className="flex items-center gap-2.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
                   <div>
-                    <h2 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider">
+                    <h2 className="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
                       New Purchase Order
                     </h2>
-                    <p className="text-[10px] font-semibold text-slate-400 mt-0.5">
+                    <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mt-0.5">
                       Create and register a new purchase requisition with
                       suppliers
                     </p>
@@ -287,14 +287,14 @@ export const PurchasesPage = () => {
                 <button
                   onClick={() => setIsCreateModalOpen(false)}
                   type="button"
-                  className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 cursor-pointer transition border-0"
+                  className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition border-0"
                 >
                   <X size={16} />
                 </button>
               </div>
 
               {/* Scrollable Modal Content */}
-              <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50">
+              <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50 dark:bg-slate-950/50">
                 <PurchaseForm
                   isModal={true}
                   onSuccess={() => {
@@ -318,17 +318,17 @@ export const PurchasesPage = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="relative bg-slate-50 w-full max-w-6xl rounded-2xl border border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+              className="relative bg-slate-50 dark:bg-slate-900 w-full max-w-6xl rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] transition-colors"
             >
               {/* Modal Sticky Header */}
-              <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white z-10 shrink-0">
+              <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 z-10 shrink-0">
                 <div className="flex items-center gap-2.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
                   <div>
-                    <h2 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider">
+                    <h2 className="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
                       Edit Purchase Order
                     </h2>
-                    <p className="text-[10px] font-semibold text-slate-400 mt-0.5">
+                    <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mt-0.5">
                       Update details of your pending purchase requisition
                     </p>
                   </div>
@@ -336,14 +336,14 @@ export const PurchasesPage = () => {
                 <button
                   onClick={() => setPurchaseToEdit(null)}
                   type="button"
-                  className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 cursor-pointer transition border-0"
+                  className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition border-0"
                 >
                   <X size={16} />
                 </button>
               </div>
 
               {/* Scrollable Modal Content */}
-              <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50">
+              <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50 dark:bg-slate-950/50">
                 <PurchaseForm
                   purchase={purchaseToEdit}
                   isModal={true}
