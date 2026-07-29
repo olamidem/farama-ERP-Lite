@@ -77,7 +77,8 @@ export const ProductUnitsTable = ({
               <span
                 className={cn(
                   "truncate max-w-37.5 text-sm font-bold text-slate-800 dark:text-slate-100",
-                  !isActive && "text-slate-400 dark:text-slate-500 line-through font-medium",
+                  !isActive &&
+                    "text-slate-400 dark:text-slate-500 line-through font-medium",
                 )}
                 title={uomName}
               >
@@ -107,7 +108,8 @@ export const ProductUnitsTable = ({
               <span
                 className={cn(
                   "font-bold font-mono text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-950/50 px-1.5 py-0.5 rounded text-xs",
-                  !isActive && "text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800",
+                  !isActive &&
+                    "text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800",
                 )}
               >
                 {row.original.conversion_factor} {baseUnitSymbol}
@@ -127,7 +129,8 @@ export const ProductUnitsTable = ({
               <span
                 className={cn(
                   "font-mono text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200/50 dark:border-slate-700/50",
-                  !isActive && "text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900",
+                  !isActive &&
+                    "text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900",
                 )}
               >
                 {row.original.sku}
@@ -168,7 +171,8 @@ export const ProductUnitsTable = ({
             <span
               className={cn(
                 "font-extrabold font-mono text-sm text-slate-800 dark:text-slate-100 block text-right",
-                !isActive && "text-slate-400 dark:text-slate-500 line-through opacity-60",
+                !isActive &&
+                  "text-slate-400 dark:text-slate-500 line-through opacity-60",
               )}
             >
               {formatCurrency(row.original.selling_price)}
@@ -245,7 +249,9 @@ export const ProductUnitsTable = ({
                 <span
                   className={cn(
                     "h-1.5 w-1.5 rounded-full",
-                    isActive ? "bg-emerald-500" : "bg-slate-400 dark:bg-slate-500",
+                    isActive
+                      ? "bg-emerald-500"
+                      : "bg-slate-400 dark:bg-slate-500",
                   )}
                 />
                 {isActive ? "Active" : "Archived"}
@@ -358,7 +364,8 @@ export const ProductUnitsTable = ({
                     <h5
                       className={cn(
                         "font-bold text-slate-800 dark:text-slate-100 text-xs leading-snug truncate",
-                        !pu.is_active && "text-slate-400 dark:text-slate-500 line-through",
+                        !pu.is_active &&
+                          "text-slate-400 dark:text-slate-500 line-through",
                       )}
                     >
                       {uomName}
@@ -367,7 +374,9 @@ export const ProductUnitsTable = ({
                       <span>SKU: {pu.sku}</span>
                       {pu.barcode && (
                         <>
-                          <span className="text-slate-300 dark:text-slate-600">•</span>
+                          <span className="text-slate-300 dark:text-slate-600">
+                            •
+                          </span>
                           <span className="flex items-center gap-0.5 text-slate-400 dark:text-slate-500">
                             <Barcode size={10} />
                             {pu.barcode}
@@ -445,7 +454,8 @@ export const ProductUnitsTable = ({
                   <span
                     className={cn(
                       "font-extrabold font-mono text-slate-800 dark:text-slate-100",
-                      !pu.is_active && "text-slate-400 dark:text-slate-500 line-through",
+                      !pu.is_active &&
+                        "text-slate-400 dark:text-slate-500 line-through",
                     )}
                   >
                     {formatCurrency(pu.selling_price)}
