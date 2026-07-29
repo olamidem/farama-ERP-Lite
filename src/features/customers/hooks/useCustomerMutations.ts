@@ -1,12 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-
 import {
   createCustomer,
   updateCustomer,
   deleteCustomer,
 } from "../services/customer.service";
-
 import type {
   CreateCustomerInput,
   UpdateCustomerInput,
@@ -46,7 +44,6 @@ export const useCreateCustomer = () => {
 
     onSuccess: async () => {
       await invalidateCustomers(queryClient);
-
       toast.success("Customer created successfully.");
     },
 
