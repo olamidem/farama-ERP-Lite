@@ -30,12 +30,12 @@ export const PurchaseFilters = ({
   const { data: suppliers = [] } = useSuppliers();
 
   return (
-    <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white p-4.5 rounded-2xl border border-slate-100 shadow-2xs">
+    <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-4.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xs transition-colors">
       {/* Search & Selectors Group */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 flex-1">
         {/* Search Input */}
         <div className="relative col-span-1 sm:col-span-2 xl:col-span-1">
-          <span className="absolute inset-y-0 left-3 flex items-center text-slate-400">
+          <span className="absolute inset-y-0 left-3 flex items-center text-slate-400 dark:text-slate-500">
             <Search size={15} />
           </span>
           <input
@@ -43,7 +43,7 @@ export const PurchaseFilters = ({
             placeholder="Search by PO number or supplier..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9.5 pr-4 py-2 text-xs border border-slate-200 rounded-xl bg-slate-50/50 hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500 font-medium text-slate-700 transition"
+            className="w-full pl-9.5 pr-4 py-2 text-xs border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500 font-medium text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition"
           />
         </div>
 
@@ -52,7 +52,7 @@ export const PurchaseFilters = ({
           <select
             value={supplierId}
             onChange={(e) => setSupplierId(e.target.value)}
-            className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500 text-slate-600 font-semibold cursor-pointer transition"
+            className="w-full px-3 py-2 text-xs border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500 text-slate-600 dark:text-slate-200 font-semibold cursor-pointer transition"
           >
             <option value="all">All Suppliers</option>
             {suppliers.map((s: Supplier) => (
@@ -68,7 +68,7 @@ export const PurchaseFilters = ({
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500 text-slate-600 font-semibold cursor-pointer transition"
+            className="w-full px-3 py-2 text-xs border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500 text-slate-600 dark:text-slate-200 font-semibold cursor-pointer transition"
           >
             <option value="all">All Status</option>
             <option value="PENDING">Pending</option>
@@ -80,13 +80,13 @@ export const PurchaseFilters = ({
 
         {/* Date Filter Dropdown */}
         <div className="relative">
-          <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-400">
+          <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
             <Calendar size={14} />
           </span>
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500 text-slate-600 font-semibold cursor-pointer transition appearance-none"
+            className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500 text-slate-600 dark:text-slate-200 font-semibold cursor-pointer transition appearance-none"
           >
             <option value="all">All Dates</option>
             <option value="today">Today</option>
@@ -102,7 +102,7 @@ export const PurchaseFilters = ({
         <button
           onClick={onFilterClick}
           type="button"
-          className="flex items-center gap-1.5 px-4.5 py-2 text-xs border border-slate-200 bg-white text-slate-600 font-bold rounded-xl hover:bg-slate-50 cursor-pointer shadow-3xs hover:text-slate-800 transition"
+          className="flex items-center gap-1.5 px-4.5 py-2 text-xs border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer shadow-3xs hover:text-slate-800 dark:hover:text-slate-100 transition"
         >
           <SlidersHorizontal size={13} />
           <span>Filter</span>
@@ -111,7 +111,7 @@ export const PurchaseFilters = ({
         <button
           onClick={onExport}
           type="button"
-          className="flex items-center gap-1.5 px-4.5 py-2 text-xs border border-slate-200 bg-white text-slate-600 font-bold rounded-xl hover:bg-slate-50 cursor-pointer shadow-3xs hover:text-slate-800 transition"
+          className="flex items-center gap-1.5 px-4.5 py-2 text-xs border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer shadow-3xs hover:text-slate-800 dark:hover:text-slate-100 transition"
         >
           <Download size={13} />
           <span>Export</span>
