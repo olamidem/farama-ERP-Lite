@@ -39,8 +39,8 @@ export const ProductDetailsOverviewHeader = ({
   firstLetter,
 }: ProductDetailsOverviewHeaderProps) => {
   return (
-    <div className="flex items-center gap-4 bg-slate-50 border border-slate-100 rounded-2xl p-4">
-      <div className="relative h-16 w-16 rounded-xl border border-slate-200 bg-white p-1 flex items-center justify-center shadow-inner overflow-hidden shrink-0">
+    <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl p-4">
+      <div className="relative h-16 w-16 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 flex items-center justify-center shadow-inner overflow-hidden shrink-0">
         <div
           className={`w-full h-full rounded-lg bg-linear-to-br ${gradientClass} flex items-center justify-center font-black text-2xl select-none`}
         >
@@ -48,10 +48,10 @@ export const ProductDetailsOverviewHeader = ({
         </div>
       </div>
       <div>
-        <h3 className="text-xl font-extrabold text-slate-900 leading-tight">
+        <h3 className="text-xl font-extrabold text-slate-900 dark:text-slate-100 leading-tight">
           {productName}
         </h3>
-        <p className="text-sm font-medium text-slate-500 mt-0.5">
+        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-0.5">
           Primary Specifications & Custom Attributes
         </p>
       </div>
@@ -87,26 +87,26 @@ export const ProductDetailsOverviewSpecsTable = ({
 }: ProductDetailsOverviewSpecsTableProps) => {
   return (
     <div className="space-y-3">
-      <h4 className="text-base font-bold text-slate-800 tracking-tight">
+      <h4 className="text-base font-bold text-slate-800 dark:text-slate-100 tracking-tight">
         Product Specifications Table
       </h4>
 
-      <div className="divide-y divide-slate-100 border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-xs">
-        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 transition duration-150">
-          <span className="font-bold text-slate-500">Product Name</span>
-          <span className="col-span-2 font-extrabold text-slate-900">
+      <div className="divide-y divide-slate-100 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 shadow-xs">
+        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 dark:hover:bg-slate-800/40 transition duration-150">
+          <span className="font-bold text-slate-500 dark:text-slate-400">Product Name</span>
+          <span className="col-span-2 font-extrabold text-slate-900 dark:text-slate-100">
             {product.name}
           </span>
         </div>
 
-        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 transition duration-150">
-          <span className="font-bold text-slate-500">SKU Code</span>
-          <span className="col-span-2 font-semibold text-slate-900 font-mono flex items-center gap-2">
+        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 dark:hover:bg-slate-800/40 transition duration-150">
+          <span className="font-bold text-slate-500 dark:text-slate-400">SKU Code</span>
+          <span className="col-span-2 font-semibold text-slate-900 dark:text-slate-100 font-mono flex items-center gap-2">
             {product.sku || "N/A"}
             {product.sku && (
               <button
                 onClick={() => onCopy(product.sku, "sku")}
-                className="p-1 rounded hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+                className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"
                 title="Copy SKU"
               >
                 {copiedSku ? (
@@ -119,15 +119,15 @@ export const ProductDetailsOverviewSpecsTable = ({
           </span>
         </div>
 
-        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 transition duration-150">
-          <span className="font-bold text-slate-500">Barcode</span>
-          <span className="col-span-2 font-semibold text-slate-900 font-mono flex items-center gap-2">
+        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 dark:hover:bg-slate-800/40 transition duration-150">
+          <span className="font-bold text-slate-500 dark:text-slate-400">Barcode</span>
+          <span className="col-span-2 font-semibold text-slate-900 dark:text-slate-100 font-mono flex items-center gap-2">
             {product.barcode || "6151234567890"}
             <button
               onClick={() =>
                 onCopy(product.barcode || "6151234567890", "barcode")
               }
-              className="p-1 rounded hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+              className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"
               title="Copy Barcode"
             >
               {copiedBarcode ? (
@@ -139,42 +139,42 @@ export const ProductDetailsOverviewSpecsTable = ({
           </span>
         </div>
 
-        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 transition duration-150">
-          <span className="font-bold text-slate-500">Category</span>
-          <span className="col-span-2 font-bold text-slate-800">
+        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 dark:hover:bg-slate-800/40 transition duration-150">
+          <span className="font-bold text-slate-500 dark:text-slate-400">Category</span>
+          <span className="col-span-2 font-bold text-slate-800 dark:text-slate-200">
             {categoryName}
           </span>
         </div>
 
-        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 transition duration-150">
-          <span className="font-bold text-slate-500">Subcategory</span>
-          <span className="col-span-2 font-bold text-slate-800">
+        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 dark:hover:bg-slate-800/40 transition duration-150">
+          <span className="font-bold text-slate-500 dark:text-slate-400">Subcategory</span>
+          <span className="col-span-2 font-bold text-slate-800 dark:text-slate-200">
             {subcategory}
           </span>
         </div>
 
-        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 transition duration-150">
-          <span className="font-bold text-slate-500">Base Unit</span>
-          <span className="col-span-2 font-bold text-slate-800">
+        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 dark:hover:bg-slate-800/40 transition duration-150">
+          <span className="font-bold text-slate-500 dark:text-slate-400">Base Unit</span>
+          <span className="col-span-2 font-bold text-slate-800 dark:text-slate-200">
             {baseUnitDisplay}
           </span>
         </div>
 
-        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 transition duration-150">
-          <span className="font-bold text-slate-500">Min. Stock Threshold</span>
-          <span className="col-span-2 font-bold text-rose-600 font-mono">
+        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 dark:hover:bg-slate-800/40 transition duration-150">
+          <span className="font-bold text-slate-500 dark:text-slate-400">Min. Stock Threshold</span>
+          <span className="col-span-2 font-bold text-rose-600 dark:text-rose-400 font-mono">
             {product.min_stock_alert || 0} {baseUnitSymbol}
           </span>
         </div>
 
-        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 transition duration-150">
-          <span className="font-bold text-slate-500">Status</span>
+        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 dark:hover:bg-slate-800/40 transition duration-150">
+          <span className="font-bold text-slate-500 dark:text-slate-400">Status</span>
           <span className="col-span-2">
             <span
               className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold ${
                 product.is_active !== false
-                  ? "bg-emerald-50 border border-emerald-200 text-emerald-700"
-                  : "bg-slate-100 border border-slate-200 text-slate-600"
+                  ? "bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400"
+                  : "bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
               }`}
             >
               <span
@@ -189,27 +189,27 @@ export const ProductDetailsOverviewSpecsTable = ({
           </span>
         </div>
 
-        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 transition duration-150">
-          <span className="font-bold text-slate-500">Tax Rate</span>
-          <span className="col-span-2 font-bold text-slate-800">
+        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 dark:hover:bg-slate-800/40 transition duration-150">
+          <span className="font-bold text-slate-500 dark:text-slate-400">Tax Rate</span>
+          <span className="col-span-2 font-bold text-slate-800 dark:text-slate-200">
             0% (Vat Exempted)
           </span>
         </div>
 
-        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 transition duration-150">
-          <span className="font-bold text-slate-500">Supplier</span>
-          <span className="col-span-2 font-bold text-slate-800">
+        <div className="grid grid-cols-3 p-3.5 text-base hover:bg-slate-50/40 dark:hover:bg-slate-800/40 transition duration-150">
+          <span className="font-bold text-slate-500 dark:text-slate-400">Supplier</span>
+          <span className="col-span-2 font-bold text-slate-800 dark:text-slate-200">
             {supplier}
           </span>
         </div>
 
-        <div className="grid grid-cols-3 p-3.5 text-base items-center hover:bg-slate-50/40 transition duration-150">
-          <span className="font-bold text-slate-500">Custom Tags</span>
+        <div className="grid grid-cols-3 p-3.5 text-base items-center hover:bg-slate-50/40 dark:hover:bg-slate-800/40 transition duration-150">
+          <span className="font-bold text-slate-500 dark:text-slate-400">Custom Tags</span>
           <div className="col-span-2 flex flex-wrap items-center gap-1.5">
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 text-xs font-bold border border-slate-200 uppercase"
+                className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-700 uppercase"
               >
                 {tag}
               </span>
@@ -240,47 +240,47 @@ export const ProductDetailsOverviewAssetIntelligence = ({
   formatCurrency,
 }: ProductDetailsOverviewAssetIntelligenceProps) => {
   return (
-    <div className="border border-slate-200 rounded-2xl p-5 bg-slate-50/60 shadow-xs space-y-4">
-      <h4 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
+    <div className="border border-slate-200 dark:border-slate-800 rounded-2xl p-5 bg-slate-50/60 dark:bg-slate-800/40 shadow-xs space-y-4">
+      <h4 className="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider border-b border-slate-200 dark:border-slate-700/80 pb-2">
         Computed Asset Intelligence
       </h4>
       <div className="space-y-3">
         <div className="flex items-center justify-between text-base">
-          <span className="font-medium text-slate-500">
+          <span className="font-medium text-slate-500 dark:text-slate-400">
             Total Registered Units:
           </span>
-          <span className="font-extrabold text-slate-800 font-mono">
+          <span className="font-extrabold text-slate-800 dark:text-slate-100 font-mono">
             {stock}
           </span>
         </div>
         <div className="flex items-center justify-between text-base">
-          <span className="font-medium text-slate-500">
+          <span className="font-medium text-slate-500 dark:text-slate-400">
             Est. Total Stock Value:
           </span>
-          <span className="font-bold text-emerald-700 font-mono">
+          <span className="font-bold text-emerald-700 dark:text-emerald-400 font-mono">
             {formatCurrency(estRetailValue)}
           </span>
         </div>
         <div className="flex items-center justify-between text-base">
-          <span className="font-medium text-slate-500">
+          <span className="font-medium text-slate-500 dark:text-slate-400">
             Est. Total Asset Cost:
           </span>
-          <span className="font-bold text-blue-700 font-mono">
+          <span className="font-bold text-blue-700 dark:text-blue-400 font-mono">
             {formatCurrency(estCostValue)}
           </span>
         </div>
         <div className="flex items-center justify-between text-base">
-          <span className="font-medium text-slate-500">
+          <span className="font-medium text-slate-500 dark:text-slate-400">
             Active Sell Packages:
           </span>
-          <span className="font-bold text-slate-800">
+          <span className="font-bold text-slate-800 dark:text-slate-200">
             {variantCount} Configured
           </span>
         </div>
       </div>
 
       {isLowStock && (
-        <div className="p-3 rounded-xl bg-rose-50 border border-rose-100 text-rose-700 text-xs font-extrabold text-center animate-pulse">
+        <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-800 text-rose-700 dark:text-rose-400 text-xs font-extrabold text-center animate-pulse">
           ⚠️ Alert: Current stock is under the minimum warning threshold.
         </div>
       )}
@@ -305,49 +305,49 @@ export const ProductDetailsOverviewOperations = ({
   onArchive,
 }: ProductDetailsOverviewOperationsProps) => {
   return (
-    <div className="border border-slate-200 rounded-2xl p-5 bg-white shadow-xs space-y-4">
-      <h4 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
+    <div className="border border-slate-200 dark:border-slate-800 rounded-2xl p-5 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+      <h4 className="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2">
         Operations Console
       </h4>
 
       <div className="flex flex-col gap-2.5">
         <button
           onClick={onEdit}
-          className="flex items-center justify-center gap-2 h-11 w-full rounded-xl border border-slate-200 bg-white text-base font-bold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition shadow-xs cursor-pointer"
+          className="flex items-center justify-center gap-2 h-11 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-base font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100 transition shadow-xs cursor-pointer"
         >
-          <Pencil size={16} className="text-slate-500" />
+          <Pencil size={16} className="text-slate-500 dark:text-slate-400" />
           <span>Edit Product Details</span>
         </button>
 
         <button
           onClick={onAdjustStock}
-          className="flex items-center justify-center gap-2 h-11 w-full rounded-xl border border-slate-200 bg-white text-base font-bold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition shadow-xs cursor-pointer"
+          className="flex items-center justify-center gap-2 h-11 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-base font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100 transition shadow-xs cursor-pointer"
         >
-          <Sliders size={16} className="text-slate-500" />
+          <Sliders size={16} className="text-slate-500 dark:text-slate-400" />
           <span>Adjust Stock Value</span>
         </button>
 
         <button
           onClick={onDuplicate}
-          className="flex items-center justify-center gap-2 h-11 w-full rounded-xl border border-slate-200 bg-white text-base font-bold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition shadow-xs cursor-pointer"
+          className="flex items-center justify-center gap-2 h-11 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-base font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100 transition shadow-xs cursor-pointer"
         >
-          <Copy size={16} className="text-slate-500" />
+          <Copy size={16} className="text-slate-500 dark:text-slate-400" />
           <span>Duplicate Product</span>
         </button>
 
         <button
           onClick={onPrintBarcode}
-          className="flex items-center justify-center gap-2 h-11 w-full rounded-xl border border-slate-200 bg-white text-base font-bold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition shadow-xs cursor-pointer"
+          className="flex items-center justify-center gap-2 h-11 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-base font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100 transition shadow-xs cursor-pointer"
         >
-          <Barcode size={16} className="text-slate-500" />
+          <Barcode size={16} className="text-slate-500 dark:text-slate-400" />
           <span>Print Barcode Labels</span>
         </button>
 
-        <div className="h-px bg-slate-100 my-1" />
+        <div className="h-px bg-slate-100 dark:bg-slate-800 my-1" />
 
         <button
           onClick={onArchive}
-          className="flex items-center justify-center gap-2 h-11 w-full rounded-xl border border-rose-200 bg-rose-50/15 text-base font-bold text-rose-600 hover:bg-rose-50 transition shadow-xs cursor-pointer"
+          className="flex items-center justify-center gap-2 h-11 w-full rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/15 dark:bg-rose-950/30 text-base font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/60 transition shadow-xs cursor-pointer"
         >
           <Trash2 size={16} />
           <span>Archive Product</span>
@@ -504,13 +504,13 @@ export const ProductDetailsOverviewTab = ({
 
         {/* Description Section */}
         <div className="space-y-3">
-          <h4 className="text-base font-bold text-slate-800 tracking-tight">
+          <h4 className="text-base font-bold text-slate-800 dark:text-slate-100 tracking-tight">
             Product Description
           </h4>
-          <p className="text-base text-slate-600 leading-relaxed bg-slate-50/30 p-4 rounded-2xl border border-slate-100">
+          <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50/30 dark:bg-slate-800/30 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
             {product.description ||
               "No custom description available for this item."}
-            <span className="block mt-2 font-semibold text-sm text-slate-400">
+            <span className="block mt-2 font-semibold text-sm text-slate-400 dark:text-slate-500">
               Note: This description appears on standard billing registers,
               variant sheets, and print layouts.
             </span>
@@ -518,41 +518,41 @@ export const ProductDetailsOverviewTab = ({
         </div>
 
         {/* Product Integration: Last Requisition Details */}
-        <div className="border border-slate-200 rounded-2xl p-5 bg-white shadow-3xs space-y-4">
-          <h4 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2 flex items-center gap-2">
-            <ShoppingBag size={15} className="text-indigo-600" />
+        <div className="border border-slate-200 dark:border-slate-800 rounded-2xl p-5 bg-white dark:bg-slate-900 shadow-3xs space-y-4">
+          <h4 className="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center gap-2">
+            <ShoppingBag size={15} className="text-indigo-600 dark:text-indigo-400" />
             <span>Product Requisition Integration</span>
           </h4>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-150">
-              <span className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-150 dark:border-slate-700">
+              <span className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 Last Purchase Price
               </span>
-              <span className="block text-sm font-black text-slate-800 font-mono mt-1">
+              <span className="block text-sm font-black text-slate-800 dark:text-slate-100 font-mono mt-1">
                 {lastPurchase?.price
                   ? formatCurrency(lastPurchase.price)
                   : "N/A"}
               </span>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-150">
-              <span className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-150 dark:border-slate-700">
+              <span className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 Last Supplier
               </span>
               <span
-                className="block text-sm font-black text-slate-800 mt-1 truncate"
+                className="block text-sm font-black text-slate-800 dark:text-slate-100 mt-1 truncate"
                 title={lastPurchase?.supplierName}
               >
                 {lastPurchase?.supplierName || "N/A"}
               </span>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-150">
-              <span className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-150 dark:border-slate-700">
+              <span className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 Last Purchase Date
               </span>
-              <span className="block text-sm font-black text-slate-800 mt-1">
+              <span className="block text-sm font-black text-slate-800 dark:text-slate-100 mt-1">
                 {lastPurchase?.purchaseDate &&
                 lastPurchase.purchaseDate !== "N/A"
                   ? new Date(lastPurchase.purchaseDate).toLocaleDateString(
@@ -579,8 +579,8 @@ export const ProductDetailsOverviewTab = ({
 
         {/* Alternative Pack Pricing Quick List */}
         {productUnits.length > 0 && (
-          <div className="border border-slate-200 rounded-2xl p-5 bg-white shadow-xs space-y-3">
-            <h4 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2 flex items-center gap-1.5">
+          <div className="border border-slate-200 dark:border-slate-800 rounded-2xl p-5 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+            <h4 className="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center gap-1.5">
               <Layers size={15} className="text-blue-500" />
               Alternative Pack Prices
             </h4>
@@ -591,22 +591,22 @@ export const ProductDetailsOverviewTab = ({
                 return (
                   <div
                     key={pu.id}
-                    className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-base"
+                    className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 text-base"
                   >
                     <div>
-                      <span className="font-bold text-slate-700 block text-base">
+                      <span className="font-bold text-slate-700 dark:text-slate-200 block text-base">
                         {u?.name || "Pack Unit"} ({u?.symbol || "pk"})
                       </span>
-                      <span className="text-xs text-slate-500 font-semibold block">
+                      <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block">
                         1 {u?.symbol || "unit"} = {pu.conversion_factor}{" "}
                         {baseUnitSymbol}
                       </span>
                     </div>
                     <div className="text-right">
-                      <span className="font-extrabold text-slate-800 font-mono block text-base">
+                      <span className="font-extrabold text-slate-800 dark:text-slate-100 font-mono block text-base">
                         {formatCurrency(pu.selling_price)}
                       </span>
-                      <span className="text-xs text-emerald-600 font-bold block">
+                      <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold block">
                         Stock Eq: {packStock} {u?.symbol || "pk"}
                       </span>
                     </div>
