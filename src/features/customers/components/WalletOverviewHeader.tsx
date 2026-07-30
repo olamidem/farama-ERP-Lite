@@ -1,100 +1,88 @@
 import { Wallet, ArrowDownLeft, ArrowUpRight, ShoppingBag } from "lucide-react";
 import { useWalletOverviewStats } from "../hooks/useCustomerWallet";
+import { formatCurrency } from "../../../utils/formatCurrenty";
 
 export default function WalletOverviewHeader() {
   const { data: stats } = useWalletOverviewStats();
 
-  const totalBalance = stats?.total_wallet_balance ?? 0;
-  const depositsToday = stats?.deposits_today ?? 0;
-  const withdrawalsToday = stats?.withdrawals_today ?? 0;
-  const walletPaymentsToday = stats?.wallet_payments_today ?? 0;
-
-  const formatMoney = (value: number) =>
-    `₦${value.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
+  const totalBalance = stats?.totalWalletBalance || 0;
+  const depositsToday = stats?.depositsToday || 0;
+  const withdrawalsToday = stats?.withdrawalsToday || 0;
+  const walletPaymentsToday = stats?.walletPaymentsToday || 0;
 
   return (
-    <div className="space-y-6">
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-        <div className="space-y-2 rounded-3xl border border-slate-200/80 bg-white p-5 shadow-xs">
-          <span className="block text-[10px] font-black uppercase tracking-widest text-slate-400">
+    <div className="space-y-4">
+      {/* Overview Stat Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Wallet Balance */}
+        <div className="p-5 rounded-3xl bg-indigo-600 text-white shadow-md shadow-indigo-600/10 space-y-2">
+          <span className="text-[10px] font-black text-indigo-200 uppercase tracking-widest block">
             Total Customer Balance
           </span>
-
           <div className="flex items-center justify-between">
-            <span className="font-mono text-2xl font-black tracking-tight text-indigo-700">
-              {formatMoney(totalBalance)}
+            <span className="text-xl font-black font-mono tracking-tight">
+              {formatCurrency(totalBalance)}
             </span>
-
-            <div className="rounded-2xl bg-indigo-50 p-2 text-indigo-600">
+            <div className="p-2 rounded-2xl bg-indigo-500 text-indigo-100">
               <Wallet className="h-5 w-5" />
             </div>
           </div>
-
-          <p className="text-[10px] font-extrabold text-slate-400">
-            Total funds held in active customer wallets.
+          <p className="text-[10px] text-indigo-200 font-bold">
+            Total funds held in active customer wallets
           </p>
         </div>
 
-        <div className="space-y-2 rounded-3xl border border-slate-200/80 bg-white p-5 shadow-xs">
-          <span className="block text-[10px] font-black uppercase tracking-widest text-slate-400">
+        {/* Deposits Today */}
+        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-xs space-y-2">
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
             Deposits Today
           </span>
-
           <div className="flex items-center justify-between">
-            <span className="font-mono text-xl font-black tracking-tight text-emerald-600">
-              {formatMoney(depositsToday)}
+            <span className="text-xl font-black text-emerald-600 font-mono tracking-tight">
+              {formatCurrency(depositsToday)}
             </span>
-
-            <div className="rounded-2xl bg-emerald-50 p-2 text-emerald-600">
+            <div className="p-2 rounded-2xl bg-emerald-50 text-emerald-600">
               <ArrowDownLeft className="h-5 w-5" />
             </div>
           </div>
-
-          <p className="text-[10px] font-extrabold text-slate-400">
-            Fresh wallet deposits received today.
+          <p className="text-[10px] text-slate-400 font-extrabold">
+            Fresh wallet top-ups collected today
           </p>
         </div>
 
-        <div className="space-y-2 rounded-3xl border border-slate-200/80 bg-white p-5 shadow-xs">
-          <span className="block text-[10px] font-black uppercase tracking-widest text-slate-400">
+        {/* Withdrawals Today */}
+        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-xs space-y-2">
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
             Withdrawals Today
           </span>
-
           <div className="flex items-center justify-between">
-            <span className="font-mono text-xl font-black tracking-tight text-rose-600">
-              {formatMoney(withdrawalsToday)}
+            <span className="text-xl font-black text-rose-600 font-mono tracking-tight">
+              {formatCurrency(withdrawalsToday)}
             </span>
-
-            <div className="rounded-2xl bg-rose-50 p-2 text-rose-600">
+            <div className="p-2 rounded-2xl bg-rose-50 text-rose-600">
               <ArrowUpRight className="h-5 w-5" />
             </div>
           </div>
-
-          <p className="text-[10px] font-extrabold text-slate-400">
-            Wallet withdrawals processed today.
+          <p className="text-[10px] text-slate-400 font-extrabold">
+            Cash payouts disbursed from customer wallets
           </p>
         </div>
 
-        <div className="space-y-2 rounded-3xl border border-slate-200/80 bg-white p-5 shadow-xs">
-          <span className="block text-[10px] font-black uppercase tracking-widest text-slate-400">
+        {/* Wallet POS Payments */}
+        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-xs space-y-2">
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
             Wallet Sales Today
           </span>
-
           <div className="flex items-center justify-between">
-            <span className="font-mono text-xl font-black tracking-tight text-indigo-600">
-              {formatMoney(walletPaymentsToday)}
+            <span className="text-xl font-black text-indigo-600 font-mono tracking-tight">
+              {formatCurrency(walletPaymentsToday)}
             </span>
-
-            <div className="rounded-2xl bg-indigo-50 p-2 text-indigo-600">
+            <div className="p-2 rounded-2xl bg-indigo-50 text-indigo-600">
               <ShoppingBag className="h-5 w-5" />
             </div>
           </div>
-
-          <p className="text-[10px] font-extrabold text-slate-400">
-            POS sales paid using customer wallets.
+          <p className="text-[10px] text-slate-400 font-extrabold">
+            POS checkouts settled via wallet balance
           </p>
         </div>
       </div>
