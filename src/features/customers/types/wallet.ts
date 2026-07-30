@@ -1,7 +1,3 @@
-/* -------------------------------------------------------------------------- */
-/* Wallet Enums */
-/* -------------------------------------------------------------------------- */
-
 export type CurrencyCode = "NGN" | "USD" | "EUR";
 
 export type WalletStatus = "ACTIVE" | "SUSPENDED";
@@ -26,24 +22,16 @@ export type WalletPaymentMethod =
   | "WALLET"
   | "SYSTEM";
 
-/* -------------------------------------------------------------------------- */
-/* Wallet */
-/* -------------------------------------------------------------------------- */
-
 export interface CustomerWallet {
   id: string;
   customer_id: string;
   balance: number;
   currency: CurrencyCode;
   status: WalletStatus;
-  version: number;
+  version?: number;
   created_at: string;
   updated_at: string;
 }
-
-/* -------------------------------------------------------------------------- */
-/* Wallet Transaction */
-/* -------------------------------------------------------------------------- */
 
 export interface WalletTransaction {
   id: string;
@@ -61,10 +49,6 @@ export interface WalletTransaction {
   notes?: string | null;
   created_at: string;
 }
-
-/* -------------------------------------------------------------------------- */
-/* DTOs */
-/* -------------------------------------------------------------------------- */
 
 export interface WalletDepositInput {
   customer_id: string;
@@ -110,10 +94,6 @@ export interface WalletAdjustmentInput {
   performed_by?: string;
 }
 
-/* -------------------------------------------------------------------------- */
-/* Reports */
-/* -------------------------------------------------------------------------- */
-
 export interface WalletStatement {
   wallet: CustomerWallet;
   transactions: WalletTransaction[];
@@ -136,19 +116,15 @@ export interface WalletTransactionResponse {
   limit: number;
 }
 
-/* -------------------------------------------------------------------------- */
-/* Dashboard */
-/* -------------------------------------------------------------------------- */
-
 export interface WalletOverviewStats {
   totalWalletBalance: number;
-  activeWallets: number;
-  suspendedWallets: number;
+  activeWallets?: number;
+  suspendedWallets?: number;
   depositsToday: number;
   withdrawalsToday: number;
   walletPaymentsToday: number;
-  refundsToday: number;
+  refundsToday?: number;
   totalTransactionsToday: number;
-  totalDeposits: number;
-  totalWithdrawals: number;
+  totalDeposits?: number;
+  totalWithdrawals?: number;
 }
