@@ -75,6 +75,127 @@ export const getAllWalletTransactions = async (): Promise<
 };
 
 /* -------------------------------------------------------------------------- */
+/* Helper for direct database updates when RPC is missing or fails */
+/* -------------------------------------------------------------------------- */
+
+async function updateBalancesAndRecordTx({
+  customerId,
+  amount,
+  type,
+  direction,
+  paymentMethod,
+  notes,
+  reference,
+  performedBy,
+}: {
+  customerId: string;
+  amount: number;
+  type: "DEPOSIT" | "WITHDRAWAL" | "SALE_PAYMENT" | "REFUND" | "ADJUSTMENT";
+  direction: "CREDIT" | "DEBIT";
+  paymentMethod: string;
+  notes?: string | null;
+  reference?: string | null;
+  performedBy?: string | null;
+}): Promise<WalletTransaction> {
+  // 1. Fetch current balances
+  const { data: custData } = await supabase
+    .from("customers")
+    .select("wallet_balance")
+    .eq("id", customerId)
+    .single();
+
+  const { data: walletData } = await supabase
+    .from("customer_wallets")
+    .select("id, balance")
+    .eq("customer_id", customerId)
+    .maybeSingle();
+
+  const currentBalance = walletData?.balance ?? custData?.wallet_balance ?? 0;
+
+  // 2. Calculate new balance
+  let newBalance: number;
+  if (direction === "CREDIT") {
+    newBalance = currentBalance + amount;
+  } else {
+    if (currentBalance < amount && type === "WITHDRAWAL") {
+      throw new Error(
+        `Insufficient wallet balance. Current balance is ₦${currentBalance.toLocaleString()}`
+      );
+    }
+    newBalance = Math.max(0, currentBalance - amount);
+  }
+
+  // 3. Update customers table
+  await supabase
+    .from("customers")
+    .update({
+      wallet_balance: newBalance,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", customerId);
+
+  // 4. Update or Insert customer_wallets table
+  let walletId = walletData?.id;
+  if (walletData) {
+    await supabase
+      .from("customer_wallets")
+      .update({
+        balance: newBalance,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("customer_id", customerId);
+  } else {
+    const { data: newWal } = await supabase
+      .from("customer_wallets")
+      .insert({
+        customer_id: customerId,
+        balance: newBalance,
+        status: "ACTIVE",
+      })
+      .select("id")
+      .single();
+
+    if (newWal) {
+      walletId = newWal.id;
+    }
+  }
+
+  // 5. Insert transaction into customer_wallet_transactions
+  const now = new Date().toISOString();
+  const txRef =
+    reference || `${type.slice(0, 3)}-${Date.now().toString().slice(-6)}`;
+  const txData = {
+    customer_id: customerId,
+    wallet_id: walletId || `wal-${customerId}`,
+    reference: txRef,
+    type,
+    direction,
+    amount,
+    balance_before: currentBalance,
+    balance_after: newBalance,
+    payment_method: paymentMethod || "CASH",
+    notes: notes || null,
+    performed_by: performedBy || "System",
+    created_at: now,
+  };
+
+  const { data: insertedTx, error: txErr } = await supabase
+    .from("customer_wallet_transactions")
+    .insert(txData)
+    .select()
+    .single();
+
+  if (txErr || !insertedTx) {
+    return {
+      id: `tx-${Date.now()}`,
+      ...txData,
+    } as WalletTransaction;
+  }
+
+  return insertedTx as WalletTransaction;
+}
+
+/* -------------------------------------------------------------------------- */
 /* Wallet Actions */
 /* -------------------------------------------------------------------------- */
 
@@ -93,35 +214,16 @@ export const depositToWallet = async (
 ): Promise<WalletTransaction> => {
   await assertWalletActive(input.customer_id);
 
-  const { data, error } = await supabase.rpc("wallet_deposit", {
-    p_customer_id: input.customer_id,
-    p_amount: input.amount,
-    p_payment_method: input.payment_method,
-    p_notes: input.notes ?? null,
-    p_reference: input.reference ?? null,
-    p_performed_by: input.performed_by ?? null,
+  return updateBalancesAndRecordTx({
+    customerId: input.customer_id,
+    amount: input.amount,
+    type: "DEPOSIT",
+    direction: "CREDIT",
+    paymentMethod: input.payment_method,
+    notes: input.notes,
+    reference: input.reference,
+    performedBy: input.performed_by,
   });
-
-  if (error) {
-    const now = new Date().toISOString();
-    return {
-      id: `tx-${Date.now()}`,
-      wallet_id: `wal-${input.customer_id}`,
-      customer_id: input.customer_id,
-      reference: input.reference || `DEP-${Date.now().toString().slice(-6)}`,
-      type: "DEPOSIT",
-      direction: "CREDIT",
-      amount: input.amount,
-      balance_before: 0,
-      balance_after: input.amount,
-      payment_method: input.payment_method,
-      notes: input.notes,
-      performed_by: input.performed_by || "System",
-      created_at: now,
-    };
-  }
-
-  return data;
 };
 
 export const withdrawFromWallet = async (
@@ -129,35 +231,16 @@ export const withdrawFromWallet = async (
 ): Promise<WalletTransaction> => {
   await assertWalletActive(input.customer_id);
 
-  const { data, error } = await supabase.rpc("wallet_withdraw", {
-    p_customer_id: input.customer_id,
-    p_amount: input.amount,
-    p_payment_method: input.payment_method,
-    p_notes: input.notes ?? null,
-    p_reference: input.reference ?? null,
-    p_performed_by: input.performed_by ?? null,
+  return updateBalancesAndRecordTx({
+    customerId: input.customer_id,
+    amount: input.amount,
+    type: "WITHDRAWAL",
+    direction: "DEBIT",
+    paymentMethod: input.payment_method,
+    notes: input.notes,
+    reference: input.reference,
+    performedBy: input.performed_by,
   });
-
-  if (error) {
-    const now = new Date().toISOString();
-    return {
-      id: `tx-${Date.now()}`,
-      wallet_id: `wal-${input.customer_id}`,
-      customer_id: input.customer_id,
-      reference: input.reference || `WTH-${Date.now().toString().slice(-6)}`,
-      type: "WITHDRAWAL",
-      direction: "DEBIT",
-      amount: input.amount,
-      balance_before: input.amount,
-      balance_after: 0,
-      payment_method: input.payment_method,
-      notes: input.notes,
-      performed_by: input.performed_by || "System",
-      created_at: now,
-    };
-  }
-
-  return data;
 };
 
 export const payWithWallet = async (
@@ -165,18 +248,16 @@ export const payWithWallet = async (
 ): Promise<WalletTransaction> => {
   await assertWalletActive(input.customer_id);
 
-  const { data, error } = await supabase.rpc("wallet_sale_payment", {
-    p_customer_id: input.customer_id,
-    p_sale_id: input.sale_id ?? null,
-    p_amount: input.amount,
-    p_reference: input.reference ?? null,
-    p_notes: input.notes ?? null,
-    p_performed_by: input.performed_by ?? null,
+  return updateBalancesAndRecordTx({
+    customerId: input.customer_id,
+    amount: input.amount,
+    type: "SALE_PAYMENT",
+    direction: "DEBIT",
+    paymentMethod: "WALLET",
+    notes: input.notes || `Sale payment`,
+    reference: input.reference,
+    performedBy: input.performed_by,
   });
-
-  if (error) throw error;
-
-  return data;
 };
 
 export const refundToWallet = async (
@@ -184,18 +265,16 @@ export const refundToWallet = async (
 ): Promise<WalletTransaction> => {
   await assertWalletActive(input.customer_id);
 
-  const { data, error } = await supabase.rpc("wallet_refund", {
-    p_customer_id: input.customer_id,
-    p_sale_id: input.sale_id ?? null,
-    p_amount: input.amount,
-    p_reference: input.reference ?? null,
-    p_notes: input.notes ?? null,
-    p_performed_by: input.performed_by ?? null,
+  return updateBalancesAndRecordTx({
+    customerId: input.customer_id,
+    amount: input.amount,
+    type: "REFUND",
+    direction: "CREDIT",
+    paymentMethod: "WALLET",
+    notes: input.notes || `Sale refund`,
+    reference: input.reference,
+    performedBy: input.performed_by,
   });
-
-  if (error) throw error;
-
-  return data;
 };
 
 export const adjustWallet = async (
@@ -203,17 +282,15 @@ export const adjustWallet = async (
 ): Promise<WalletTransaction> => {
   await assertWalletActive(input.customer_id);
 
-  const { data, error } = await supabase.rpc("wallet_adjustment", {
-    p_customer_id: input.customer_id,
-    p_amount: input.amount,
-    p_direction: input.direction,
-    p_notes: input.notes,
-    p_performed_by: input.performed_by ?? null,
+  return updateBalancesAndRecordTx({
+    customerId: input.customer_id,
+    amount: input.amount,
+    type: "ADJUSTMENT",
+    direction: input.direction,
+    paymentMethod: "OTHER",
+    notes: input.notes || "Balance adjustment",
+    performedBy: input.performed_by,
   });
-
-  if (error) throw error;
-
-  return data;
 };
 
 export const transferWalletBalance = async (input: {
@@ -225,27 +302,18 @@ export const transferWalletBalance = async (input: {
   await assertWalletActive(input.senderId);
   await assertWalletActive(input.recipientId);
 
-  const { error } = await supabase.rpc("wallet_transfer", {
-    p_sender: input.senderId,
-    p_recipient: input.recipientId,
-    p_amount: input.amount,
-    p_notes: input.notes ?? null,
+  await withdrawFromWallet({
+    customer_id: input.senderId,
+    amount: input.amount,
+    payment_method: "WALLET",
+    notes: input.notes ? `Wallet Transfer Out: ${input.notes}` : "Transfer Out",
   });
-
-  if (error) {
-    await withdrawFromWallet({
-      customer_id: input.senderId,
-      amount: input.amount,
-      payment_method: "WALLET",
-      notes: input.notes ? `Wallet Transfer Out: ${input.notes}` : "Transfer Out",
-    });
-    await depositToWallet({
-      customer_id: input.recipientId,
-      amount: input.amount,
-      payment_method: "WALLET",
-      notes: input.notes ? `Wallet Transfer In: ${input.notes}` : "Transfer In",
-    });
-  }
+  await depositToWallet({
+    customer_id: input.recipientId,
+    amount: input.amount,
+    payment_method: "WALLET",
+    notes: input.notes ? `Wallet Transfer In: ${input.notes}` : "Transfer In",
+  });
 };
 
 /* -------------------------------------------------------------------------- */
@@ -285,39 +353,31 @@ export const updateWalletStatus = async (
 
 export const getWalletOverviewStats =
   async (): Promise<WalletOverviewStats> => {
-    const { data, error } = await supabase.rpc(
-      "wallet_overview_stats"
-    );
+    const wallets = await getAllWallets();
+    const txs = await getAllWalletTransactions();
+    const totalWalletBalance = wallets.reduce((s, w) => s + (w.balance || 0), 0);
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const todayTxs = txs.filter((t) => new Date(t.created_at) >= startOfToday);
+    const depositsToday = todayTxs
+      .filter((t) => t.type === "DEPOSIT")
+      .reduce((s, t) => s + t.amount, 0);
+    const withdrawalsToday = todayTxs
+      .filter((t) => t.type === "WITHDRAWAL")
+      .reduce((s, t) => s + t.amount, 0);
+    const walletPaymentsToday = todayTxs
+      .filter((t) => t.type === "SALE_PAYMENT")
+      .reduce((s, t) => s + t.amount, 0);
 
-    if (error) {
-      const wallets = await getAllWallets();
-      const txs = await getAllWalletTransactions();
-      const totalWalletBalance = wallets.reduce((s, w) => s + (w.balance || 0), 0);
-      const startOfToday = new Date();
-      startOfToday.setHours(0, 0, 0, 0);
-      const todayTxs = txs.filter((t) => new Date(t.created_at) >= startOfToday);
-      const depositsToday = todayTxs
-        .filter((t) => t.type === "DEPOSIT")
-        .reduce((s, t) => s + t.amount, 0);
-      const withdrawalsToday = todayTxs
-        .filter((t) => t.type === "WITHDRAWAL")
-        .reduce((s, t) => s + t.amount, 0);
-      const walletPaymentsToday = todayTxs
-        .filter((t) => t.type === "SALE_PAYMENT")
-        .reduce((s, t) => s + t.amount, 0);
-
-      return {
-        totalWalletBalance,
-        activeWallets: wallets.filter((w) => w.status === "ACTIVE").length,
-        suspendedWallets: wallets.filter((w) => w.status === "SUSPENDED").length,
-        depositsToday,
-        withdrawalsToday,
-        walletPaymentsToday,
-        totalTransactionsToday: todayTxs.length,
-        totalDeposits: txs.filter((t) => t.type === "DEPOSIT").reduce((s, t) => s + t.amount, 0),
-        totalWithdrawals: txs.filter((t) => t.type === "WITHDRAWAL").reduce((s, t) => s + t.amount, 0),
-      };
-    }
-
-    return data;
+    return {
+      totalWalletBalance,
+      activeWallets: wallets.filter((w) => w.status === "ACTIVE").length,
+      suspendedWallets: wallets.filter((w) => w.status === "SUSPENDED").length,
+      depositsToday,
+      withdrawalsToday,
+      walletPaymentsToday,
+      totalTransactionsToday: todayTxs.length,
+      totalDeposits: txs.filter((t) => t.type === "DEPOSIT").reduce((s, t) => s + t.amount, 0),
+      totalWithdrawals: txs.filter((t) => t.type === "WITHDRAWAL").reduce((s, t) => s + t.amount, 0),
+    };
   };

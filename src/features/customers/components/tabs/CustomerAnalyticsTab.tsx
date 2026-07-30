@@ -1,4 +1,11 @@
-import { Wallet, CreditCard, TrendingUp, Users, Award, ShieldAlert } from "lucide-react";
+import {
+  Wallet,
+  CreditCard,
+  TrendingUp,
+  Users,
+  Award,
+  ShieldAlert,
+} from "lucide-react";
 import { formatNaira } from "../../lib/customerExport";
 
 interface CustomerAnalyticsTabProps {
@@ -12,7 +19,9 @@ interface CustomerAnalyticsTabProps {
   };
 }
 
-export default function CustomerAnalyticsTab({ stats }: CustomerAnalyticsTabProps) {
+export default function CustomerAnalyticsTab({
+  stats,
+}: CustomerAnalyticsTabProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -82,8 +91,12 @@ export default function CustomerAnalyticsTab({ stats }: CustomerAnalyticsTabProp
             <Users className="h-4 w-4" />
             <span>Registered Directory</span>
           </div>
-          <div className="text-3xl font-black font-mono">{stats.registeredCount}</div>
-          <p className="text-xs text-slate-400 font-medium">Active customer accounts in database</p>
+          <div className="text-3xl font-black font-mono">
+            {stats.registeredCount}
+          </div>
+          <p className="text-xs text-slate-400 font-medium">
+            Active customer accounts in database
+          </p>
         </div>
 
         <div className="p-6 rounded-3xl bg-emerald-950 text-white space-y-2">
@@ -91,8 +104,12 @@ export default function CustomerAnalyticsTab({ stats }: CustomerAnalyticsTabProp
             <Award className="h-4 w-4" />
             <span>Top Wallet Holder</span>
           </div>
-          <div className="text-lg font-black text-emerald-100 truncate">{stats.topPrepaidCust}</div>
-          <p className="text-xs text-emerald-400/80 font-medium">Highest prepaid wallet customer</p>
+          <div className="text-lg font-black text-emerald-100 truncate">
+            {stats.topPrepaidCust}
+          </div>
+          <p className="text-xs text-emerald-400/80 font-medium">
+            Highest prepaid wallet customer
+          </p>
         </div>
 
         <div className="p-6 rounded-3xl bg-rose-950 text-white space-y-2">
@@ -100,8 +117,12 @@ export default function CustomerAnalyticsTab({ stats }: CustomerAnalyticsTabProp
             <ShieldAlert className="h-4 w-4" />
             <span>Top Debtor Account</span>
           </div>
-          <div className="text-lg font-black text-rose-100 truncate">{stats.topDebtorCust}</div>
-          <p className="text-xs text-rose-400/80 font-medium">Highest unsettled store balance</p>
+          <div className="text-lg font-black text-rose-100 truncate">
+            {stats.topDebtorCust}
+          </div>
+          <p className="text-xs text-rose-400/80 font-medium">
+            Highest unsettled store balance
+          </p>
         </div>
       </div>
     </div>

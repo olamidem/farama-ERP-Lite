@@ -1,11 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { supabase } from "../../../api/supabase";
 
 import {
   createCustomer,
   updateCustomer,
   deleteCustomer,
 } from "../services/customer.service";
+import { depositToWallet } from "../services/wallet.service";
 
 import type {
   CreateCustomerInput,
@@ -122,6 +124,48 @@ export const useAddCustomerLedgerEntry = () => {
       amount: number;
       remarks?: string;
     }) => {
+      if (type === "TOP_UP") {
+        return depositToWallet({
+          customer_id: customerId,
+          amount,
+          payment_method: "CASH",
+          notes: remarks || "Manual Top Up / Deposit",
+        });
+      } else if (type === "PAYMENT") {
+        const { data: cust } = await supabase
+          .from("customers")
+          .select("outstanding_debt")
+          .eq("id", customerId)
+          .single();
+        const currentDebt = cust?.outstanding_debt || 0;
+        const newDebt = Math.max(0, currentDebt - amount);
+        const { error } = await supabase
+          .from("customers")
+          .update({
+            outstanding_debt: newDebt,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", customerId);
+        if (error) throw error;
+        return { customerId, type, amount, remarks };
+      } else if (type === "DEBIT") {
+        const { data: cust } = await supabase
+          .from("customers")
+          .select("outstanding_debt")
+          .eq("id", customerId)
+          .single();
+        const currentDebt = cust?.outstanding_debt || 0;
+        const newDebt = currentDebt + amount;
+        const { error } = await supabase
+          .from("customers")
+          .update({
+            outstanding_debt: newDebt,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", customerId);
+        if (error) throw error;
+        return { customerId, type, amount, remarks };
+      }
       return { customerId, type, amount, remarks };
     },
 

@@ -213,7 +213,7 @@ export default function ImportCustomersModal({
                         </td>
                         <td className="py-2 px-3 font-bold text-slate-800">{row.name || "N/A"}</td>
                         <td className="py-2 px-3 font-mono text-slate-600">{row.phone || "N/A"}</td>
-                        <td className="py-2 px-3 text-slate-600 truncate max-w-[120px]">{row.email || "N/A"}</td>
+                        <td className="py-2 px-3 text-slate-600 truncate max-w-30">{row.email || "N/A"}</td>
                       </tr>
                     ))}
                   </tbody>

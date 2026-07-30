@@ -17,7 +17,11 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { Customer } from "../types/customer";
-import type { CustomerWallet, WalletTransaction, WalletStatus } from "../types/wallet";
+import type {
+  CustomerWallet,
+  WalletTransaction,
+  WalletStatus,
+} from "../types/wallet";
 import type { CustomerSale } from "../hooks/useCustomerSales";
 import { formatNaira } from "../lib/customerExport";
 import { getBadgeColorForTransactionType } from "../utils/wallet.utils";
@@ -60,7 +64,8 @@ export default function CustomerDetailDrawer({
   if (!activeCustomer) {
     return (
       <div className="bg-white rounded-3xl border border-slate-200/80 p-8 text-center text-slate-400 text-xs font-bold shadow-xs">
-        Select a customer from the table to view detailed ledger, transactions, and POS purchase history.
+        Select a customer from the table to view detailed ledger, transactions,
+        and POS purchase history.
       </div>
     );
   }
@@ -77,7 +82,9 @@ export default function CustomerDetailDrawer({
       <div className="flex items-start justify-between border-b border-slate-100 pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-black text-slate-800">{activeCustomer.name}</h2>
+            <h2 className="text-base font-black text-slate-800">
+              {activeCustomer.name}
+            </h2>
             {isWalkIn && (
               <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[10px] font-black uppercase">
                 Guest
@@ -97,7 +104,8 @@ export default function CustomerDetailDrawer({
       </div>
 
       {/* Suspended Notice Banner */}
-      {(activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED") && (
+      {(activeWallet?.status === "SUSPENDED" ||
+        activeCustomer.status === "SUSPENDED") && (
         <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200/80 text-rose-700 text-xs font-bold flex items-center justify-between gap-2 shadow-2xs">
           <div className="flex items-center gap-2">
             <ShieldAlert className="h-4 w-4 text-rose-600 shrink-0" />
@@ -122,7 +130,8 @@ export default function CustomerDetailDrawer({
           </span>
           <span
             className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
-              activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED"
+              activeWallet?.status === "SUSPENDED" ||
+              activeCustomer.status === "SUSPENDED"
                 ? "bg-rose-500 text-rose-100"
                 : "bg-indigo-500 text-indigo-100"
             }`}
@@ -138,14 +147,20 @@ export default function CustomerDetailDrawer({
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => {
-                if (activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED") {
-                  toast.error("Account is suspended. Activate account to deposit funds.");
+                if (
+                  activeWallet?.status === "SUSPENDED" ||
+                  activeCustomer.status === "SUSPENDED"
+                ) {
+                  toast.error(
+                    "Account is suspended. Activate account to deposit funds.",
+                  );
                   return;
                 }
                 onDeposit(activeCustomer);
               }}
               className={`p-2 rounded-xl transition ${
-                activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED"
+                activeWallet?.status === "SUSPENDED" ||
+                activeCustomer.status === "SUSPENDED"
                   ? "bg-indigo-400/40 text-indigo-200 cursor-not-allowed opacity-50"
                   : "bg-indigo-500 hover:bg-indigo-400 text-white cursor-pointer"
               }`}
@@ -155,14 +170,20 @@ export default function CustomerDetailDrawer({
             </button>
             <button
               onClick={() => {
-                if (activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED") {
-                  toast.error("Account is suspended. Activate account to withdraw funds.");
+                if (
+                  activeWallet?.status === "SUSPENDED" ||
+                  activeCustomer.status === "SUSPENDED"
+                ) {
+                  toast.error(
+                    "Account is suspended. Activate account to withdraw funds.",
+                  );
                   return;
                 }
                 onWithdraw(activeCustomer);
               }}
               className={`p-2 rounded-xl transition ${
-                activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED"
+                activeWallet?.status === "SUSPENDED" ||
+                activeCustomer.status === "SUSPENDED"
                   ? "bg-indigo-400/40 text-indigo-200 cursor-not-allowed opacity-50"
                   : "bg-indigo-500 hover:bg-indigo-400 text-white cursor-pointer"
               }`}
@@ -204,7 +225,7 @@ export default function CustomerDetailDrawer({
               onClick={() =>
                 onToggleStatus(
                   activeCustomer.id,
-                  activeWallet?.status === "SUSPENDED" ? "ACTIVE" : "SUSPENDED"
+                  activeWallet?.status === "SUSPENDED" ? "ACTIVE" : "SUSPENDED",
                 )
               }
               className="flex items-center gap-1 text-indigo-200 hover:text-white transition cursor-pointer"
@@ -307,10 +328,14 @@ export default function CustomerDetailDrawer({
                 >
                   <div>
                     <div className="font-bold text-slate-800 flex items-center gap-2">
-                      <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-black border uppercase ${getBadgeColorForTransactionType(tx.type)}`}>
+                      <span
+                        className={`px-1.5 py-0.5 rounded-md text-[9px] font-black border uppercase ${getBadgeColorForTransactionType(tx.type)}`}
+                      >
                         {tx.type}
                       </span>
-                      <span className="font-mono text-[10px] text-slate-400">{tx.reference}</span>
+                      <span className="font-mono text-[10px] text-slate-400">
+                        {tx.reference}
+                      </span>
                     </div>
                     <p className="text-[10px] text-slate-400 font-semibold mt-1">
                       {new Date(tx.created_at).toLocaleString()}
@@ -320,7 +345,9 @@ export default function CustomerDetailDrawer({
                   <div className="text-right">
                     <span
                       className={`font-mono font-black text-xs ${
-                        tx.direction === "CREDIT" ? "text-emerald-600" : "text-rose-600"
+                        tx.direction === "CREDIT"
+                          ? "text-emerald-600"
+                          : "text-rose-600"
                       }`}
                     >
                       {tx.direction === "CREDIT" ? "+" : "-"}
@@ -358,10 +385,14 @@ export default function CustomerDetailDrawer({
                   <div>
                     <div className="font-bold text-slate-800 flex items-center gap-2">
                       <History className="h-3.5 w-3.5 text-indigo-500" />
-                      <span>{s.invoice_number || `INV-${s.id.slice(0, 6)}`}</span>
+                      <span>
+                        {s.invoice_number || `INV-${s.id.slice(0, 6)}`}
+                      </span>
                     </div>
                     <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
-                      {s.created_at ? new Date(s.created_at).toLocaleString() : "Recently"}
+                      {s.created_at
+                        ? new Date(s.created_at).toLocaleString()
+                        : "Recently"}
                     </p>
                   </div>
 
