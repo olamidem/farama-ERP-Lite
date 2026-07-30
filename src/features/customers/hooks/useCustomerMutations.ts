@@ -122,7 +122,6 @@ export const useAddCustomerLedgerEntry = () => {
       amount: number;
       remarks?: string;
     }) => {
-      // Logic for adding ledger entry
       return { customerId, type, amount, remarks };
     },
 
@@ -135,4 +134,4 @@ export const useAddCustomerLedgerEntry = () => {
       toast.error(getReadableError(error));
     },
   });
-};
+};
