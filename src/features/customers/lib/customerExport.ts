@@ -20,7 +20,7 @@ export function exportCustomersToExcel(customers: Customer[]) {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Customers Directory");
     XLSX.writeFile(
       workbook,
-      `Pharmacy_Customers_Report_${new Date().toISOString().split("T")[0]}.xlsx`,
+      `Pharmacy_Customers_Report_${new Date().toISOString().split("T")[0]}.xlsx`
     );
     toast.success("Customers list exported to Excel");
   } catch {
