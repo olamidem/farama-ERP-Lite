@@ -56,11 +56,11 @@ export function useCustomerTableState(customers: Customer[] = []) {
       totalDebt += c.outstanding_debt || 0;
 
       if ((c.wallet_balance || 0) > topPrepaidVal) {
-        topPrepaidVal = c.wallet_balance;
+        topPrepaidVal = c.wallet_balance || 0;
         topPrepaidCust = c.name;
       }
       if ((c.outstanding_debt || 0) > topDebtorVal) {
-        topDebtorVal = c.outstanding_debt;
+        topDebtorVal = c.outstanding_debt || 0;
         topDebtorCust = c.name;
       }
     });
