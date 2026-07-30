@@ -40,3 +40,26 @@ export interface Sale {
   updated_at?: string;
   items?: SaleItem[];
 }
+
+export interface CreateSaleItemInput {
+  product_id: string;
+  product_unit_id: string;
+  quantity: number;
+  unit_price: number;
+  cost_price: number;
+  discount?: number;
+  tax?: number;
+}
+
+export interface CreateSaleInput {
+  cart_id?: string;
+  customer_id?: string | null;
+  subtotal: number;
+  discount_amount: number;
+  tax_amount: number;
+  payable_amount: number;
+  amount_paid: number;
+  payment_method: PaymentMethod;
+  remarks?: string;
+  items: CreateSaleItemInput[];
+}
