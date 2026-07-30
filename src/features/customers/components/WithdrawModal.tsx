@@ -56,18 +56,18 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
 
   return (
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl max-w-md w-full overflow-hidden flex flex-col">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-2xl max-w-md w-full overflow-hidden flex flex-col transition-colors">
         {/* Header */}
-        <div className="border-b border-slate-100 px-6 py-4 flex items-center justify-between bg-rose-50/50">
+        <div className="border-b border-slate-100 dark:border-slate-800 px-6 py-4 flex items-center justify-between bg-rose-50/50 dark:bg-rose-950/40">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-2xl bg-rose-500 text-white shadow-sm">
               <ArrowUpRight className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">
+              <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-wider">
                 Withdraw Wallet Funds
               </h3>
-              <p className="text-[10px] font-bold text-rose-700">
+              <p className="text-[10px] font-bold text-rose-700 dark:text-rose-400">
                 Customer: {customer.name}
               </p>
             </div>
@@ -75,7 +75,7 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
           <button
             onClick={handleClose}
             type="button"
-            className="text-slate-400 hover:text-slate-600 font-bold transition p-1.5 rounded-xl hover:bg-white/80 cursor-pointer"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 font-bold transition p-1.5 rounded-xl hover:bg-white/80 dark:hover:bg-slate-800 cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
@@ -84,29 +84,29 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
         {/* Form Body */}
         <form onSubmit={handleWithdraw} className="p-6 space-y-4">
           {customer.status === "SUSPENDED" && (
-            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold flex items-center gap-2">
+            <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-center gap-2">
               <span className="text-base">⚠️</span>
               <span>Account is SUSPENDED. Activate this customer account before performing any withdrawal activities.</span>
             </div>
           )}
 
           {/* Balance Preview Card */}
-          <div className="bg-slate-50 border border-slate-200/70 rounded-2xl p-4 flex justify-between items-center">
+          <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700 rounded-2xl p-4 flex justify-between items-center">
             <div>
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+              <span className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest block">
                 Available Balance
               </span>
-              <span className="text-sm font-black text-slate-700">
+              <span className="text-sm font-black text-slate-700 dark:text-slate-200">
                 ₦{currentBalance.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
               </span>
             </div>
             <div className="text-right">
-              <span className="text-[10px] font-black text-rose-600 uppercase tracking-widest block">
+              <span className="text-[10px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-widest block">
                 Remaining Balance
               </span>
               <span
                 className={`text-base font-black ${
-                  isOverBalance ? "text-rose-600" : "text-slate-800"
+                  isOverBalance ? "text-rose-600 dark:text-rose-400" : "text-slate-800 dark:text-slate-100"
                 }`}
               >
                 ₦{projectedBalance.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
@@ -116,11 +116,11 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
 
           {/* Amount Input */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest block">
               Withdrawal Amount (₦) *
             </label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400 dark:text-slate-500">
                 ₦
               </span>
               <input
@@ -132,15 +132,15 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className={`w-full pl-8 pr-4 py-3 bg-white text-base font-black rounded-2xl border ${
+                className={`w-full pl-8 pr-4 py-3 bg-white dark:bg-slate-800 text-base font-black rounded-2xl border ${
                   isOverBalance
-                    ? "border-rose-500 text-rose-600 focus:ring-rose-500/20"
-                    : "border-slate-200 text-slate-800 focus:border-rose-500 focus:ring-rose-500/20"
+                    ? "border-rose-500 text-rose-600 dark:text-rose-400 focus:ring-rose-500/20"
+                    : "border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:border-rose-500 focus:ring-rose-500/20"
                 } focus:ring-2 focus:outline-none transition`}
               />
             </div>
             {isOverBalance && (
-              <p className="text-[10px] font-bold text-rose-600 flex items-center gap-1 mt-1">
+              <p className="text-[10px] font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-1">
                 <AlertCircle className="h-3 w-3" />
                 <span>Requested amount exceeds available wallet balance.</span>
               </p>
@@ -150,7 +150,7 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
               <button
                 type="button"
                 onClick={() => setAmount(String(currentBalance))}
-                className="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-[10px] font-black transition cursor-pointer"
+                className="px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 text-[10px] font-black transition cursor-pointer"
               >
                 Withdraw Full Balance (₦{currentBalance.toLocaleString()})
               </button>
@@ -159,13 +159,13 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
 
           {/* Payout Method */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest block">
               Payout Method
             </label>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { id: "cash", label: "Cash Payout", icon: DollarSign },
-                { id: "bank_transfer", label: "Bank Transfer Out", icon: Landmark },
+                { id: "CASH", label: "Cash Payout", icon: DollarSign },
+                { id: "BANK_TRANSFER", label: "Bank Transfer Out", icon: Landmark },
               ].map((m) => {
                 const Icon = m.icon;
                 const isSelected = paymentMethod === m.id;
@@ -176,8 +176,8 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
                     onClick={() => setPaymentMethod(m.id as WalletPaymentMethod)}
                     className={`p-2.5 rounded-2xl border text-center transition flex flex-col items-center justify-center gap-1 cursor-pointer ${
                       isSelected
-                        ? "bg-rose-50 border-rose-500 text-rose-700 font-extrabold"
-                        : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 font-bold"
+                        ? "bg-rose-50 dark:bg-rose-950/60 border-rose-500 text-rose-700 dark:text-rose-300 font-extrabold"
+                        : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-bold"
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -190,7 +190,7 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
 
           {/* Optional Reference */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest block">
               Reference / Bank Confirmation Code
             </label>
             <input
@@ -198,13 +198,13 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
               placeholder="e.g. WTH-VOUCHER-09 or Bank Ref"
               value={reference}
               onChange={(e) => setReference(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs font-bold text-slate-800 rounded-xl border border-slate-200 focus:outline-none focus:border-rose-500"
+              className="w-full px-3.5 py-2.5 text-xs font-bold text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-rose-500"
             />
           </div>
 
           {/* Notes */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest block">
               Withdrawal Reason / Memo
             </label>
             <textarea
@@ -212,7 +212,7 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
               placeholder="Reason for withdrawing funds..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs font-bold text-slate-800 rounded-xl border border-slate-200 focus:outline-none focus:border-rose-500"
+              className="w-full px-3.5 py-2.5 text-xs font-bold text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-rose-500"
             />
           </div>
 
@@ -221,7 +221,7 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
             <button
               type="button"
               onClick={handleClose}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition cursor-pointer"
+              className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer"
             >
               Cancel
             </button>

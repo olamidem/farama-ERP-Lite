@@ -11,20 +11,20 @@ import Label from "./Label";
 const variantConfigs = {
   danger: {
     icon: AlertTriangle,
-    iconBg: "bg-rose-50 text-rose-600",
-    subtitleText: "text-rose-700",
+    iconBg: "bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400",
+    subtitleText: "text-rose-700 dark:text-rose-400",
     buttonVariant: "danger" as const,
   },
   success: {
     icon: RefreshCw, // Or CheckCircle
-    iconBg: "bg-emerald-50 text-emerald-600",
-    subtitleText: "text-emerald-700",
+    iconBg: "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400",
+    subtitleText: "text-emerald-700 dark:text-emerald-400",
     buttonVariant: "primary" as const, // Adjust if your brand primary isn't green
   },
   info: {
     icon: Info,
-    iconBg: "bg-blue-50 text-blue-600",
-    subtitleText: "text-blue-700",
+    iconBg: "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400",
+    subtitleText: "text-blue-700 dark:text-blue-400",
     buttonVariant: "primary" as const,
   },
 };

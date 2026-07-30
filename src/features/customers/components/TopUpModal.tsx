@@ -52,21 +52,21 @@ export default function TopUpModal({
 
   return (
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl max-w-md w-full overflow-hidden flex flex-col">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-2xl max-w-md w-full overflow-hidden flex flex-col transition-colors">
         {/* Header */}
-        <div className="border-b border-slate-100 px-6 py-4 flex items-center justify-between">
+        <div className="border-b border-slate-100 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">
+            <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-wider">
               Post Ledger / Top Up
             </h3>
-            <p className="text-[10px] font-bold text-indigo-600 mt-0.5">
+            <p className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">
               Customer: {customer.name}
             </p>
           </div>
           <button
             onClick={onClose}
             type="button"
-            className="text-slate-400 hover:text-slate-600 font-bold transition p-1 rounded-lg hover:bg-slate-50 cursor-pointer"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 font-bold transition p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
@@ -77,7 +77,7 @@ export default function TopUpModal({
           
           {/* Transaction Type Select */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest block">
               Transaction Action
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -86,8 +86,8 @@ export default function TopUpModal({
                 onClick={() => setValue("type", "TOP_UP")}
                 className={`py-2 px-3 text-[10px] font-extrabold uppercase tracking-wider rounded-xl border transition flex flex-col items-center justify-center gap-1.5 ${
                   selectedType === "TOP_UP"
-                    ? "bg-indigo-50 border-indigo-200 text-indigo-700"
-                    : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
+                    ? "bg-indigo-50 dark:bg-indigo-950/60 border-indigo-200 dark:border-indigo-900 text-indigo-700 dark:text-indigo-300"
+                    : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700"
                 }`}
               >
                 <Wallet className="h-4 w-4" />
@@ -99,8 +99,8 @@ export default function TopUpModal({
                 onClick={() => setValue("type", "PAYMENT")}
                 className={`py-2 px-3 text-[10px] font-extrabold uppercase tracking-wider rounded-xl border transition flex flex-col items-center justify-center gap-1.5 ${
                   selectedType === "PAYMENT"
-                    ? "bg-emerald-50 border-emerald-200 text-emerald-700"
-                    : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
+                    ? "bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-900 text-emerald-700 dark:text-emerald-300"
+                    : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700"
                 }`}
                 disabled={(customer.outstanding_debt || 0) <= 0}
                 title={(customer.outstanding_debt || 0) <= 0 ? "No outstanding debt" : ""}
@@ -114,8 +114,8 @@ export default function TopUpModal({
                 onClick={() => setValue("type", "DEBIT")}
                 className={`py-2 px-3 text-[10px] font-extrabold uppercase tracking-wider rounded-xl border transition flex flex-col items-center justify-center gap-1.5 ${
                   selectedType === "DEBIT"
-                    ? "bg-rose-50 border-rose-200 text-rose-700"
-                    : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
+                    ? "bg-rose-50 dark:bg-rose-950/60 border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300"
+                    : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700"
                 }`}
               >
                 <AlertTriangle className="h-4 w-4" />
@@ -125,20 +125,20 @@ export default function TopUpModal({
           </div>
 
           {/* Balance Preview Card */}
-          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-3.5 flex justify-between text-center divide-x divide-slate-100">
+          <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700 rounded-2xl p-3.5 flex justify-between text-center divide-x divide-slate-100 dark:divide-slate-700">
             <div className="flex-1">
-              <span className="block text-[8px] font-black text-slate-400 uppercase tracking-widest">
+              <span className="block text-[8px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest">
                 Wallet Balance
               </span>
-              <span className="text-xs font-black text-indigo-600">
+              <span className="text-xs font-black text-indigo-600 dark:text-indigo-400">
                 ₦{Number(customer.wallet_balance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </span>
             </div>
             <div className="flex-1">
-              <span className="block text-[8px] font-black text-slate-400 uppercase tracking-widest">
+              <span className="block text-[8px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest">
                 Outstanding Debt
               </span>
-              <span className="text-xs font-black text-rose-600">
+              <span className="text-xs font-black text-rose-600 dark:text-rose-400">
                 ₦{Number(customer.outstanding_debt || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </span>
             </div>
@@ -146,11 +146,11 @@ export default function TopUpModal({
 
           {/* Amount input */}
           <div className="space-y-1">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest block">
               Transaction Amount (₦) *
             </label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-black text-slate-400 text-xs">
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-black text-slate-400 dark:text-slate-500 text-xs">
                 ₦
               </span>
               <input
@@ -158,11 +158,11 @@ export default function TopUpModal({
                 placeholder="0.00"
                 step="any"
                 {...register("amount", { valueAsNumber: true })}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-8 pr-3.5 text-xs font-bold text-slate-700 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/15 transition font-mono"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 py-2.5 pl-8 pr-3.5 text-xs font-bold text-slate-700 dark:text-slate-200 placeholder-slate-400 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 transition font-mono"
               />
             </div>
             {errors.amount && (
-              <p className="text-[10px] text-rose-500 font-extrabold tracking-wide uppercase mt-0.5">
+              <p className="text-[10px] text-rose-500 dark:text-rose-400 font-extrabold tracking-wide uppercase mt-0.5">
                 {errors.amount.message}
               </p>
             )}
@@ -170,31 +170,31 @@ export default function TopUpModal({
 
           {/* Remarks input */}
           <div className="space-y-1">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest block">
               Ledger Remarks / Reference Note
             </label>
             <input
               type="text"
               placeholder="e.g. Cash Top up, Direct Bank Transfer reference..."
               {...register("remarks")}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 px-3.5 text-xs font-semibold text-slate-700 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/15 transition"
+              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 py-2.5 px-3.5 text-xs font-semibold text-slate-700 dark:text-slate-200 placeholder-slate-400 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/15 transition"
             />
           </div>
 
           {/* Info/Warning note */}
-          <div className="bg-amber-50/60 border border-amber-100 rounded-xl p-3 flex items-start gap-2.5">
-            <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
-            <p className="text-[9px] font-bold text-amber-700 leading-normal">
+          <div className="bg-amber-50/60 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 rounded-xl p-3 flex items-start gap-2.5">
+            <AlertTriangle className="h-4 w-4 text-amber-500 dark:text-amber-400 shrink-0 mt-0.5" />
+            <p className="text-[9px] font-bold text-amber-700 dark:text-amber-300 leading-normal">
               Posting this ledger entry will adjust the customer's live wallet balances and create a permanent transaction trace in their ledger card.
             </p>
           </div>
 
           {/* Actions */}
-          <div className="pt-4 border-t border-slate-50 flex items-center justify-end gap-3">
+          <div className="pt-4 border-t border-slate-50 dark:border-slate-800 flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-extrabold text-[10px] uppercase tracking-wider cursor-pointer shadow-xs transition"
+              className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-extrabold text-[10px] uppercase tracking-wider cursor-pointer shadow-xs transition"
             >
               Cancel
             </button>

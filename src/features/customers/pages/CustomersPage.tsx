@@ -113,14 +113,14 @@ export default function CustomersPage() {
       <WalletOverviewHeader />
 
       {/* Navigation Tabs */}
-      <div className="border-b border-slate-200">
+      <div className="border-b border-slate-200 dark:border-slate-800">
         <div className="flex gap-6 -mb-px">
           <button
             onClick={() => setActiveTab("profiles_wallets")}
             className={`pb-3 text-xs font-black uppercase tracking-wider border-b-2 transition cursor-pointer ${
               activeTab === "profiles_wallets"
-                ? "border-indigo-600 text-indigo-600 font-extrabold"
-                : "border-transparent text-slate-400 hover:text-slate-600"
+                ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 font-extrabold"
+                : "border-transparent text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
             }`}
           >
             PROFILES & LEDGER WALLETS
@@ -129,8 +129,8 @@ export default function CustomersPage() {
             onClick={() => setActiveTab("ledger_analytics")}
             className={`pb-3 text-xs font-black uppercase tracking-wider border-b-2 transition cursor-pointer ${
               activeTab === "ledger_analytics"
-                ? "border-indigo-600 text-indigo-600 font-extrabold"
-                : "border-transparent text-slate-400 hover:text-slate-600"
+                ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 font-extrabold"
+                : "border-transparent text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
             }`}
           >
             DETAILED LEDGER ANALYTICS

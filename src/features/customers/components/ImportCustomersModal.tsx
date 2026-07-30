@@ -124,18 +124,18 @@ export default function ImportCustomersModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
-      <div className="bg-white rounded-3xl shadow-xl border border-slate-100 w-full max-w-xl overflow-hidden flex flex-col">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-xl overflow-hidden flex flex-col transition-colors">
         {/* Header */}
-        <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
           <div className="flex items-center gap-2.5">
-            <div className="p-2.5 bg-emerald-50 border border-emerald-100 rounded-2xl text-emerald-600">
+            <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-900 rounded-2xl text-emerald-600 dark:text-emerald-400">
               <FileSpreadsheet className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider">
+              <h3 className="text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-wider">
                 Batch Import Customer Profiles
               </h3>
-              <p className="text-[10px] font-bold text-slate-400 mt-0.5">
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 mt-0.5">
                 Upload CSV or Excel file to import customer accounts in bulk
               </p>
             </div>
@@ -143,7 +143,7 @@ export default function ImportCustomersModal({
           <button
             onClick={onClose}
             type="button"
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer"
+            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
@@ -154,12 +154,12 @@ export default function ImportCustomersModal({
           {/* Action Row */}
           <div className="flex items-center justify-between gap-2">
             <label className="flex-1 cursor-pointer">
-              <div className="border-2 border-dashed border-slate-200 hover:border-indigo-400 rounded-2xl p-4 text-center bg-slate-50/40 hover:bg-indigo-50/20 transition flex flex-col items-center justify-center gap-1.5">
-                <Upload className="h-5 w-5 text-indigo-500" />
-                <span className="text-xs font-black text-slate-700">
+              <div className="border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 rounded-2xl p-4 text-center bg-slate-50/40 dark:bg-slate-800/50 hover:bg-indigo-50/20 dark:hover:bg-indigo-950/20 transition flex flex-col items-center justify-center gap-1.5">
+                <Upload className="h-5 w-5 text-indigo-500 dark:text-indigo-400" />
+                <span className="text-xs font-black text-slate-700 dark:text-slate-200">
                   {fileName ? fileName : "Click to select CSV or XLSX file"}
                 </span>
-                <span className="text-[9px] font-bold text-slate-400">
+                <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500">
                   Supported formats: .csv, .xlsx, .xls
                 </span>
               </div>
@@ -174,9 +174,9 @@ export default function ImportCustomersModal({
             <button
               type="button"
               onClick={handleDownloadTemplate}
-              className="px-3.5 py-4 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-2xl font-extrabold text-[10px] uppercase tracking-wider transition flex flex-col items-center gap-1 shrink-0 cursor-pointer shadow-xs"
+              className="px-3.5 py-4 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl font-extrabold text-[10px] uppercase tracking-wider transition flex flex-col items-center gap-1 shrink-0 cursor-pointer shadow-xs"
             >
-              <Download className="h-4 w-4 text-emerald-600" />
+              <Download className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
               <span>Sample Format</span>
             </button>
           </div>
@@ -184,14 +184,14 @@ export default function ImportCustomersModal({
           {/* Parsed Preview Table */}
           {parsedRows.length > 0 && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-slate-500">
+              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <span>Preview Records ({parsedRows.length} total)</span>
-                <span className="text-emerald-600 font-extrabold">{validCount} valid to import</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{validCount} valid to import</span>
               </div>
 
-              <div className="max-h-56 overflow-y-auto border border-slate-100 rounded-2xl overflow-hidden">
+              <div className="max-h-56 overflow-y-auto border border-slate-100 dark:border-slate-800 rounded-2xl overflow-hidden">
                 <table className="w-full text-left border-collapse">
-                  <thead className="bg-slate-50 text-[9px] font-black uppercase text-slate-400">
+                  <thead className="bg-slate-50 dark:bg-slate-800 text-[9px] font-black uppercase text-slate-400 dark:text-slate-400">
                     <tr>
                       <th className="py-2.5 px-3">Status</th>
                       <th className="py-2.5 px-3">Name</th>
@@ -199,21 +199,21 @@ export default function ImportCustomersModal({
                       <th className="py-2.5 px-3">Email</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-[10px]">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-[10px]">
                     {parsedRows.map((row, idx) => (
-                      <tr key={idx} className={row.isValid ? "bg-white" : "bg-rose-50/40"}>
+                      <tr key={idx} className={row.isValid ? "bg-white dark:bg-slate-900" : "bg-rose-50/40 dark:bg-rose-950/30"}>
                         <td className="py-2 px-3">
                           {row.isValid ? (
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
                           ) : (
                             <span title={row.error}>
-                              <AlertTriangle className="h-3.5 w-3.5 text-rose-500" />
+                              <AlertTriangle className="h-3.5 w-3.5 text-rose-500 dark:text-rose-400" />
                             </span>
                           )}
                         </td>
-                        <td className="py-2 px-3 font-bold text-slate-800">{row.name || "N/A"}</td>
-                        <td className="py-2 px-3 font-mono text-slate-600">{row.phone || "N/A"}</td>
-                        <td className="py-2 px-3 text-slate-600 truncate max-w-30">{row.email || "N/A"}</td>
+                        <td className="py-2 px-3 font-bold text-slate-800 dark:text-slate-100">{row.name || "N/A"}</td>
+                        <td className="py-2 px-3 font-mono text-slate-600 dark:text-slate-300">{row.phone || "N/A"}</td>
+                        <td className="py-2 px-3 text-slate-600 dark:text-slate-300 truncate max-w-30">{row.email || "N/A"}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -228,7 +228,7 @@ export default function ImportCustomersModal({
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-extrabold text-[10px] uppercase tracking-wider cursor-pointer transition"
+              className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 font-extrabold text-[10px] uppercase tracking-wider cursor-pointer transition"
             >
               Cancel
             </button>

@@ -63,7 +63,7 @@ export default function CustomerDetailDrawer({
 
   if (!activeCustomer) {
     return (
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-8 text-center text-slate-400 text-xs font-bold shadow-xs">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-8 text-center text-slate-400 dark:text-slate-500 text-xs font-bold shadow-xs">
         Select a customer from the table to view detailed ledger, transactions,
         and POS purchase history.
       </div>
@@ -77,27 +77,27 @@ export default function CustomerDetailDrawer({
   });
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col space-y-4 p-6">
+    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden flex flex-col space-y-4 p-6 transition-colors">
       {/* Drawer Header */}
-      <div className="flex items-start justify-between border-b border-slate-100 pb-4">
+      <div className="flex items-start justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-black text-slate-800">
+            <h2 className="text-base font-black text-slate-800 dark:text-slate-100">
               {activeCustomer.name}
             </h2>
             {isWalkIn && (
-              <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[10px] font-black uppercase">
+              <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase">
                 Guest
               </span>
             )}
           </div>
-          <p className="text-[11px] text-slate-400 font-bold">
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-bold">
             Customer ID: {activeCustomer.id.slice(0, 12)}
           </p>
         </div>
         <button
           onClick={onDeselect}
-          className="p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+          className="p-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition cursor-pointer"
         >
           <X className="h-4 w-4" />
         </button>
@@ -106,9 +106,9 @@ export default function CustomerDetailDrawer({
       {/* Suspended Notice Banner */}
       {(activeWallet?.status === "SUSPENDED" ||
         activeCustomer.status === "SUSPENDED") && (
-        <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200/80 text-rose-700 text-xs font-bold flex items-center justify-between gap-2 shadow-2xs">
+        <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200/80 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-center justify-between gap-2 shadow-2xs">
           <div className="flex items-center gap-2">
-            <ShieldAlert className="h-4 w-4 text-rose-600 shrink-0" />
+            <ShieldAlert className="h-4 w-4 text-rose-600 dark:text-rose-400 shrink-0" />
             <span>Account Suspended. Activities disabled.</span>
           </div>
           {!isWalkIn && (
@@ -247,35 +247,35 @@ export default function CustomerDetailDrawer({
       </div>
 
       {/* Customer Contact Quick Info */}
-      <div className="space-y-2 text-xs font-semibold text-slate-600 bg-slate-50 p-4 rounded-2xl">
+      <div className="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl">
         {activeCustomer.phone && (
           <div className="flex items-center gap-2">
-            <Phone className="h-3.5 w-3.5 text-slate-400" />
+            <Phone className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
             <span>{activeCustomer.phone}</span>
           </div>
         )}
         {activeCustomer.email && (
           <div className="flex items-center gap-2">
-            <Mail className="h-3.5 w-3.5 text-slate-400" />
+            <Mail className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
             <span>{activeCustomer.email}</span>
           </div>
         )}
         {activeCustomer.address && (
           <div className="flex items-center gap-2">
-            <MapPin className="h-3.5 w-3.5 text-slate-400" />
+            <MapPin className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
             <span>{activeCustomer.address}</span>
           </div>
         )}
       </div>
 
       {/* Sub Tabs: Wallet Ledger vs Purchase History */}
-      <div className="flex border-b border-slate-100 pt-2">
+      <div className="flex border-b border-slate-100 dark:border-slate-800 pt-2">
         <button
           onClick={() => setTab("wallet")}
           className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-black uppercase border-b-2 transition cursor-pointer ${
             tab === "wallet"
-              ? "border-indigo-600 text-indigo-600"
-              : "border-transparent text-slate-400 hover:text-slate-600"
+              ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 font-extrabold"
+              : "border-transparent text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
           }`}
         >
           <Wallet className="h-3.5 w-3.5" />
@@ -285,8 +285,8 @@ export default function CustomerDetailDrawer({
           onClick={() => setTab("sales")}
           className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-black uppercase border-b-2 transition cursor-pointer ${
             tab === "sales"
-              ? "border-indigo-600 text-indigo-600"
-              : "border-transparent text-slate-400 hover:text-slate-600"
+              ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 font-extrabold"
+              : "border-transparent text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
           }`}
         >
           <ShoppingBag className="h-3.5 w-3.5" />
@@ -299,13 +299,13 @@ export default function CustomerDetailDrawer({
         <div className="space-y-3">
           {/* Filter Dropdown */}
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
               Recent Transactions
             </span>
             <select
               value={txFilterType}
               onChange={(e) => onTxFilterChange(e.target.value)}
-              className="text-[10px] font-extrabold text-slate-600 bg-slate-100 border border-slate-200/80 rounded-lg px-2 py-1 focus:outline-hidden cursor-pointer"
+              className="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-lg px-2 py-1 focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">All Types</option>
               <option value="DEPOSIT">Deposits</option>
@@ -317,27 +317,27 @@ export default function CustomerDetailDrawer({
 
           <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
             {filteredTxs.length === 0 ? (
-              <div className="p-6 text-center text-slate-400 text-xs font-bold">
+              <div className="p-6 text-center text-slate-400 dark:text-slate-500 text-xs font-bold">
                 No wallet transactions found.
               </div>
             ) : (
               filteredTxs.map((tx) => (
                 <div
                   key={tx.id}
-                  className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs"
+                  className="p-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex items-center justify-between text-xs"
                 >
                   <div>
-                    <div className="font-bold text-slate-800 flex items-center gap-2">
+                    <div className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                       <span
                         className={`px-1.5 py-0.5 rounded-md text-[9px] font-black border uppercase ${getBadgeColorForTransactionType(tx.type)}`}
                       >
                         {tx.type}
                       </span>
-                      <span className="font-mono text-[10px] text-slate-400">
+                      <span className="font-mono text-[10px] text-slate-400 dark:text-slate-500">
                         {tx.reference}
                       </span>
                     </div>
-                    <p className="text-[10px] text-slate-400 font-semibold mt-1">
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold mt-1">
                       {new Date(tx.created_at).toLocaleString()}
                     </p>
                   </div>
@@ -346,14 +346,14 @@ export default function CustomerDetailDrawer({
                     <span
                       className={`font-mono font-black text-xs ${
                         tx.direction === "CREDIT"
-                          ? "text-emerald-600"
-                          : "text-rose-600"
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-rose-600 dark:text-rose-400"
                       }`}
                     >
                       {tx.direction === "CREDIT" ? "+" : "-"}
                       {formatNaira(tx.amount)}
                     </span>
-                    <p className="text-[9px] font-mono text-slate-400 font-bold">
+                    <p className="text-[9px] font-mono text-slate-400 dark:text-slate-500 font-bold">
                       Bal: {formatNaira(tx.balance_after)}
                     </p>
                   </div>
@@ -364,39 +364,39 @@ export default function CustomerDetailDrawer({
         </div>
       ) : (
         <div className="space-y-3">
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+          <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block">
             POS Sales History
           </span>
           <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
             {isLoadingSales ? (
-              <div className="p-6 text-center text-slate-400 text-xs font-bold animate-pulse">
+              <div className="p-6 text-center text-slate-400 dark:text-slate-500 text-xs font-bold animate-pulse">
                 Loading orders...
               </div>
             ) : activeCustomerSales.length === 0 ? (
-              <div className="p-6 text-center text-slate-400 text-xs font-bold">
+              <div className="p-6 text-center text-slate-400 dark:text-slate-500 text-xs font-bold">
                 No past sales records for this customer.
               </div>
             ) : (
               activeCustomerSales.map((s) => (
                 <div
                   key={s.id}
-                  className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs"
+                  className="p-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex items-center justify-between text-xs"
                 >
                   <div>
-                    <div className="font-bold text-slate-800 flex items-center gap-2">
-                      <History className="h-3.5 w-3.5 text-indigo-500" />
+                    <div className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                      <History className="h-3.5 w-3.5 text-indigo-500 dark:text-indigo-400" />
                       <span>
                         {s.invoice_number || `INV-${s.id.slice(0, 6)}`}
                       </span>
                     </div>
-                    <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold mt-0.5">
                       {s.created_at
                         ? new Date(s.created_at).toLocaleString()
                         : "Recently"}
                     </p>
                   </div>
 
-                  <div className="text-right font-mono font-bold text-slate-800">
+                  <div className="text-right font-mono font-bold text-slate-800 dark:text-slate-100">
                     {formatNaira(Number(s.total_amount))}
                   </div>
                 </div>
