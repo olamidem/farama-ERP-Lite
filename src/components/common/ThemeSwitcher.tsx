@@ -21,7 +21,9 @@ export const ThemeSwitcher = ({
 
   if (variant === "compact") {
     return (
-      <div className={`flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-700/80 ${className}`}>
+      <div
+        className={`flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-700/80 ${className}`}
+      >
         {options.map((opt) => {
           const Icon = opt.icon;
           const isActive = theme === opt.id;
@@ -46,7 +48,9 @@ export const ThemeSwitcher = ({
   }
 
   return (
-    <div className={`flex items-center p-1 bg-slate-100/80 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 ${className}`}>
+    <div
+      className={`flex items-center p-1 bg-slate-100/80 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 ${className}`}
+    >
       {options.map((opt) => {
         const Icon = opt.icon;
         const isActive = theme === opt.id;
@@ -61,7 +65,9 @@ export const ThemeSwitcher = ({
                 : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
             }`}
           >
-            <Icon className={`h-3.5 w-3.5 ${isActive ? "text-indigo-600 dark:text-indigo-400" : ""}`} />
+            <Icon
+              className={`h-3.5 w-3.5 ${isActive ? "text-indigo-600 dark:text-indigo-400" : ""}`}
+            />
             <span className="capitalize">{opt.label}</span>
           </button>
         );
