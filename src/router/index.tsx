@@ -188,7 +188,11 @@ const lockScreenRoute = createRoute({
 const customersRoute = createRoute({
 getParentRoute: () => appLayoutRoute,
  path: "/customers",
-component: CustomersPage,
+  component: CustomersPage,
+  staticData:{
+    title: "Customers",
+    subtitle: "Manage customer profiles and wallets"
+  }
 });
 
 /**

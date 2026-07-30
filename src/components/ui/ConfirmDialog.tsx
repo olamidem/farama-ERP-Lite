@@ -17,7 +17,8 @@ const variantConfigs = {
   },
   success: {
     icon: RefreshCw, // Or CheckCircle
-    iconBg: "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400",
+    iconBg:
+      "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400",
     subtitleText: "text-emerald-700 dark:text-emerald-400",
     buttonVariant: "primary" as const, // Adjust if your brand primary isn't green
   },
