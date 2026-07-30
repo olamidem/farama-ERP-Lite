@@ -1,19 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import {
-  Loader2,
-  Save,
-  X,
-  Landmark,
-  Wallet,
-  AlertTriangle,
-} from "lucide-react";
+import { Loader2, Save, X, Landmark, Wallet, AlertTriangle } from "lucide-react";
 import type { Customer } from "../types/customer";
-import {
-  topUpSchema,
-  type TopUpFormInput,
-} from "../validation/customer.schema";
+import { topUpSchema, type TopUpFormInput } from "../validation/customer.schema";
 
 interface TopUpModalProps {
   isOpen: boolean;
@@ -83,10 +73,8 @@ export default function TopUpModal({
         </div>
 
         {/* Form Body */}
-        <form
-          onSubmit={handleSubmit((data) => onSave(data))}
-          className="p-6 space-y-4"
-        >
+        <form onSubmit={handleSubmit((data) => onSave(data))} className="p-6 space-y-4">
+          
           {/* Transaction Type Select */}
           <div className="space-y-1.5">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
@@ -115,20 +103,10 @@ export default function TopUpModal({
                     : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
                 }`}
                 disabled={(customer.outstanding_debt || 0) <= 0}
-                title={
-                  (customer.outstanding_debt || 0) <= 0
-                    ? "No outstanding debt"
-                    : ""
-                }
+                title={(customer.outstanding_debt || 0) <= 0 ? "No outstanding debt" : ""}
               >
                 <Landmark className="h-4 w-4" />
-                <span
-                  className={
-                    (customer.outstanding_debt || 0) <= 0 ? "opacity-50" : ""
-                  }
-                >
-                  Pay Debt
-                </span>
+                <span className={(customer.outstanding_debt || 0) <= 0 ? "opacity-50" : ""}>Pay Debt</span>
               </button>
 
               <button
@@ -153,10 +131,7 @@ export default function TopUpModal({
                 Wallet Balance
               </span>
               <span className="text-xs font-black text-indigo-600">
-                ₦
-                {Number(customer.wallet_balance || 0).toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                })}
+                ₦{Number(customer.wallet_balance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </span>
             </div>
             <div className="flex-1">
@@ -164,11 +139,7 @@ export default function TopUpModal({
                 Outstanding Debt
               </span>
               <span className="text-xs font-black text-rose-600">
-                ₦
-                {Number(customer.outstanding_debt || 0).toLocaleString(
-                  "en-US",
-                  { minimumFractionDigits: 2 },
-                )}
+                ₦{Number(customer.outstanding_debt || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </span>
             </div>
           </div>
@@ -214,9 +185,7 @@ export default function TopUpModal({
           <div className="bg-amber-50/60 border border-amber-100 rounded-xl p-3 flex items-start gap-2.5">
             <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
             <p className="text-[9px] font-bold text-amber-700 leading-normal">
-              Posting this ledger entry will adjust the customer's live wallet
-              balances and create a permanent transaction trace in their ledger
-              card.
+              Posting this ledger entry will adjust the customer's live wallet balances and create a permanent transaction trace in their ledger card.
             </p>
           </div>
 
