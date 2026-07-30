@@ -1,28 +1,12 @@
 import { useState } from "react";
-import {
-  Upload,
-  X,
-  FileSpreadsheet,
-  Loader2,
-  CheckCircle2,
-  AlertTriangle,
-  Download,
-} from "lucide-react";
+import { Upload, X, FileSpreadsheet, Loader2, CheckCircle2, AlertTriangle, Download } from "lucide-react";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
 
 interface ImportCustomersModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onImport: (
-    newCustomers: Array<{
-      name: string;
-      phone?: string;
-      email?: string;
-      address?: string;
-      remarks?: string;
-    }>,
-  ) => Promise<void>;
+  onImport: (newCustomers: Array<{ name: string; phone?: string; email?: string; address?: string; remarks?: string }>) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -64,24 +48,14 @@ export default function ImportCustomersModal({
 
         const rows: ParsedCustomerRow[] = data.map((row) => {
           // Normalize column headers
-          const name = String(
-            row["Name"] || row["name"] || row["Full Name"] || "",
-          ).trim();
-          const phone = String(
-            row["Phone"] || row["phone"] || row["Phone Number"] || "",
-          ).trim();
-          const email = String(
-            row["Email"] || row["email"] || row["Email Address"] || "",
-          ).trim();
+          const name = String(row["Name"] || row["name"] || row["Full Name"] || "").trim();
+          const phone = String(row["Phone"] || row["phone"] || row["Phone Number"] || "").trim();
+          const email = String(row["Email"] || row["email"] || row["Email Address"] || "").trim();
           const address = String(row["Address"] || row["address"] || "").trim();
-          const remarks = String(
-            row["Remarks"] || row["remarks"] || row["Notes"] || "",
-          ).trim();
+          const remarks = String(row["Remarks"] || row["remarks"] || row["Notes"] || "").trim();
 
           const isValid = name.length >= 2;
-          const error = !isValid
-            ? "Customer name must be at least 2 characters"
-            : undefined;
+          const error = !isValid ? "Customer name must be at least 2 characters" : undefined;
 
           return { name, phone, email, address, remarks, isValid, error };
         });
@@ -93,9 +67,7 @@ export default function ImportCustomersModal({
           toast.success(`Loaded ${rows.length} rows from file`);
         }
       } catch {
-        toast.error(
-          "Failed to parse file. Please upload a valid CSV or Excel file.",
-        );
+        toast.error("Failed to parse file. Please upload a valid CSV or Excel file.");
       }
     };
 
@@ -108,25 +80,21 @@ export default function ImportCustomersModal({
         "Full Name": "John Doe",
         "Phone Number": "+2348012345678",
         "Email Address": "john.doe@example.com",
-        Address: "12 Commercial Avenue, Ikeja, Lagos",
-        Remarks: "VIP regular client",
+        "Address": "12 Commercial Avenue, Ikeja, Lagos",
+        "Remarks": "VIP regular client",
       },
       {
         "Full Name": "Jane Smith",
         "Phone Number": "+2348098765432",
         "Email Address": "jane.smith@example.com",
-        Address: "5 Victoria Island, Lagos",
-        Remarks: "Prefers generic brands",
+        "Address": "5 Victoria Island, Lagos",
+        "Remarks": "Prefers generic brands",
       },
     ];
 
     const worksheet = XLSX.utils.json_to_sheet(templateData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(
-      workbook,
-      worksheet,
-      "Customer Import Template",
-    );
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Customer Import Template");
     XLSX.writeFile(workbook, "Customers_Import_Template.xlsx");
   };
 
@@ -144,7 +112,7 @@ export default function ImportCustomersModal({
         email: r.email,
         address: r.address,
         remarks: r.remarks,
-      })),
+      }))
     );
 
     setParsedRows([]);
@@ -218,9 +186,7 @@ export default function ImportCustomersModal({
             <div className="space-y-2">
               <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-slate-500">
                 <span>Preview Records ({parsedRows.length} total)</span>
-                <span className="text-emerald-600 font-extrabold">
-                  {validCount} valid to import
-                </span>
+                <span className="text-emerald-600 font-extrabold">{validCount} valid to import</span>
               </div>
 
               <div className="max-h-56 overflow-y-auto border border-slate-100 rounded-2xl overflow-hidden">
@@ -235,10 +201,7 @@ export default function ImportCustomersModal({
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-[10px]">
                     {parsedRows.map((row, idx) => (
-                      <tr
-                        key={idx}
-                        className={row.isValid ? "bg-white" : "bg-rose-50/40"}
-                      >
+                      <tr key={idx} className={row.isValid ? "bg-white" : "bg-rose-50/40"}>
                         <td className="py-2 px-3">
                           {row.isValid ? (
                             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
@@ -248,15 +211,9 @@ export default function ImportCustomersModal({
                             </span>
                           )}
                         </td>
-                        <td className="py-2 px-3 font-bold text-slate-800">
-                          {row.name || "N/A"}
-                        </td>
-                        <td className="py-2 px-3 font-mono text-slate-600">
-                          {row.phone || "N/A"}
-                        </td>
-                        <td className="py-2 px-3 text-slate-600 truncate max-w-[120px]">
-                          {row.email || "N/A"}
-                        </td>
+                        <td className="py-2 px-3 font-bold text-slate-800">{row.name || "N/A"}</td>
+                        <td className="py-2 px-3 font-mono text-slate-600">{row.phone || "N/A"}</td>
+                        <td className="py-2 px-3 text-slate-600 truncate max-w-[120px]">{row.email || "N/A"}</td>
                       </tr>
                     ))}
                   </tbody>
