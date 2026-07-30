@@ -1,333 +1,236 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ArrowDownLeft,
-  CreditCard,
-  DollarSign,
-  Landmark,
-  Loader2,
-  X,
-} from "lucide-react";
+import { useState } from "react";
+import { X, ArrowDownLeft, Loader2, DollarSign, CreditCard, Landmark } from "lucide-react";
 import type { Customer } from "../types/customer";
-import type {
-  CustomerWallet,
-  WalletDepositInput,
-  WalletPaymentMethod,
-} from "../types/wallet";
-import {
-  depositSchema,
-  type DepositFormInput,
-} from "../validation/customer.schema";
+import type { WalletPaymentMethod } from "../types/wallet";
 import { useDepositWallet } from "../hooks/useCustomerWallet";
 
 interface DepositModalProps {
   isOpen: boolean;
   onClose: () => void;
   customer: Customer | null;
-  wallet: CustomerWallet | null;
 }
 
-const PAYMENT_METHODS: {
-  value: WalletPaymentMethod;
-  label: string;
-  icon: typeof DollarSign;
-}[] = [
-  {
-    value: "CASH",
-    label: "Cash",
-    icon: DollarSign,
-  },
-  {
-    value: "BANK_TRANSFER",
-    label: "Transfer",
-    icon: Landmark,
-  },
-  {
-    value: "CARD",
-    label: "POS / Card",
-    icon: CreditCard,
-  },
-];
+export default function DepositModal({ isOpen, onClose, customer }: DepositModalProps) {
+  const [amount, setAmount] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState<WalletPaymentMethod>("CASH");
+  const [notes, setNotes] = useState<string>("");
+  const [reference, setReference] = useState<string>("");
 
-export default function DepositModal({
-  isOpen,
-  onClose,
-  customer,
-  wallet,
-}: DepositModalProps) {
   const depositMutation = useDepositWallet();
 
-  const {
-    register,
-    watch,
-    reset,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<DepositFormInput>({
-    resolver: zodResolver(depositSchema),
-    defaultValues: {
-      wallet_id: "",
-      amount: 0,
-      payment_method: "CASH",
-      notes: "",
-      reference: "",
-    },
-  });
-
-  useEffect(() => {
-    if (wallet) {
-      reset({
-        wallet_id: wallet.id,
-        amount: 0,
-        payment_method: "CASH",
-        notes: "",
-        reference: "",
-      });
-    }
-  }, [wallet, reset]);
-
-  if (!isOpen || !customer || !wallet) return null;
-
-  const amount = Number(watch("amount")) || 0;
-
-  const currentBalance = wallet.balance;
-
-  const projectedBalance = currentBalance + amount;
-
-  const onSubmit = async (data: DepositFormInput) => {
-    const payload: WalletDepositInput = {
-      ...data,
-      customer_id: customer.id,
-      reference:
-        data.reference ||
-        `DEP-${Date.now()}`,
-      performed_by: "CURRENT_USER",
-    };
-
-    await depositMutation.mutateAsync(payload);
-
+  const handleClose = () => {
+    setAmount("");
+    setPaymentMethod("CASH");
+    setNotes("");
+    setReference("");
     onClose();
   };
 
+  if (!isOpen || !customer) return null;
+
+  const currentBalance = customer.wallet_balance || 0;
+  const numAmount = Number(amount) || 0;
+  const projectedBalance = currentBalance + numAmount;
+
+  const handleDeposit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (numAmount <= 0) return;
+
+    try {
+      await depositMutation.mutateAsync({
+        customer_id: customer.id,
+        amount: numAmount,
+        payment_method: paymentMethod,
+        notes: notes.trim() || undefined,
+        reference: reference.trim() || undefined,
+        performed_by: "Store Cashier",
+      });
+      onClose();
+    } catch {
+      // Error handled by mutation toast
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-5">
-
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-xl overflow-hidden">
-
-        <div className="flex items-center justify-between px-6 py-5 border-b">
-
-          <div>
-            <h2 className="text-lg font-black">
-              Deposit Wallet Funds
-            </h2>
-
-            <p className="text-xs text-slate-500">
-              {customer.name}
-            </p>
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl max-w-md w-full overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="border-b border-slate-100 px-6 py-4 flex items-center justify-between bg-emerald-50/50">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-2xl bg-emerald-500 text-white shadow-xs">
+              <ArrowDownLeft className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">
+                Deposit Wallet Funds
+              </h3>
+              <p className="text-[10px] font-bold text-emerald-700">
+                Customer: {customer.name}
+              </p>
+            </div>
           </div>
-
           <button
-            onClick={onClose}
-            className="p-2 rounded-xl hover:bg-slate-100"
+            onClick={handleClose}
+            type="button"
+            className="text-slate-400 hover:text-slate-600 font-bold transition p-1.5 rounded-xl hover:bg-white/80 cursor-pointer"
           >
-            <X size={18} />
+            <X className="h-4 w-4" />
           </button>
-
         </div>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="p-6 space-y-5"
-        >
+        {/* Form Body */}
+        <form onSubmit={handleDeposit} className="p-6 space-y-4">
+          {customer.status === "SUSPENDED" && (
+            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold flex items-center gap-2">
+              <span className="text-base">⚠️</span>
+              <span>Account is SUSPENDED. Activate this customer account before performing any deposit activities.</span>
+            </div>
+          )}
 
-          <div className="rounded-2xl border bg-slate-50 p-4 flex justify-between">
-
+          {/* Balance Preview Card */}
+          <div className="bg-slate-50 border border-slate-200/70 rounded-2xl p-4 flex justify-between items-center">
             <div>
-              <p className="text-[10px] uppercase font-black text-slate-400">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
                 Current Balance
-              </p>
-
-              <p className="text-lg font-black">
-                ₦{currentBalance.toLocaleString()}
-              </p>
+              </span>
+              <span className="text-sm font-black text-slate-700">
+                ₦{currentBalance.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
+              </span>
             </div>
-
             <div className="text-right">
-
-              <p className="text-[10px] uppercase font-black text-emerald-500">
-                Balance After
-              </p>
-
-              <p className="text-xl font-black text-emerald-600">
-                ₦{projectedBalance.toLocaleString()}
-              </p>
-
+              <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest block">
+                After Deposit
+              </span>
+              <span className="text-base font-black text-emerald-600">
+                ₦{projectedBalance.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
+              </span>
             </div>
-
           </div>
 
-          <div>
-
-            <label className="text-xs font-bold">
-              Deposit Amount
+          {/* Amount Input */}
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+              Deposit Amount (₦) *
             </label>
-
-            <div className="relative mt-2">
-
-              <span className="absolute left-4 top-3 font-bold">
+            <div className="relative">
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">
                 ₦
               </span>
-
               <input
                 type="number"
-                step="0.01"
-                {...register("amount", {
-                  valueAsNumber: true,
-                })}
-                className="w-full pl-8 pr-4 py-3 rounded-xl border"
+                min="1"
+                step="any"
+                required
+                placeholder="0.00"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="w-full pl-8 pr-4 py-3 bg-white text-base font-black text-slate-800 rounded-2xl border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden transition"
               />
-
             </div>
-
-            {errors.amount && (
-              <p className="text-xs text-red-500 mt-1">
-                {errors.amount.message}
-              </p>
-            )}
-
+            {/* Quick amount shortcuts */}
+            <div className="flex gap-1.5 pt-1">
+              {[1000, 5000, 10000, 25000, 50000].map((val) => (
+                <button
+                  key={val}
+                  type="button"
+                  onClick={() => setAmount(String(val))}
+                  className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-[10px] font-extrabold text-slate-600 transition cursor-pointer"
+                >
+                  +₦{val.toLocaleString()}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div>
-
-            <label className="text-xs font-bold">
-              Payment Method
+          {/* Payment Method Selector */}
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+              Payment Source
             </label>
-
-            <div className="grid grid-cols-3 gap-2 mt-2">
-
-              {PAYMENT_METHODS.map((method) => {
-                const Icon = method.icon;
-
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { id: "CASH", label: "Cash", icon: DollarSign },
+                { id: "BANK_TRANSFER", label: "Transfer", icon: Landmark },
+                { id: "CARD", label: "POS / Card", icon: CreditCard },
+              ].map((m) => {
+                const Icon = m.icon;
+                const isSelected = paymentMethod === m.id;
                 return (
                   <button
-                    key={method.value}
+                    key={m.id}
                     type="button"
-                    onClick={() =>
-                      setValue(
-                        "payment_method",
-                        method.value
-                      )
-                    }
-                    className={`rounded-xl border p-3 flex flex-col items-center gap-2 ${
-                      watch("payment_method") ===
-                      method.value
-                        ? "border-emerald-600 bg-emerald-50"
-                        : ""
+                    onClick={() => setPaymentMethod(m.id as WalletPaymentMethod)}
+                    className={`p-2.5 rounded-2xl border text-center transition flex flex-col items-center justify-center gap-1 cursor-pointer ${
+                      isSelected
+                        ? "bg-emerald-50 border-emerald-500 text-emerald-700 font-extrabold"
+                        : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 font-bold"
                     }`}
                   >
-                    <Icon size={18} />
-
-                    <span className="text-xs font-bold">
-                      {method.label}
-                    </span>
+                    <Icon className="h-4 w-4" />
+                    <span className="text-[10px] uppercase tracking-wider">{m.label}</span>
                   </button>
                 );
               })}
-
             </div>
-
           </div>
 
-          <div>
-
-            <label className="text-xs font-bold">
-              Reference
+          {/* Optional Reference */}
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+              Reference / Teller No. (Optional)
             </label>
-
             <input
-              {...register("reference")}
-              className="mt-2 w-full rounded-xl border p-3"
-              placeholder="Leave blank to auto-generate"
+              type="text"
+              placeholder="e.g. TRF-982312 or Cash Teller #4"
+              value={reference}
+              onChange={(e) => setReference(e.target.value)}
+              className="w-full px-3.5 py-2.5 text-xs font-bold text-slate-800 rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-500"
             />
-
           </div>
 
-          <div>
-
-            <label className="text-xs font-bold">
-              Notes
+          {/* Notes */}
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+              Transaction Notes
             </label>
-
             <textarea
-              rows={3}
-              {...register("notes")}
-              className="mt-2 w-full rounded-xl border p-3"
+              rows={2}
+              placeholder="e.g. Advance wallet deposit for medicine supply..."
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full px-3.5 py-2.5 text-xs font-bold text-slate-800 rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-500"
             />
-
           </div>
 
-          <div className="rounded-xl bg-slate-50 border p-4">
-
-            <h3 className="font-bold text-sm mb-2">
-              Transaction Summary
-            </h3>
-
-            <div className="flex justify-between text-sm">
-              <span>Customer</span>
-              <strong>{customer.name}</strong>
-            </div>
-
-            <div className="flex justify-between text-sm">
-              <span>Amount</span>
-              <strong>
-                ₦{amount.toLocaleString()}
-              </strong>
-            </div>
-
-            <div className="flex justify-between text-sm">
-              <span>New Balance</span>
-              <strong className="text-emerald-600">
-                ₦{projectedBalance.toLocaleString()}
-              </strong>
-            </div>
-
-          </div>
-
-          <div className="flex justify-end gap-3 pt-2">
-
+          {/* Actions */}
+          <div className="pt-2 flex justify-end gap-2">
             <button
               type="button"
-              onClick={onClose}
-              className="px-5 py-2 rounded-xl border"
+              onClick={handleClose}
+              className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition cursor-pointer"
             >
               Cancel
             </button>
-
             <button
-              disabled={depositMutation.isPending}
-              className="px-5 py-2 rounded-xl bg-emerald-600 text-white flex items-center gap-2"
+              type="submit"
+              disabled={numAmount <= 0 || depositMutation.isPending || customer.status === "SUSPENDED"}
+              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-wider transition shadow-md shadow-emerald-600/20 flex items-center gap-2 disabled:opacity-50 cursor-pointer"
             >
               {depositMutation.isPending ? (
                 <>
-                  <Loader2 className="animate-spin h-4 w-4" />
-                  Processing...
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <span>Processing...</span>
                 </>
               ) : (
                 <>
-                  <ArrowDownLeft size={16} />
-                  Deposit Funds
+                  <ArrowDownLeft className="h-3.5 w-3.5" />
+                  <span>Credit Wallet (₦{numAmount.toLocaleString()})</span>
                 </>
               )}
             </button>
-
           </div>
-
         </form>
-
       </div>
-
     </div>
   );
 }
