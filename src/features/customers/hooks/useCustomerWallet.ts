@@ -9,6 +9,7 @@ import {
   withdrawFromWallet,
   updateWalletStatus,
   getWalletOverviewStats,
+  transferWalletBalance,
 } from "../services/wallet.service";
 import type {
   WalletDepositInput,
@@ -86,6 +87,39 @@ export const useWithdrawWallet = () => {
   });
 };
 
+export const useTransferWallet = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: { senderId: string; recipientId: string; amount: number; notes?: string }) =>
+      transferWalletBalance(input),
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.wallets.detail(variables.senderId),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.wallets.detail(variables.recipientId),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.wallets.transactions(variables.senderId),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.wallets.transactions(variables.recipientId),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.customers.all,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.wallets.overview,
+      });
+      toast.success(`Successfully transferred ₦${variables.amount.toLocaleString()} store credit!`);
+    },
+    onError: (error) => {
+      toast.error(getReadableError(error));
+    },
+  });
+};
+
 export const useUpdateWalletStatus = () => {
   const queryClient = useQueryClient();
 
@@ -101,7 +135,10 @@ export const useUpdateWalletStatus = () => {
       await queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.wallets.detail(variables.customerId),
       });
-      toast.success("Wallet status updated.");
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.customers.all,
+      });
+      toast.success(`Customer status set to ${variables.status}.`);
     },
     onError: (error) => {
       toast.error(getReadableError(error));
