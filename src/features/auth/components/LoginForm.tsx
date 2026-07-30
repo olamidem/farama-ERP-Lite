@@ -44,20 +44,20 @@ const LoginForm = () => {
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div className="space-y-1.5 text-left">
-          <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide">
+          <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide">
             Staff Email
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
             <input
               type="email"
               placeholder="admin@mail.com"
               {...register("email")}
-              className={`w-full rounded-xl border bg-slate-50 py-2.5 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 transition-all focus:bg-white focus:outline-none focus:ring-2 ${errors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-blue-500 focus:ring-blue-500/10"}`}
+              className={`w-full rounded-xl border bg-slate-50 dark:bg-slate-900/60 py-2.5 pl-10 pr-4 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 transition-all focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 ${errors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 dark:border-slate-700 focus:border-blue-500 focus:ring-blue-500/10"}`}
             />
           </div>
           {errors.email && (
-            <div className="flex items-center gap-1 text-red-500 mt-1">
+            <div className="flex items-center gap-1 text-red-500 dark:text-red-400 mt-1">
               <AlertCircle className="h-3 w-3" />
               <p className="text-xs font-medium">{errors.email.message}</p>
             </div>
@@ -65,21 +65,21 @@ const LoginForm = () => {
         </div>
         
         <div className="space-y-1.5 text-left">
-          <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide">
+          <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide">
             Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               {...register("password")}
-              className={`w-full rounded-xl border bg-slate-50 py-2.5 pl-10 pr-12 text-sm text-slate-800 placeholder-slate-400 transition-all focus:bg-white focus:outline-none focus:ring-2 ${errors.password ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-blue-500 focus:ring-blue-500/10"}`}
+              className={`w-full rounded-xl border bg-slate-50 dark:bg-slate-900/60 py-2.5 pl-10 pr-12 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 transition-all focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 ${errors.password ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 dark:border-slate-700 focus:border-blue-500 focus:ring-blue-500/10"}`}
             />
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-600 cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
             >
               {showPassword ? (
                 <EyeOff className="h-4 w-4" />
@@ -89,7 +89,7 @@ const LoginForm = () => {
             </button>
           </div>
           {errors.password && (
-            <div className="flex items-center gap-1 text-red-500 mt-1">
+            <div className="flex items-center gap-1 text-red-500 dark:text-red-400 mt-1">
               <AlertCircle className="h-3 w-3" />
               <p className="text-xs font-medium">{errors.password.message}</p>
             </div>
