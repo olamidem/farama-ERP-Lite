@@ -2,14 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  Send,
-  X,
-  Loader2,
-  ArrowRight,
-  UserCheck,
-  AlertCircle,
-} from "lucide-react";
+import { Send, X, Loader2, ArrowRight, UserCheck, AlertCircle } from "lucide-react";
 import type { Customer } from "../types/customer";
 import { formatCurrency } from "../utils/wallet.utils";
 
@@ -43,12 +36,10 @@ export default function WalletTransferModal({
   onTransfer,
   isLoading = false,
 }: WalletTransferModalProps) {
-  const [selectedRecipient, setSelectedRecipient] = useState<Customer | null>(
-    null,
-  );
+  const [selectedRecipient, setSelectedRecipient] = useState<Customer | null>(null);
 
   const eligibleRecipients = allCustomers.filter(
-    (c) => c.id !== senderCustomer?.id && c.id !== "walk-in-customer-id",
+    (c) => c.id !== senderCustomer?.id && c.id !== "walk-in-customer-id"
   );
 
   const {
@@ -114,10 +105,7 @@ export default function WalletTransferModal({
         </div>
 
         {/* Form Body */}
-        <form
-          onSubmit={handleSubmit(handleFormSubmit)}
-          className="p-5 space-y-4"
-        >
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="p-5 space-y-4">
           {/* Sender Overview Card */}
           <div className="p-3.5 bg-indigo-50/50 border border-indigo-100/80 rounded-2xl flex items-center justify-between">
             <div>
@@ -148,8 +136,7 @@ export default function WalletTransferModal({
               onChange={(e) => {
                 const recId = e.target.value;
                 setValue("recipient_id", recId);
-                const found =
-                  eligibleRecipients.find((c) => c.id === recId) || null;
+                const found = eligibleRecipients.find((c) => c.id === recId) || null;
                 setSelectedRecipient(found);
               }}
               className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-2.5 px-3.5 text-xs font-semibold text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/15 transition cursor-pointer"
@@ -157,8 +144,7 @@ export default function WalletTransferModal({
               <option value="">-- Choose registered customer --</option>
               {eligibleRecipients.map((rec) => (
                 <option key={rec.id} value={rec.id}>
-                  {rec.name} ({rec.phone || "No phone"}) - Bal:{" "}
-                  {formatCurrency(rec.wallet_balance || 0)}
+                  {rec.name} ({rec.phone || "No phone"}) - Bal: {formatCurrency(rec.wallet_balance || 0)}
                 </option>
               ))}
             </select>
@@ -172,10 +158,7 @@ export default function WalletTransferModal({
           {selectedRecipient && (
             <div className="p-3 bg-emerald-50/60 border border-emerald-100 rounded-xl flex items-center gap-2 text-[10px] text-emerald-800 font-semibold">
               <UserCheck className="h-4 w-4 shrink-0 text-emerald-600" />
-              <span>
-                Recipient current balance:{" "}
-                {formatCurrency(selectedRecipient.wallet_balance || 0)}
-              </span>
+              <span>Recipient current balance: {formatCurrency(selectedRecipient.wallet_balance || 0)}</span>
             </div>
           )}
 
@@ -194,24 +177,17 @@ export default function WalletTransferModal({
                 placeholder="0.00"
                 {...register("amount", { valueAsNumber: true })}
                 className={`w-full rounded-2xl border ${
-                  isInsufficient
-                    ? "border-rose-300 bg-rose-50/30"
-                    : "border-slate-200 bg-slate-50/50"
+                  isInsufficient ? "border-rose-300 bg-rose-50/30" : "border-slate-200 bg-slate-50/50"
                 } py-2.5 pl-8 pr-3.5 font-mono text-xs font-black text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/15 transition`}
               />
             </div>
             {errors.amount && (
-              <p className="text-[10px] font-bold text-rose-500 mt-1">
-                {errors.amount.message}
-              </p>
+              <p className="text-[10px] font-bold text-rose-500 mt-1">{errors.amount.message}</p>
             )}
             {isInsufficient && (
               <div className="mt-1.5 flex items-center gap-1.5 text-[10px] font-bold text-rose-600">
                 <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                <span>
-                  Amount exceeds available sender wallet balance (
-                  {formatCurrency(senderBalance)})
-                </span>
+                <span>Amount exceeds available sender wallet balance ({formatCurrency(senderBalance)})</span>
               </div>
             )}
           </div>
@@ -241,9 +217,7 @@ export default function WalletTransferModal({
               <div className="flex justify-between font-bold text-slate-600">
                 <span>Recipient New Balance:</span>
                 <span className="font-mono text-emerald-600">
-                  {formatCurrency(
-                    (selectedRecipient.wallet_balance || 0) + transferAmount,
-                  )}
+                  {formatCurrency((selectedRecipient.wallet_balance || 0) + transferAmount)}
                 </span>
               </div>
             </div>
