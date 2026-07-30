@@ -8,12 +8,35 @@ import type {
 export const getCustomers = async (): Promise<Customer[]> => {
   const { data, error } = await supabase
     .from("customers")
-    .select("*")
+    .select(`
+      *,
+      customer_wallets ( status )
+    `)
     .order("created_at", { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+    const { data: fallbackData, error: fallbackErr } = await supabase
+      .from("customers")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-  return data ?? [];
+    if (fallbackErr) throw fallbackErr;
+    return ((fallbackData ?? []) as Customer[]).map((c: Customer) => ({ ...c, status: "ACTIVE" as const }));
+  }
+
+  type CustomerWithWallet = Customer & {
+    customer_wallets?: { status?: "ACTIVE" | "SUSPENDED" } | { status?: "ACTIVE" | "SUSPENDED" }[];
+  };
+
+  return ((data ?? []) as unknown as CustomerWithWallet[]).map((item) => {
+    const wallet = Array.isArray(item.customer_wallets)
+      ? item.customer_wallets[0]
+      : item.customer_wallets;
+    return {
+      ...item,
+      status: (wallet?.status || "ACTIVE") as "ACTIVE" | "SUSPENDED",
+    };
+  });
 };
 
 export const getCustomer = async (
@@ -43,6 +66,8 @@ export const createCustomer = async (
       phone: input.phone || null,
       address: input.address || null,
       remarks: input.remarks || null,
+      wallet_balance: input.wallet_balance || 0,
+      outstanding_debt: input.outstanding_debt || 0,
     })
     .select()
     .single();
@@ -55,7 +80,9 @@ export const createCustomer = async (
       customer_id: data.id,
     });
 
-  if (walletError) throw walletError;
+  if (walletError) {
+    console.warn("Wallet initialization warning:", walletError);
+  }
 
   return data;
 };
