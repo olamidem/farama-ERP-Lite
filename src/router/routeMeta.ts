@@ -39,6 +39,16 @@ export const routeMeta = {
     subtitle: "Manage supplier information",
   },
 
+  "/customers": {
+    title: "Customers",
+    subtitle: "Manage customer profiles and wallets",
+  },
+
+  "/customers/$customerId": {
+    title: "Customer Details",
+    subtitle: "View customer history and manage store credit",
+  },
+
   "/staff": {
     title: "Staff",
     subtitle: "Manage employees",

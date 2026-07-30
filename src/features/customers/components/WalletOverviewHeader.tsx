@@ -12,6 +12,17 @@ export default function WalletOverviewHeader() {
 
   return (
     <div className="space-y-4">
+      {/* Page Title & Subtitle */}
+      <div>
+        <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
+          Customers &amp; Wallets
+        </h1>
+        <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
+          Manage customer accounts, deposit balances, process wallet checkouts,
+          and print account statements.
+        </p>
+      </div>
+
       {/* Overview Stat Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Wallet Balance */}
