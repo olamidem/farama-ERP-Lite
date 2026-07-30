@@ -4,8 +4,6 @@ import type {
   WalletTransaction,
   WalletDepositInput,
   WalletWithdrawalInput,
-  WalletSalePaymentInput,
-  WalletRefundInput,
   WalletAdjustmentInput,
   WalletOverviewStats,
   WalletStatus,
@@ -47,31 +45,53 @@ export const getAllWallets = async (): Promise<CustomerWallet[]> => {
   return data ?? [];
 };
 
+function isUUID(str?: string | null): boolean {
+  if (!str) return false;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(str.trim());
+}
+
 export const getWalletTransactions = async (
   customerId: string
 ): Promise<WalletTransaction[]> => {
-  const { data, error } = await supabase
-    .from("customer_wallet_transactions")
-    .select("*")
+  const { data: wallet } = await supabase
+    .from("customer_wallets")
+    .select("id")
     .eq("customer_id", customerId)
+    .maybeSingle();
+
+  if (wallet?.id) {
+    const { data: wtData, error: wtErr } = await supabase
+      .from("wallet_transactions")
+      .select("*")
+      .eq("wallet_id", wallet.id)
+      .order("created_at", { ascending: false });
+
+    if (!wtErr && wtData && wtData.length > 0) {
+      return wtData.map((t: Record<string, unknown>) => ({
+        ...t,
+        customer_id: customerId,
+      })) as unknown as WalletTransaction[];
+    }
+  }
+
+  const { data } = await supabase
+    .from("wallet_transactions")
+    .select("*")
+    .eq("wallet_id", wallet?.id)
     .order("created_at", { ascending: false });
 
-  if (error) return [];
-
-  return data ?? [];
+  return (data ?? []) as unknown as WalletTransaction[];
 };
 
 export const getAllWalletTransactions = async (): Promise<
   WalletTransaction[]
 > => {
-  const { data, error } = await supabase
-    .from("customer_wallet_transactions")
+  const { data: wtData } = await supabase
+    .from("wallet_transactions")
     .select("*")
     .order("created_at", { ascending: false });
 
-  if (error) return [];
-
-  return data ?? [];
+  return (wtData ?? []) as unknown as WalletTransaction[];
 };
 
 /* -------------------------------------------------------------------------- */
@@ -97,20 +117,30 @@ async function updateBalancesAndRecordTx({
   reference?: string | null;
   performedBy?: string | null;
 }): Promise<WalletTransaction> {
-  // 1. Fetch current balances
-  const { data: custData } = await supabase
-    .from("customers")
-    .select("wallet_balance")
-    .eq("id", customerId)
-    .single();
+  if (!isUUID(customerId)) {
+    console.warn("Skipping DB wallet transaction for non-UUID customerId:", customerId);
+    return {
+      id: `tx-${Date.now()}`,
+      customer_id: customerId,
+      reference: reference || `REF-${Date.now()}`,
+      type,
+      direction,
+      amount,
+      balance_before: 0,
+      balance_after: 0,
+      payment_method: paymentMethod || "WALLET",
+      created_at: new Date().toISOString(),
+    } as unknown as WalletTransaction;
+  }
 
+  // 1. Fetch current wallet balance
   const { data: walletData } = await supabase
     .from("customer_wallets")
     .select("id, balance")
     .eq("customer_id", customerId)
     .maybeSingle();
 
-  const currentBalance = walletData?.balance ?? custData?.wallet_balance ?? 0;
+  const currentBalance = Number(walletData?.balance || 0);
 
   // 2. Calculate new balance
   let newBalance: number;
@@ -125,23 +155,13 @@ async function updateBalancesAndRecordTx({
     newBalance = Math.max(0, currentBalance - amount);
   }
 
-  // 3. Update customers table
-  await supabase
-    .from("customers")
-    .update({
-      wallet_balance: newBalance,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", customerId);
-
-  // 4. Update or Insert customer_wallets table
+  // 3. Update or Insert customer_wallets table
   let walletId = walletData?.id;
   if (walletData) {
     await supabase
       .from("customer_wallets")
       .update({
         balance: newBalance,
-        updated_at: new Date().toISOString(),
       })
       .eq("customer_id", customerId);
   } else {
@@ -150,49 +170,98 @@ async function updateBalancesAndRecordTx({
       .insert({
         customer_id: customerId,
         balance: newBalance,
+        currency: "NGN",
         status: "ACTIVE",
       })
       .select("id")
-      .single();
+      .maybeSingle();
 
-    if (newWal) {
+    if (newWal?.id) {
       walletId = newWal.id;
+    } else {
+      const { data: refetched } = await supabase
+        .from("customer_wallets")
+        .select("id")
+        .eq("customer_id", customerId)
+        .maybeSingle();
+      if (refetched?.id) {
+        walletId = refetched.id;
+      }
     }
   }
 
-  // 5. Insert transaction into customer_wallet_transactions
+  // 4. Insert transaction into wallet_transactions
   const now = new Date().toISOString();
   const txRef =
     reference || `${type.slice(0, 3)}-${Date.now().toString().slice(-6)}`;
-  const txData = {
-    customer_id: customerId,
-    wallet_id: walletId || `wal-${customerId}`,
+
+  const txData: Record<string, unknown> = {
     reference: txRef,
     type,
     direction,
     amount,
     balance_before: currentBalance,
     balance_after: newBalance,
-    payment_method: paymentMethod || "CASH",
+    payment_method: paymentMethod || "WALLET",
     notes: notes || null,
-    performed_by: performedBy || "System",
     created_at: now,
   };
 
-  const { data: insertedTx, error: txErr } = await supabase
-    .from("customer_wallet_transactions")
+  if (walletId) {
+    txData.wallet_id = walletId;
+  }
+  if (isUUID(performedBy)) {
+    txData.performed_by = performedBy;
+  }
+
+  const { data: wtTx, error: wtErr } = await supabase
+    .from("wallet_transactions")
     .insert(txData)
     .select()
     .single();
 
-  if (txErr || !insertedTx) {
+  if (!wtErr && wtTx) {
     return {
-      id: `tx-${Date.now()}`,
-      ...txData,
-    } as WalletTransaction;
+      ...wtTx,
+      customer_id: customerId,
+    } as unknown as WalletTransaction;
   }
 
-  return insertedTx as WalletTransaction;
+  console.warn("Insert into wallet_transactions failed:", wtErr);
+
+  // Fallback: Try minimal payload
+  const minimalTx: Record<string, unknown> = {
+    reference: txRef,
+    type,
+    direction,
+    amount,
+    balance_before: currentBalance,
+    balance_after: newBalance,
+    created_at: now,
+  };
+  if (walletId) {
+    minimalTx.wallet_id = walletId;
+  }
+
+  const { data: fbWtData } = await supabase
+    .from("wallet_transactions")
+    .insert(minimalTx)
+    .select()
+    .single();
+
+  if (fbWtData) {
+    return {
+      ...fbWtData,
+      customer_id: customerId,
+    } as unknown as WalletTransaction;
+  }
+
+  return {
+    id: `tx-${Date.now()}`,
+    customer_id: customerId,
+    wallet_id: walletId || `wal-${customerId}`,
+    ...txData,
+  } as unknown as WalletTransaction;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -238,40 +307,6 @@ export const withdrawFromWallet = async (
     direction: "DEBIT",
     paymentMethod: input.payment_method,
     notes: input.notes,
-    reference: input.reference,
-    performedBy: input.performed_by,
-  });
-};
-
-export const payWithWallet = async (
-  input: WalletSalePaymentInput
-): Promise<WalletTransaction> => {
-  await assertWalletActive(input.customer_id);
-
-  return updateBalancesAndRecordTx({
-    customerId: input.customer_id,
-    amount: input.amount,
-    type: "SALE_PAYMENT",
-    direction: "DEBIT",
-    paymentMethod: "WALLET",
-    notes: input.notes || `Sale payment`,
-    reference: input.reference,
-    performedBy: input.performed_by,
-  });
-};
-
-export const refundToWallet = async (
-  input: WalletRefundInput
-): Promise<WalletTransaction> => {
-  await assertWalletActive(input.customer_id);
-
-  return updateBalancesAndRecordTx({
-    customerId: input.customer_id,
-    amount: input.amount,
-    type: "REFUND",
-    direction: "CREDIT",
-    paymentMethod: "WALLET",
-    notes: input.notes || `Sale refund`,
     reference: input.reference,
     performedBy: input.performed_by,
   });
@@ -353,31 +388,47 @@ export const updateWalletStatus = async (
 
 export const getWalletOverviewStats =
   async (): Promise<WalletOverviewStats> => {
-    const wallets = await getAllWallets();
-    const txs = await getAllWalletTransactions();
-    const totalWalletBalance = wallets.reduce((s, w) => s + (w.balance || 0), 0);
+    const [wallets, txs] = await Promise.all([
+      getAllWallets(),
+      getAllWalletTransactions(),
+    ]);
+
+    const activeWalletsCount = wallets.filter((w) => w.status === "ACTIVE").length;
+    const suspendedWalletsCount = wallets.filter((w) => w.status === "SUSPENDED").length;
+
+    // Sum balances across customer_wallets
+    const totalWalletBalance = wallets.reduce(
+      (sum: number, w) => sum + Number(w.balance || 0),
+      0
+    );
+
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
     const todayTxs = txs.filter((t) => new Date(t.created_at) >= startOfToday);
+
     const depositsToday = todayTxs
       .filter((t) => t.type === "DEPOSIT")
-      .reduce((s, t) => s + t.amount, 0);
+      .reduce((s, t) => s + Number(t.amount || 0), 0);
     const withdrawalsToday = todayTxs
       .filter((t) => t.type === "WITHDRAWAL")
-      .reduce((s, t) => s + t.amount, 0);
+      .reduce((s, t) => s + Number(t.amount || 0), 0);
     const walletPaymentsToday = todayTxs
       .filter((t) => t.type === "SALE_PAYMENT")
-      .reduce((s, t) => s + t.amount, 0);
+      .reduce((s, t) => s + Number(t.amount || 0), 0);
 
     return {
       totalWalletBalance,
-      activeWallets: wallets.filter((w) => w.status === "ACTIVE").length,
-      suspendedWallets: wallets.filter((w) => w.status === "SUSPENDED").length,
+      activeWallets: activeWalletsCount,
+      suspendedWallets: suspendedWalletsCount,
       depositsToday,
       withdrawalsToday,
       walletPaymentsToday,
       totalTransactionsToday: todayTxs.length,
-      totalDeposits: txs.filter((t) => t.type === "DEPOSIT").reduce((s, t) => s + t.amount, 0),
-      totalWithdrawals: txs.filter((t) => t.type === "WITHDRAWAL").reduce((s, t) => s + t.amount, 0),
+      totalDeposits: txs
+        .filter((t) => t.type === "DEPOSIT")
+        .reduce((s, t) => s + Number(t.amount || 0), 0),
+      totalWithdrawals: txs
+        .filter((t) => t.type === "WITHDRAWAL")
+        .reduce((s, t) => s + Number(t.amount || 0), 0),
     };
   };

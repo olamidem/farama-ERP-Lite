@@ -3,6 +3,7 @@ import { X, ArrowDownLeft, Loader2, DollarSign, CreditCard, Landmark } from "luc
 import type { Customer } from "../types/customer";
 import type { WalletPaymentMethod } from "../types/wallet";
 import { useDepositWallet } from "../hooks/useCustomerWallet";
+import useAuthStore from "../../auth/store/authStore";
 
 interface DepositModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export default function DepositModal({ isOpen, onClose, customer }: DepositModal
   const [reference, setReference] = useState<string>("");
 
   const depositMutation = useDepositWallet();
+  const currentUser = useAuthStore((state) => state.user);
 
   const handleClose = () => {
     setAmount("");
@@ -43,12 +45,13 @@ export default function DepositModal({ isOpen, onClose, customer }: DepositModal
         payment_method: paymentMethod,
         notes: notes.trim() || undefined,
         reference: reference.trim() || undefined,
-        performed_by: "Store Cashier",
+         performed_by: currentUser?.id,
       });
-      onClose();
-    } catch {
-      // Error handled by mutation toast
-    }
+      handleClose();
+    } catch (error) {
+    console.error(error);
+    // Error toast is already handled inside the mutation
+  }
   };
 
   return (

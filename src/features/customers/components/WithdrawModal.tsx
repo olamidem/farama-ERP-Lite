@@ -3,6 +3,7 @@ import { X, ArrowUpRight, Loader2, DollarSign, Landmark, AlertCircle } from "luc
 import type { Customer } from "../types/customer";
 import type { WalletPaymentMethod } from "../types/wallet";
 import { useWithdrawWallet } from "../hooks/useCustomerWallet";
+import useAuthStore from "../../auth/store/authStore";
 
 interface WithdrawModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
   const [reference, setReference] = useState<string>("");
 
   const withdrawMutation = useWithdrawWallet();
+  const currentUser = useAuthStore((state) => state.user);
 
   const handleClose = () => {
     setAmount("");
@@ -44,9 +46,9 @@ export default function WithdrawModal({ isOpen, onClose, customer }: WithdrawMod
         payment_method: paymentMethod,
         notes: notes.trim() || undefined,
         reference: reference.trim() || undefined,
-        performed_by: "Store Cashier",
+         performed_by: currentUser?.id,
       });
-      onClose();
+      handleClose();
     } catch {
       // Handled by mutation toast
     }

@@ -77,6 +77,7 @@ export default function CustomerModalsContainer({
       />
 
       <TopUpModal
+        key={customerToTopUp?.id ? `topup-${customerToTopUp.id}-${isTopUpOpen}` : "topup-modal"}
         isOpen={isTopUpOpen}
         onClose={onCloseTopUpModal}
         customer={customerToTopUp}
@@ -85,12 +86,14 @@ export default function CustomerModalsContainer({
       />
 
       <DepositModal
+        key={depositCustomer?.id ? `deposit-${depositCustomer.id}-${isDepositOpen}` : "deposit-modal"}
         isOpen={isDepositOpen}
         onClose={onCloseDepositModal}
         customer={depositCustomer}
       />
 
       <WithdrawModal
+        key={withdrawCustomer?.id ? `withdraw-${withdrawCustomer.id}-${isWithdrawOpen}` : "withdraw-modal"}
         isOpen={isWithdrawOpen}
         onClose={onCloseWithdrawModal}
         customer={withdrawCustomer}

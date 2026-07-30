@@ -137,3 +137,12 @@ export const statementFilterSchema = z.object({
 export type StatementFilterInput = z.infer<
   typeof statementFilterSchema
 >;
+
+
+export const transferSchema = z.object({
+  recipient_id: z.string().min(1, "Please select a recipient customer"),
+  amount: z.number().gt(0, "Transfer amount must be greater than 0"),
+  notes: z.string().trim().optional().or(z.string().length(0)),
+});
+
+export type TransferFormInput = z.infer<typeof transferSchema>;

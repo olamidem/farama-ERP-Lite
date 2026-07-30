@@ -1,18 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Send, X, Loader2, ArrowRight, UserCheck, AlertCircle } from "lucide-react";
 import type { Customer } from "../types/customer";
 import { formatCurrency } from "../utils/wallet.utils";
-
-const transferSchema = z.object({
-  recipient_id: z.string().min(1, "Please select a recipient customer"),
-  amount: z.number().gt(0, "Transfer amount must be greater than 0"),
-  notes: z.string().trim().optional().or(z.string().length(0)),
-});
-
-export type TransferFormInput = z.infer<typeof transferSchema>;
+import { transferSchema, type TransferFormInput } from "../validation/customer.schema";
 
 interface WalletTransferModalProps {
   isOpen: boolean;
@@ -61,6 +53,17 @@ export default function WalletTransferModal({
   const transferAmount = watch("amount") || 0;
   const senderBalance = senderCustomer?.wallet_balance || 0;
   const isInsufficient = transferAmount > senderBalance;
+
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        recipient_id: "",
+        amount: 0,
+        notes: "",
+      });
+      setSelectedRecipient(null);
+    }
+  }, [isOpen, senderCustomer, reset]);
 
   if (!isOpen || !senderCustomer) return null;
 

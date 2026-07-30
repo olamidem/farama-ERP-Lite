@@ -146,7 +146,7 @@ export default function WalletStatementModal({
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-slate-100">
             <div>
               <h1 className="text-xl font-black text-slate-900 uppercase tracking-tight">
-                FARAMA PHARMACY & STORE
+                FARAMA STORE
               </h1>
               <p className="text-xs font-bold text-slate-500">
                 Official Customer Wallet Statement
