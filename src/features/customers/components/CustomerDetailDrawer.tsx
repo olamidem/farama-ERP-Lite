@@ -1,43 +1,49 @@
+import { useState } from "react";
+import { toast } from "sonner";
 import {
-  Users,
+  X,
+  Wallet,
+  ArrowDownLeft,
+  ArrowUpRight,
+  FileText,
   Edit2,
   Trash2,
-  X,
   Phone,
   Mail,
   MapPin,
-  ArrowDownLeft,
-  ArrowUpRight,
-  Wallet,
-  History,
   ShoppingBag,
+  History,
+  ShieldAlert,
+  ShieldCheck,
 } from "lucide-react";
 import type { Customer } from "../types/customer";
-import type { CustomerWallet, WalletTransaction } from "../types/wallet";
+import type { CustomerWallet, WalletTransaction, WalletStatus } from "../types/wallet";
 import type { CustomerSale } from "../hooks/useCustomerSales";
+import { formatNaira } from "../lib/customerExport";
+import { getBadgeColorForTransactionType } from "../utils/wallet.utils";
 
 interface CustomerDetailDrawerProps {
   activeCustomer: Customer | null;
-  activeWallet?: CustomerWallet | null;
-  activeWalletTransactions?: WalletTransaction[];
-  activeCustomerSales?: CustomerSale[];
+  activeWallet: CustomerWallet | undefined;
+  activeWalletTransactions: WalletTransaction[];
+  activeCustomerSales: CustomerSale[];
   isLoadingSales: boolean;
   txFilterType: string;
   onTxFilterChange: (type: string) => void;
   onDeselect: () => void;
-  onEdit: (cust: Customer) => void;
-  onDelete: (cust: Customer) => void;
-  onDeposit: (cust: Customer) => void;
-  onWithdraw: (cust: Customer) => void;
-  onStatement: (cust: Customer) => void;
-  onToggleStatus: (customerId: string, newStatus: "active" | "suspended") => void;
+  onEdit: (customer: Customer) => void;
+  onDelete: (customer: Customer) => void;
+  onDeposit: (customer: Customer) => void;
+  onWithdraw: (customer: Customer) => void;
+  onStatement: (customer: Customer) => void;
+  onToggleStatus: (customerId: string, status: WalletStatus) => void;
 }
 
 export default function CustomerDetailDrawer({
   activeCustomer,
   activeWallet,
-  activeWalletTransactions = [],
-  activeCustomerSales = [],
+  activeWalletTransactions,
+  activeCustomerSales,
   isLoadingSales,
   txFilterType,
   onTxFilterChange,
@@ -49,343 +55,325 @@ export default function CustomerDetailDrawer({
   onStatement,
   onToggleStatus,
 }: CustomerDetailDrawerProps) {
+  const [tab, setTab] = useState<"wallet" | "sales">("wallet");
+
   if (!activeCustomer) {
     return (
-      <div className="lg:col-span-1 bg-white border border-slate-100 rounded-3xl shadow-xs overflow-hidden">
-        <div className="p-8 py-16 text-center bg-slate-50/20 border-2 border-dashed border-slate-200/60 rounded-3xl m-4 flex flex-col items-center justify-center min-h-[380px]">
-          <div className="p-4 bg-slate-100/70 border border-slate-200/30 rounded-2xl text-slate-400/80 mb-4 select-none">
-            <Users className="h-8 w-8" />
-          </div>
-          <h4 className="text-xs font-black text-slate-700 uppercase tracking-widest">
-            No Customer Selected
-          </h4>
-          <p className="text-[10px] font-bold text-slate-400 leading-relaxed mt-2 max-w-[240px] mx-auto">
-            Click a row in the registry table to view detailed ledger cards,
-            recent store purchases, and wallet transactions.
-          </p>
-        </div>
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-8 text-center text-slate-400 text-xs font-bold shadow-xs">
+        Select a customer from the table to view detailed ledger, transactions, and POS purchase history.
       </div>
     );
   }
 
+  const isWalkIn = activeCustomer.id === "walk-in-customer-id";
+  const filteredTxs = activeWalletTransactions.filter((t) => {
+    if (txFilterType === "ALL") return true;
+    return (t.type || "").toUpperCase() === txFilterType;
+  });
+
   return (
-    <div className="lg:col-span-1 bg-white border border-slate-100 rounded-3xl shadow-xs overflow-hidden">
-      <div className="flex flex-col h-full animate-fade-in divide-y divide-slate-100">
-        {/* Account Header info */}
-        <div className="p-5 space-y-4">
-          <div className="flex items-start justify-between">
-            <div>
-              <span className="inline-block bg-indigo-50 border border-indigo-100 text-indigo-700 text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md mb-2 select-none">
-                Active Account
+    <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col space-y-4 p-6">
+      {/* Drawer Header */}
+      <div className="flex items-start justify-between border-b border-slate-100 pb-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-black text-slate-800">{activeCustomer.name}</h2>
+            {isWalkIn && (
+              <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[10px] font-black uppercase">
+                Guest
               </span>
-              <h3 className="text-sm font-black text-slate-800">
-                {activeCustomer.name}
-              </h3>
+            )}
+          </div>
+          <p className="text-[11px] text-slate-400 font-bold">
+            Customer ID: {activeCustomer.id.slice(0, 12)}
+          </p>
+        </div>
+        <button
+          onClick={onDeselect}
+          className="p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* Suspended Notice Banner */}
+      {(activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED") && (
+        <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200/80 text-rose-700 text-xs font-bold flex items-center justify-between gap-2 shadow-2xs">
+          <div className="flex items-center gap-2">
+            <ShieldAlert className="h-4 w-4 text-rose-600 shrink-0" />
+            <span>Account Suspended. Activities disabled.</span>
+          </div>
+          {!isWalkIn && (
+            <button
+              onClick={() => onToggleStatus(activeCustomer.id, "ACTIVE")}
+              className="px-2.5 py-1 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-[10px] uppercase tracking-wider transition cursor-pointer shrink-0"
+            >
+              Activate
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Info & Wallet Overview Card */}
+      <div className="p-5 rounded-2xl bg-indigo-600 text-white space-y-4 shadow-md shadow-indigo-600/10">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] font-black uppercase tracking-widest text-indigo-200">
+            Ledger Wallet Balance
+          </span>
+          <span
+            className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
+              activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED"
+                ? "bg-rose-500 text-rose-100"
+                : "bg-indigo-500 text-indigo-100"
+            }`}
+          >
+            {activeWallet?.status || activeCustomer.status || "ACTIVE"}
+          </span>
+        </div>
+
+        <div className="flex items-baseline justify-between">
+          <span className="text-2xl font-black font-mono tracking-tight">
+            {formatNaira(activeCustomer.wallet_balance || 0)}
+          </span>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => {
+                if (activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED") {
+                  toast.error("Account is suspended. Activate account to deposit funds.");
+                  return;
+                }
+                onDeposit(activeCustomer);
+              }}
+              className={`p-2 rounded-xl transition ${
+                activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED"
+                  ? "bg-indigo-400/40 text-indigo-200 cursor-not-allowed opacity-50"
+                  : "bg-indigo-500 hover:bg-indigo-400 text-white cursor-pointer"
+              }`}
+              title="Deposit Funds"
+            >
+              <ArrowDownLeft className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => {
+                if (activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED") {
+                  toast.error("Account is suspended. Activate account to withdraw funds.");
+                  return;
+                }
+                onWithdraw(activeCustomer);
+              }}
+              className={`p-2 rounded-xl transition ${
+                activeWallet?.status === "SUSPENDED" || activeCustomer.status === "SUSPENDED"
+                  ? "bg-indigo-400/40 text-indigo-200 cursor-not-allowed opacity-50"
+                  : "bg-indigo-500 hover:bg-indigo-400 text-white cursor-pointer"
+              }`}
+              title="Withdraw Funds"
+            >
+              <ArrowUpRight className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => onStatement(activeCustomer)}
+              className="p-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white transition cursor-pointer"
+              title="Statement"
+            >
+              <FileText className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Action button bar */}
+        {!isWalkIn && (
+          <div className="pt-2 border-t border-indigo-500/50 flex items-center justify-between gap-2 text-[10px] font-black uppercase">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onEdit(activeCustomer)}
+                className="flex items-center gap-1 text-indigo-200 hover:text-white transition cursor-pointer"
+              >
+                <Edit2 className="h-3 w-3" />
+                <span>Edit Profile</span>
+              </button>
+              <button
+                onClick={() => onDelete(activeCustomer)}
+                className="flex items-center gap-1 text-rose-300 hover:text-rose-100 transition cursor-pointer"
+              >
+                <Trash2 className="h-3 w-3" />
+                <span>Delete</span>
+              </button>
             </div>
-            <div className="flex items-center gap-1">
-              {activeCustomer.id !== "walk-in-customer-id" && (
+
+            <button
+              onClick={() =>
+                onToggleStatus(
+                  activeCustomer.id,
+                  activeWallet?.status === "SUSPENDED" ? "ACTIVE" : "SUSPENDED"
+                )
+              }
+              className="flex items-center gap-1 text-indigo-200 hover:text-white transition cursor-pointer"
+            >
+              {activeWallet?.status === "SUSPENDED" ? (
                 <>
-                  <button
-                    onClick={() => onEdit(activeCustomer)}
-                    className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg border border-slate-200/50 hover:bg-slate-50 transition cursor-pointer"
-                    title="Edit Profile"
-                  >
-                    <Edit2 className="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    onClick={() => onDelete(activeCustomer)}
-                    className="text-rose-400 hover:text-rose-600 p-1.5 rounded-lg border border-slate-200/50 hover:bg-rose-50 transition cursor-pointer"
-                    title="Delete Profile"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
+                  <ShieldCheck className="h-3 w-3 text-emerald-300" />
+                  <span>Activate</span>
+                </>
+              ) : (
+                <>
+                  <ShieldAlert className="h-3 w-3 text-amber-300" />
+                  <span>Suspend</span>
                 </>
               )}
-              <button
-                onClick={onDeselect}
-                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-50 transition cursor-pointer ml-1"
-                title="Deselect Account"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
+            </button>
           </div>
+        )}
+      </div>
 
-          {/* Contact particulars */}
-          <div className="space-y-2 text-[10px] text-slate-600 font-bold">
-            {activeCustomer.phone && (
-              <div className="flex items-center gap-2">
-                <Phone className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                <span>{activeCustomer.phone}</span>
-              </div>
-            )}
-            {activeCustomer.email && (
-              <div className="flex items-center gap-2">
-                <Mail className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                <span className="truncate">{activeCustomer.email}</span>
-              </div>
-            )}
-            {activeCustomer.address && (
-              <div className="flex items-center gap-2">
-                <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                <span className="truncate">{activeCustomer.address}</span>
-              </div>
-            )}
+      {/* Customer Contact Quick Info */}
+      <div className="space-y-2 text-xs font-semibold text-slate-600 bg-slate-50 p-4 rounded-2xl">
+        {activeCustomer.phone && (
+          <div className="flex items-center gap-2">
+            <Phone className="h-3.5 w-3.5 text-slate-400" />
+            <span>{activeCustomer.phone}</span>
           </div>
-
-          {/* Wallet Status & Quick Actions */}
-          <div className="bg-slate-50/80 border border-slate-200/60 rounded-2xl p-4 space-y-3">
-            <div className="flex justify-between items-center">
-              <div>
-                <span className="block text-[8px] font-black text-slate-400 uppercase tracking-widest">
-                  Wallet Balance
-                </span>
-                <span className="block text-base font-black text-indigo-600 font-mono mt-0.5">
-                  ₦
-                  {Number(
-                    activeCustomer.wallet_balance || 0,
-                  ).toLocaleString("en-NG", { minimumFractionDigits: 2 })}
-                </span>
-              </div>
-              <div className="text-right">
-                <span className="block text-[8px] font-black text-slate-400 uppercase tracking-widest">
-                  Wallet Status
-                </span>
-                <span
-                  className={`inline-block text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full mt-0.5 ${
-                    activeWallet?.status === "suspended"
-                      ? "bg-rose-100 text-rose-700"
-                      : "bg-emerald-100 text-emerald-700"
-                  }`}
-                >
-                  {activeWallet?.status || "ACTIVE"}
-                </span>
-              </div>
-            </div>
-
-            {/* Action Buttons Row */}
-            <div className="grid grid-cols-2 gap-2 pt-1">
-              <button
-                type="button"
-                onClick={() => onDeposit(activeCustomer)}
-                className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition flex items-center justify-center gap-1 cursor-pointer"
-              >
-                <ArrowDownLeft className="h-3.5 w-3.5" />
-                <span>Deposit</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onWithdraw(activeCustomer)}
-                className="px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition flex items-center justify-center gap-1 cursor-pointer"
-              >
-                <ArrowUpRight className="h-3.5 w-3.5" />
-                <span>Withdraw</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => onStatement(activeCustomer)}
-                className="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-[9px] font-black uppercase tracking-wider transition flex items-center justify-center gap-1 cursor-pointer"
-              >
-                <Wallet className="h-3 w-3" />
-                <span>Statement</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  const newStatus =
-                    activeWallet?.status === "active" ? "suspended" : "active";
-                  onToggleStatus(activeCustomer.id, newStatus);
-                }}
-                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-wider transition flex items-center justify-center gap-1 cursor-pointer"
-              >
-                <span>Toggle Status</span>
-              </button>
-            </div>
+        )}
+        {activeCustomer.email && (
+          <div className="flex items-center gap-2">
+            <Mail className="h-3.5 w-3.5 text-slate-400" />
+            <span>{activeCustomer.email}</span>
           </div>
-        </div>
+        )}
+        {activeCustomer.address && (
+          <div className="flex items-center gap-2">
+            <MapPin className="h-3.5 w-3.5 text-slate-400" />
+            <span>{activeCustomer.address}</span>
+          </div>
+        )}
+      </div>
 
-        {/* Wallet Ledger & Immutable Transactions trace */}
-        <div className="p-5 flex-1 flex flex-col min-h-[260px]">
-          <div className="flex items-center justify-between gap-1.5 mb-3">
-            <div className="flex items-center gap-1.5">
-              <History className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-              <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                Wallet Transactions Ledger
-              </h4>
-            </div>
-            <span className="text-[9px] font-black text-indigo-600">
-              {activeWalletTransactions.length} logs
+      {/* Sub Tabs: Wallet Ledger vs Purchase History */}
+      <div className="flex border-b border-slate-100 pt-2">
+        <button
+          onClick={() => setTab("wallet")}
+          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-black uppercase border-b-2 transition cursor-pointer ${
+            tab === "wallet"
+              ? "border-indigo-600 text-indigo-600"
+              : "border-transparent text-slate-400 hover:text-slate-600"
+          }`}
+        >
+          <Wallet className="h-3.5 w-3.5" />
+          <span>Wallet Ledger ({activeWalletTransactions.length})</span>
+        </button>
+        <button
+          onClick={() => setTab("sales")}
+          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-black uppercase border-b-2 transition cursor-pointer ${
+            tab === "sales"
+              ? "border-indigo-600 text-indigo-600"
+              : "border-transparent text-slate-400 hover:text-slate-600"
+          }`}
+        >
+          <ShoppingBag className="h-3.5 w-3.5" />
+          <span>POS Orders ({activeCustomerSales.length})</span>
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      {tab === "wallet" ? (
+        <div className="space-y-3">
+          {/* Filter Dropdown */}
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              Recent Transactions
             </span>
+            <select
+              value={txFilterType}
+              onChange={(e) => onTxFilterChange(e.target.value)}
+              className="text-[10px] font-extrabold text-slate-600 bg-slate-100 border border-slate-200/80 rounded-lg px-2 py-1 focus:outline-hidden cursor-pointer"
+            >
+              <option value="ALL">All Types</option>
+              <option value="DEPOSIT">Deposits</option>
+              <option value="WITHDRAWAL">Withdrawals</option>
+              <option value="SALE_PAYMENT">POS Sales</option>
+              <option value="REFUND">Refunds</option>
+            </select>
           </div>
 
-          {/* Filter Tabs */}
-          <div className="flex gap-1 overflow-x-auto pb-2 mb-2 no-scrollbar">
-            {[
-              "ALL",
-              "DEPOSIT",
-              "WITHDRAWAL",
-              "SALE_PAYMENT",
-              "REFUND",
-            ].map((f) => (
-              <button
-                key={f}
-                type="button"
-                onClick={() => onTxFilterChange(f)}
-                className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-wider transition shrink-0 cursor-pointer ${
-                  txFilterType === f
-                    ? "bg-slate-900 text-white"
-                    : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-                }`}
-              >
-                {f.replace("_", " ")}
-              </button>
-            ))}
-          </div>
-
-          {activeWalletTransactions.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border border-dashed border-slate-100 rounded-2xl bg-slate-50/10">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                No Wallet Transactions
-              </span>
-              <p className="text-[9px] font-bold text-slate-400/80 mt-1 max-w-[160px]">
-                Deposits, withdrawals, and POS sales will appear here.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
-              {activeWalletTransactions
-                .filter(
-                  (tx) =>
-                    txFilterType === "ALL" || tx.type === txFilterType,
-                )
-                .map((tx) => {
-                  const isCredit = tx.direction === "CREDIT";
-                  return (
-                    <div
-                      key={tx.id}
-                      className="p-2.5 border border-slate-100 rounded-xl bg-slate-50/40 text-[10px] flex justify-between items-start gap-2"
-                    >
-                      <div className="min-w-0 space-y-0.5">
-                        <div className="flex items-center gap-1.5">
-                          <span
-                            className={`inline-block text-[8px] font-black uppercase tracking-widest rounded px-1.5 py-0.2 ${
-                              tx.type === "DEPOSIT"
-                                ? "bg-emerald-100 text-emerald-800"
-                                : tx.type === "WITHDRAWAL"
-                                  ? "bg-rose-100 text-rose-800"
-                                  : tx.type === "SALE_PAYMENT"
-                                    ? "bg-indigo-100 text-indigo-800"
-                                    : tx.type === "REFUND"
-                                      ? "bg-amber-100 text-amber-800"
-                                      : "bg-slate-200 text-slate-800"
-                            }`}
-                          >
-                            {tx.type.replace("_", " ")}
-                          </span>
-                          <span className="text-[8px] font-mono text-slate-400">
-                            {tx.reference}
-                          </span>
-                        </div>
-                        <p className="font-bold text-slate-700 truncate pr-1">
-                          {tx.notes || `${tx.type.toUpperCase()} transaction`}
-                        </p>
-                        <span className="block text-[8px] text-slate-400 font-medium">
-                          {new Date(tx.created_at).toLocaleString("en-NG", {
-                            dateStyle: "short",
-                            timeStyle: "short",
-                          })}{" "}
-                          • {tx.payment_method.toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <span
-                          className={`block font-black font-mono ${
-                            isCredit ? "text-emerald-600" : "text-rose-600"
-                          }`}
-                        >
-                          {isCredit ? "+" : "-"}₦
-                          {tx.amount.toLocaleString("en-NG", {
-                            minimumFractionDigits: 2,
-                          })}
-                        </span>
-                        <span className="block text-[8px] font-mono text-slate-400">
-                          Bal: ₦{tx.balance_after.toLocaleString("en-NG")}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          )}
-        </div>
-
-        {/* Recent Store Purchases trace */}
-        <div className="p-5 min-h-[220px]">
-          <div className="flex items-center gap-1.5 mb-3">
-            <ShoppingBag className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-            <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-              Recent Store Purchases
-            </h4>
-          </div>
-
-          {isLoadingSales ? (
-            <div className="animate-pulse space-y-2">
-              <div className="h-10 bg-slate-100 rounded-xl" />
-              <div className="h-10 bg-slate-100 rounded-xl" />
-            </div>
-          ) : activeCustomerSales.length === 0 ? (
-            <div className="text-center py-6 border border-dashed border-slate-100 rounded-2xl bg-slate-50/10">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                No Purchases Recorded
-              </span>
-              <p className="text-[9px] font-bold text-slate-400/80 mt-1">
-                No store sales logged under this client.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-2 max-h-[180px] overflow-y-auto pr-1">
-              {activeCustomerSales.map((sale: CustomerSale) => (
+          <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+            {filteredTxs.length === 0 ? (
+              <div className="p-6 text-center text-slate-400 text-xs font-bold">
+                No wallet transactions found.
+              </div>
+            ) : (
+              filteredTxs.map((tx) => (
                 <div
-                  key={sale.id}
-                  className="p-2 border border-slate-100 rounded-xl bg-slate-50/20 text-[10px] flex justify-between items-center"
+                  key={tx.id}
+                  className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs"
                 >
                   <div>
-                    <span className="block font-black text-slate-700">
-                      Invoice: #
-                      {sale.invoice_number ||
-                        sale.id.substring(0, 8).toUpperCase()}
-                    </span>
-                    <span className="block text-[8px] text-slate-400 font-bold">
-                      {sale.created_at || sale.sale_date
-                        ? new Date(
-                            sale.created_at || sale.sale_date || "",
-                          ).toLocaleDateString()
-                        : "N/A"}{" "}
-                      • {sale.payment_method || "N/A"}
-                    </span>
+                    <div className="font-bold text-slate-800 flex items-center gap-2">
+                      <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-black border uppercase ${getBadgeColorForTransactionType(tx.type)}`}>
+                        {tx.type}
+                      </span>
+                      <span className="font-mono text-[10px] text-slate-400">{tx.reference}</span>
+                    </div>
+                    <p className="text-[10px] text-slate-400 font-semibold mt-1">
+                      {new Date(tx.created_at).toLocaleString()}
+                    </p>
                   </div>
+
                   <div className="text-right">
-                    <span className="block font-black text-slate-800">
-                      ₦
-                      {Number(sale.total_amount).toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                      })}
+                    <span
+                      className={`font-mono font-black text-xs ${
+                        tx.direction === "CREDIT" ? "text-emerald-600" : "text-rose-600"
+                      }`}
+                    >
+                      {tx.direction === "CREDIT" ? "+" : "-"}
+                      {formatNaira(tx.amount)}
                     </span>
-                    <span className="block text-[8px] font-bold uppercase tracking-wider text-slate-400">
-                      {sale.status || "Completed"}
-                    </span>
+                    <p className="text-[9px] font-mono text-slate-400 font-bold">
+                      Bal: {formatNaira(tx.balance_after)}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="space-y-3">
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+            POS Sales History
+          </span>
+          <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+            {isLoadingSales ? (
+              <div className="p-6 text-center text-slate-400 text-xs font-bold animate-pulse">
+                Loading orders...
+              </div>
+            ) : activeCustomerSales.length === 0 ? (
+              <div className="p-6 text-center text-slate-400 text-xs font-bold">
+                No past sales records for this customer.
+              </div>
+            ) : (
+              activeCustomerSales.map((s) => (
+                <div
+                  key={s.id}
+                  className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs"
+                >
+                  <div>
+                    <div className="font-bold text-slate-800 flex items-center gap-2">
+                      <History className="h-3.5 w-3.5 text-indigo-500" />
+                      <span>{s.invoice_number || `INV-${s.id.slice(0, 6)}`}</span>
+                    </div>
+                    <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
+                      {s.created_at ? new Date(s.created_at).toLocaleString() : "Recently"}
+                    </p>
+                  </div>
+
+                  <div className="text-right font-mono font-bold text-slate-800">
+                    {formatNaira(Number(s.total_amount))}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
