@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { X, Printer, FileSpreadsheet, Wallet, ShieldCheck } from "lucide-react";
 import type { Customer } from "../types/customer";
-import type { WalletTransaction } from "../types/wallet";
 import { useWalletTransactions } from "../hooks/useCustomerWallet";
 
 interface WalletStatementModalProps {
@@ -21,7 +20,7 @@ export default function WalletStatementModal({
   const { data: transactions = [] } = useWalletTransactions(customer?.id);
 
   const filteredTransactions = useMemo(() => {
-    return transactions.filter((tx: WalletTransaction) => {
+    return transactions.filter((tx) => {
       const txDate = new Date(tx.created_at);
       if (startDate && txDate < new Date(startDate)) return false;
       if (endDate) {
@@ -41,15 +40,18 @@ export default function WalletStatementModal({
     let totalSalePayments = 0;
     let totalRefunds = 0;
 
-    filteredTransactions.forEach((tx: WalletTransaction) => {
-      if (tx.direction === "CREDIT") {
+    filteredTransactions.forEach((tx) => {
+      const isCredit = (tx.direction || "").toUpperCase() === "CREDIT";
+      const txType = (tx.type || "").toUpperCase();
+
+      if (isCredit) {
         totalCredits += tx.amount;
-        if (tx.type === "DEPOSIT") totalDeposits += tx.amount;
-        if (tx.type === "REFUND") totalRefunds += tx.amount;
+        if (txType === "DEPOSIT") totalDeposits += tx.amount;
+        if (txType === "REFUND") totalRefunds += tx.amount;
       } else {
         totalDebits += tx.amount;
-        if (tx.type === "WITHDRAWAL") totalWithdrawals += tx.amount;
-        if (tx.type === "SALE_PAYMENT") totalSalePayments += tx.amount;
+        if (txType === "WITHDRAWAL") totalWithdrawals += tx.amount;
+        if (txType === "SALE_PAYMENT") totalSalePayments += tx.amount;
       }
     });
 
@@ -71,17 +73,8 @@ export default function WalletStatementModal({
 
   const handleExportCSV = () => {
     if (!filteredTransactions.length) return;
-    const headers = [
-      "Date",
-      "Reference",
-      "Type",
-      "Direction",
-      "Method",
-      "Amount",
-      "Balance After",
-      "Notes",
-    ];
-    const rows = filteredTransactions.map((tx: WalletTransaction) => [
+    const headers = ["Date", "Reference", "Type", "Direction", "Method", "Amount", "Balance After", "Notes"];
+    const rows = filteredTransactions.map((tx) => [
       new Date(tx.created_at).toLocaleString("en-NG"),
       tx.reference,
       tx.type.toUpperCase(),
@@ -92,16 +85,11 @@ export default function WalletStatementModal({
       `"${(tx.notes || "").replace(/"/g, '""')}"`,
     ]);
 
-    const csvContent =
-      "data:text/csv;charset=utf-8," +
-      [headers.join(","), ...rows.map((e: (string | number)[]) => e.join(","))].join("\n");
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute(
-      "download",
-      `Wallet_Statement_${customer.name.replace(/\s+/g, "_")}_${new Date().toISOString().slice(0, 10)}.csv`,
-    );
+    link.setAttribute("download", `Wallet_Statement_${customer.name.replace(/\s+/g, "_")}_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -166,9 +154,7 @@ export default function WalletStatementModal({
             </div>
             <div className="flex items-center gap-2 print:hidden">
               <div className="space-y-0.5">
-                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                  From
-                </label>
+                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">From</label>
                 <input
                   type="date"
                   value={startDate}
@@ -177,9 +163,7 @@ export default function WalletStatementModal({
                 />
               </div>
               <div className="space-y-0.5">
-                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                  To
-                </label>
+                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">To</label>
                 <input
                   type="date"
                   value={endDate}
@@ -196,24 +180,10 @@ export default function WalletStatementModal({
               <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
                 Account Holder
               </span>
-              <p className="text-base font-black text-slate-900">
-                {customer.name}
-              </p>
-              {customer.email && (
-                <p className="text-xs font-bold text-slate-600">
-                  {customer.email}
-                </p>
-              )}
-              {customer.phone && (
-                <p className="text-xs font-bold text-slate-600">
-                  {customer.phone}
-                </p>
-              )}
-              {customer.address && (
-                <p className="text-xs font-medium text-slate-500">
-                  {customer.address}
-                </p>
-              )}
+              <p className="text-base font-black text-slate-900">{customer.name}</p>
+              {customer.email && <p className="text-xs font-bold text-slate-600">{customer.email}</p>}
+              {customer.phone && <p className="text-xs font-bold text-slate-600">{customer.phone}</p>}
+              {customer.address && <p className="text-xs font-medium text-slate-500">{customer.address}</p>}
             </div>
             <div className="space-y-1 md:text-right">
               <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
@@ -227,10 +197,7 @@ export default function WalletStatementModal({
                   Current Wallet Balance
                 </span>
                 <span className="text-lg font-black text-indigo-600 font-mono">
-                  ₦
-                  {(customer.wallet_balance || 0).toLocaleString("en-NG", {
-                    minimumFractionDigits: 2,
-                  })}
+                  ₦{(customer.wallet_balance || 0).toLocaleString("en-NG", { minimumFractionDigits: 2 })}
                 </span>
               </div>
             </div>
@@ -243,10 +210,7 @@ export default function WalletStatementModal({
                 Total Deposits
               </span>
               <span className="text-sm font-black text-emerald-700 font-mono">
-                +₦
-                {statementMetrics.totalDeposits.toLocaleString("en-NG", {
-                  minimumFractionDigits: 2,
-                })}
+                +₦{statementMetrics.totalDeposits.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
               </span>
             </div>
             <div className="p-3 bg-rose-50/60 rounded-2xl border border-rose-100">
@@ -254,10 +218,7 @@ export default function WalletStatementModal({
                 Total Withdrawals
               </span>
               <span className="text-sm font-black text-rose-700 font-mono">
-                -₦
-                {statementMetrics.totalWithdrawals.toLocaleString("en-NG", {
-                  minimumFractionDigits: 2,
-                })}
+                -₦{statementMetrics.totalWithdrawals.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
               </span>
             </div>
             <div className="p-3 bg-indigo-50/60 rounded-2xl border border-indigo-100">
@@ -265,10 +226,7 @@ export default function WalletStatementModal({
                 POS Wallet Payments
               </span>
               <span className="text-sm font-black text-indigo-700 font-mono">
-                -₦
-                {statementMetrics.totalSalePayments.toLocaleString("en-NG", {
-                  minimumFractionDigits: 2,
-                })}
+                -₦{statementMetrics.totalSalePayments.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
               </span>
             </div>
             <div className="p-3 bg-amber-50/60 rounded-2xl border border-amber-100">
@@ -276,10 +234,7 @@ export default function WalletStatementModal({
                 Refunds Credited
               </span>
               <span className="text-sm font-black text-amber-700 font-mono">
-                +₦
-                {statementMetrics.totalRefunds.toLocaleString("en-NG", {
-                  minimumFractionDigits: 2,
-                })}
+                +₦{statementMetrics.totalRefunds.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
               </span>
             </div>
           </div>
@@ -287,8 +242,7 @@ export default function WalletStatementModal({
           {/* Ledger Statement Table */}
           <div className="space-y-3">
             <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider">
-              Transaction History Statement ({filteredTransactions.length}{" "}
-              entries)
+              Transaction History Statement ({filteredTransactions.length} entries)
             </h3>
             {filteredTransactions.length === 0 ? (
               <div className="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200 text-slate-400 font-bold text-xs">
@@ -309,13 +263,11 @@ export default function WalletStatementModal({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-xs font-semibold text-slate-700">
-                    {filteredTransactions.map((tx: WalletTransaction) => {
-                      const isCredit = tx.direction === "CREDIT";
+                    {filteredTransactions.map((tx) => {
+                      const isCredit = (tx.direction || "").toUpperCase() === "CREDIT";
+                      const txType = (tx.type || "").toUpperCase();
                       return (
-                        <tr
-                          key={tx.id}
-                          className="hover:bg-slate-50 transition"
-                        >
+                        <tr key={tx.id} className="hover:bg-slate-50 transition">
                           <td className="p-3 whitespace-nowrap text-slate-500 font-mono text-[11px]">
                             {new Date(tx.created_at).toLocaleString("en-NG", {
                               dateStyle: "short",
@@ -328,15 +280,15 @@ export default function WalletStatementModal({
                           <td className="p-3">
                             <span
                               className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${
-                                tx.type === "deposit"
+                                txType === "DEPOSIT"
                                   ? "bg-emerald-100 text-emerald-800"
-                                  : tx.type === "withdrawal"
-                                    ? "bg-rose-100 text-rose-800"
-                                    : tx.type === "sale_payment"
-                                      ? "bg-indigo-100 text-indigo-800"
-                                      : tx.type === "refund"
-                                        ? "bg-amber-100 text-amber-800"
-                                        : "bg-slate-200 text-slate-800"
+                                  : txType === "WITHDRAWAL"
+                                  ? "bg-rose-100 text-rose-800"
+                                  : txType === "SALE_PAYMENT"
+                                  ? "bg-indigo-100 text-indigo-800"
+                                  : txType === "REFUND"
+                                  ? "bg-amber-100 text-amber-800"
+                                  : "bg-slate-200 text-slate-800"
                               }`}
                             >
                               {tx.type.replace("_", " ")}
@@ -351,15 +303,10 @@ export default function WalletStatementModal({
                             }`}
                           >
                             {isCredit ? "+" : "-"}₦
-                            {tx.amount.toLocaleString("en-NG", {
-                              minimumFractionDigits: 2,
-                            })}
+                            {tx.amount.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
                           </td>
                           <td className="p-3 text-right font-mono font-bold text-slate-800">
-                            ₦
-                            {tx.balance_after.toLocaleString("en-NG", {
-                              minimumFractionDigits: 2,
-                            })}
+                            ₦{tx.balance_after.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
                           </td>
                           <td className="p-3 text-slate-500 max-w-xs truncate text-[11px]">
                             {tx.notes || "—"}
@@ -375,10 +322,7 @@ export default function WalletStatementModal({
 
           {/* Statement Footer */}
           <div className="pt-6 border-t border-slate-200 text-center text-[10px] font-bold text-slate-400 space-y-1">
-            <p>
-              This statement is generated automatically from Farama Store POS
-              Wallet Ledger.
-            </p>
+            <p>This statement is generated automatically from Farama Store POS Wallet Ledger.</p>
             <p>Statement generated on {new Date().toLocaleString("en-NG")}</p>
           </div>
         </div>
