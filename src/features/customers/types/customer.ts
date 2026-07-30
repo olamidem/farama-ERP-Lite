@@ -5,6 +5,9 @@ export interface Customer {
   phone?: string | null;
   address?: string | null;
   remarks?: string | null;
+  wallet_balance?: number;
+  outstanding_debt?: number;
+  status?: "ACTIVE" | "SUSPENDED";
   created_at: string;
   updated_at: string;
 }
@@ -15,6 +18,8 @@ export interface CreateCustomerInput {
   phone?: string;
   address?: string;
   remarks?: string;
+  wallet_balance?: number;
+  outstanding_debt?: number;
 }
 
 export interface UpdateCustomerInput {
