@@ -189,7 +189,9 @@ export default function CustomerListTable({
               <button
                 onClick={() => {
                   if (isSuspended) {
-                    toast.error("Account is suspended. Activate account to perform deposits.");
+                    toast.error(
+                      "Account is suspended. Activate account to perform deposits.",
+                    );
                     return;
                   }
                   onDeposit(cust);
@@ -208,7 +210,9 @@ export default function CustomerListTable({
               <button
                 onClick={() => {
                   if (isSuspended) {
-                    toast.error("Account is suspended. Activate account to perform withdrawals.");
+                    toast.error(
+                      "Account is suspended. Activate account to perform withdrawals.",
+                    );
                     return;
                   }
                   onWithdraw(cust);
@@ -256,7 +260,7 @@ export default function CustomerListTable({
         },
       },
     ],
-    [onSelectCustomer, onDeposit, onWithdraw, onStatement, onEdit, onDelete]
+    [onSelectCustomer, onDeposit, onWithdraw, onStatement, onEdit, onDelete],
   );
 
   return (
