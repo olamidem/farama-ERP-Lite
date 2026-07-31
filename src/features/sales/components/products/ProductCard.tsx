@@ -18,7 +18,7 @@ export const ProductCard = ({
   const units = product.units || [];
   const activeUnit =
     units.find((u: POSProductUnit) => u.id === selectedUnitId) ||
-    units.find((u: POSProductUnit) => u.is_default) ||
+    units.find((u: POSProductUnit) => u.is_base_unit || u.is_default) ||
     units[0];
 
   const activePrice = Number(activeUnit?.selling_price ?? product.selling_price ?? 0);
