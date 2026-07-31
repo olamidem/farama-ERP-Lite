@@ -2,6 +2,7 @@ import { X, Printer, RotateCcw, User, Phone, Calendar, FileText } from "lucide-r
 import type { Sale } from "../../types/sale";
 import { formatCurrency } from "../../utils/pricing";
 import { PAYMENT_METHOD_DETAILS } from "../../constants";
+import Barcode from "../receipt/Barcode";
 
 interface SaleDetailsProps {
   sale: Sale | null;
@@ -22,7 +23,7 @@ export const SaleDetails = ({
 }: SaleDetailsProps) => {
   if (!isOpen || !sale) return null;
 
-  const paymentDetail = PAYMENT_METHOD_DETAILS[sale.payment_method] || PAYMENT_METHOD_DETAILS.CASH;
+  const paymentDetail = PAYMENT_METHOD_DETAILS[sale.payment_method as keyof typeof PAYMENT_METHOD_DETAILS] || PAYMENT_METHOD_DETAILS.CASH;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
@@ -105,7 +106,7 @@ export const SaleDetails = ({
                     </h5>
                     <p className="text-slate-400 text-[11px]">
                       {item.quantity} x {formatCurrency(item.unit_price)} (
-                      {item.product_unit?.unit?.symbol || "unit"})
+                      {item.product_unit?.unit?.symbol || item.product_unit?.unit_name || "unit"})
                     </p>
                   </div>
                   <span className="font-bold text-slate-900 dark:text-white">
@@ -132,12 +133,37 @@ export const SaleDetails = ({
               <span>VAT / Tax</span>
               <span>+{formatCurrency(sale.tax_amount || 0)}</span>
             </div>
-            <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between text-sm font-bold text-slate-900 dark:text-white">
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between text-xs font-bold text-slate-900 dark:text-white">
               <span>Total Payable Amount</span>
-              <span className="text-blue-600 dark:text-blue-400 font-black">
+              <span className="text-slate-900 dark:text-white font-black">
                 {formatCurrency(sale.payable_amount)}
               </span>
             </div>
+            <div className="flex justify-between text-xs text-emerald-600 dark:text-emerald-400 font-bold">
+              <span>Amount Paid</span>
+              <span>
+                {formatCurrency(Number(sale.amount_paid ?? sale.payable_amount ?? 0))}
+              </span>
+            </div>
+            {Math.max(0, Number(sale.payable_amount) - Number(sale.amount_paid ?? sale.payable_amount ?? 0)) > 0 && (
+              <div className="flex justify-between text-xs text-rose-600 dark:text-rose-400 font-extrabold pt-1 border-t border-rose-100 dark:border-rose-900/50">
+                <span>Outstanding Balance</span>
+                <span>
+                  {formatCurrency(Math.max(0, Number(sale.payable_amount) - Number(sale.amount_paid ?? sale.payable_amount ?? 0)))}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Authentic Barcode Section */}
+          <div className="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-center">
+            <span className="text-[10px] uppercase font-bold text-slate-400 mb-1">Authentic Receipt Barcode</span>
+            <div className="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
+              <Barcode value={sale.sale_number} height={38} width={1.5} fontSize={10} />
+            </div>
+            <span className="text-[10px] text-slate-400 mt-1">
+              Scanning this barcode verifies and opens these transaction details.
+            </span>
           </div>
 
           {sale.remarks && (
@@ -154,8 +180,11 @@ export const SaleDetails = ({
         <div className="flex items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-700">
           <button
             type="button"
-            onClick={() => onOpenReceipt(sale)}
-            className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all"
+            onClick={() => {
+              onClose();
+              onOpenReceipt(sale);
+            }}
+            className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             Print Receipt
