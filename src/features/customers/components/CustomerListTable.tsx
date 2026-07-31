@@ -14,6 +14,8 @@ import {
   Wallet,
   ShieldCheck,
   ShieldAlert,
+  Scale,
+  Eye,
 } from "lucide-react";
 import type { Customer } from "../types/customer";
 import { formatNaira } from "../lib/customerExport";
@@ -174,18 +176,56 @@ export default function CustomerListTable({
         },
       },
       {
+        accessorKey: "outstanding_debt",
+        header: "Outstanding Debt",
+        cell: ({ row }) => {
+          const cust = row.original;
+          const debt = cust.outstanding_debt || 0;
+          return (
+            <div
+              className="cursor-pointer py-1 text-right font-mono font-bold"
+              onClick={() => onSelectCustomer(cust.id)}
+            >
+              {debt > 0 ? (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300 font-black text-[11px] border border-rose-200 dark:border-rose-900 shadow-2xs">
+                  <Scale className="h-3 w-3 text-rose-600 dark:text-rose-400" />
+                  {formatNaira(debt)}
+                </span>
+              ) : (
+                <span className="text-slate-400 font-medium text-[11px]">
+                  ₦0.00
+                </span>
+              )}
+            </div>
+          );
+        },
+      },
+      {
         id: "actions",
-        header: "Quick Actions",
+        header: "Actions",
         cell: ({ row }) => {
           const cust = row.original;
           const isWalkIn = cust.id === "walk-in-customer-id";
           const isSuspended = cust.status === "SUSPENDED";
+          const isSelected = cust.id === activeCustomerId;
 
           return (
             <div
               className="flex items-center justify-center gap-1"
               onClick={(e) => e.stopPropagation()}
             >
+              <button
+                onClick={() => onSelectCustomer(cust.id)}
+                title="View Customer Profile & Financial Dashboard"
+                className={`p-2 rounded-xl transition cursor-pointer ${
+                  isSelected
+                    ? "bg-indigo-600 text-white shadow-xs"
+                    : "bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400"
+                }`}
+              >
+                <Eye className="h-4 w-4" />
+              </button>
+
               <button
                 onClick={() => {
                   if (isSuspended) {
@@ -260,11 +300,11 @@ export default function CustomerListTable({
         },
       },
     ],
-    [onSelectCustomer, onDeposit, onWithdraw, onStatement, onEdit, onDelete],
+    [activeCustomerId, onSelectCustomer, onDeposit, onWithdraw, onStatement, onEdit, onDelete],
   );
 
   return (
-    <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden flex flex-col space-y-4 transition-colors">
+    <div className="w-full bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden flex flex-col space-y-4 transition-colors">
       {/* Header Bar */}
       <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div className="relative flex-1">
