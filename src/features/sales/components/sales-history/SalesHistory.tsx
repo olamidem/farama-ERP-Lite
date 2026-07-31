@@ -41,7 +41,8 @@ export const SalesHistory = ({
   const [endDate, setEndDate] = useState("");
 
   const [isConfigOpen, setIsConfigOpen] = useState(false);
-  const [selectedSaleForPayment, setSelectedSaleForPayment] = useState<Sale | null>(null);
+  const [selectedSaleForPayment, setSelectedSaleForPayment] =
+    useState<Sale | null>(null);
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -57,7 +58,8 @@ export const SalesHistory = ({
         (s.customer_phone && s.customer_phone.includes(search));
 
       const matchStatus = statusFilter === "all" || s.status === statusFilter;
-      const matchPayment = paymentFilter === "all" || s.payment_method === paymentFilter;
+      const matchPayment =
+        paymentFilter === "all" || s.payment_method === paymentFilter;
 
       const paidAmount = Number(s.amount_paid ?? s.payable_amount ?? 0);
       const balance = Math.max(0, Number(s.payable_amount) - paidAmount);
@@ -73,9 +75,19 @@ export const SalesHistory = ({
         matchDate = matchDate && new Date(s.created_at) <= eDate;
       }
 
-      return matchSearch && matchStatus && matchPayment && matchUnpaid && matchDate;
+      return (
+        matchSearch && matchStatus && matchPayment && matchUnpaid && matchDate
+      );
     });
-  }, [sales, search, statusFilter, paymentFilter, unpaidOnly, startDate, endDate]);
+  }, [
+    sales,
+    search,
+    statusFilter,
+    paymentFilter,
+    unpaidOnly,
+    startDate,
+    endDate,
+  ]);
 
   const paginatedSales = useMemo(() => {
     const start = (page - 1) * pageSize;
@@ -111,7 +123,7 @@ export const SalesHistory = ({
                     (s) =>
                       s.sale_number.toLowerCase() === term ||
                       s.sale_number.toLowerCase().replace(/^#/, "") === term ||
-                      s.id.toLowerCase() === term
+                      s.id.toLowerCase() === term,
                   );
                   if (matched) {
                     onSelectSale(matched);
@@ -191,7 +203,12 @@ export const SalesHistory = ({
             />
           </div>
 
-          {(startDate || endDate || search || statusFilter !== "all" || paymentFilter !== "all" || unpaidOnly) && (
+          {(startDate ||
+            endDate ||
+            search ||
+            statusFilter !== "all" ||
+            paymentFilter !== "all" ||
+            unpaidOnly) && (
             <button
               type="button"
               onClick={() => {
@@ -254,10 +271,13 @@ export const SalesHistory = ({
               ) : (
                 paginatedSales.map((sale) => {
                   const payDetail =
-                    PAYMENT_METHOD_DETAILS[sale.payment_method as keyof typeof PAYMENT_METHOD_DETAILS] ||
-                    PAYMENT_METHOD_DETAILS.CASH;
+                    PAYMENT_METHOD_DETAILS[
+                      sale.payment_method as keyof typeof PAYMENT_METHOD_DETAILS
+                    ] || PAYMENT_METHOD_DETAILS.CASH;
 
-                  const paid = Number(sale.amount_paid ?? sale.payable_amount ?? 0);
+                  const paid = Number(
+                    sale.amount_paid ?? sale.payable_amount ?? 0,
+                  );
                   const payable = Number(sale.payable_amount ?? 0);
                   const balance = Math.max(0, payable - paid);
                   const isPrinted = isSalePrinted(sale.id);
@@ -311,7 +331,9 @@ export const SalesHistory = ({
                               : "bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400"
                           }`}
                         >
-                          {sale.status === "COMPLETED" && balance > 0 ? "PARTIAL" : sale.status}
+                          {sale.status === "COMPLETED" && balance > 0
+                            ? "PARTIAL"
+                            : sale.status}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-center">
@@ -327,7 +349,10 @@ export const SalesHistory = ({
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                      <td
+                        className="py-3 px-4 text-right"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <div className="flex items-center justify-end gap-1">
                           {balance > 0 && sale.status === "COMPLETED" && (
                             <button
@@ -344,7 +369,11 @@ export const SalesHistory = ({
                             type="button"
                             onClick={() => onOpenReceipt(sale)}
                             className="p-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 dark:text-slate-300 dark:hover:bg-blue-950/40 transition-colors"
-                            title={isPrinted ? "Re-print POS Receipt" : "Print POS Receipt"}
+                            title={
+                              isPrinted
+                                ? "Re-print POS Receipt"
+                                : "Print POS Receipt"
+                            }
                           >
                             <Printer className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                           </button>
@@ -401,7 +430,10 @@ export const SalesHistory = ({
       )}
 
       {/* POS Receipt Configuration Modal */}
-      <ReceiptConfigModal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)} />
+      <ReceiptConfigModal
+        isOpen={isConfigOpen}
+        onClose={() => setIsConfigOpen(false)}
+      />
     </div>
   );
 };
