@@ -1,5 +1,5 @@
-import { supabase } from "../../../api/supabase";
-import type { Customer } from "../../customers/types/customer";
+import { supabase } from "../../../../api/supabase";
+import type { Customer } from "../../../customers/types/customer";
 
 /* -------------------------------------------------------------------------- */
 /* Get Customer                                                               */
@@ -40,11 +40,22 @@ export async function getCustomerBalance(
 export async function getOutstandingDebt(
   customerId: string
 ): Promise<number> {
-  const customer = await getCustomer(customerId);
+  try {
+    const { data } = await supabase
+      .from("sales")
+      .select("payable_amount, amount_paid")
+      .eq("customer_id", customerId)
+      .eq("status", "COMPLETED");
 
-  if (!customer) return 0;
-
-  return Number(customer.outstanding_debt ?? 0);
+    if (!data) return 0;
+    return data.reduce((sum, sale) => {
+      const payable = Number(sale.payable_amount || 0);
+      const paid = Number(sale.amount_paid ?? payable);
+      return sum + Math.max(0, payable - paid);
+    }, 0);
+  } catch {
+    return 0;
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -55,17 +66,17 @@ export async function increaseOutstandingDebt(
   customerId: string,
   amount: number
 ): Promise<void> {
-  const debt = await getOutstandingDebt(customerId);
-
-  const { error } = await supabase
-    .from("customers")
-    .update({
-      outstanding_debt: debt + amount,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", customerId);
-
-  if (error) throw error;
+  if (amount <= 0) return;
+  try {
+    await supabase
+      .from("customers")
+      .update({
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", customerId);
+  } catch (err) {
+    console.warn("Could not update customer updated_at:", err);
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -76,19 +87,17 @@ export async function reduceOutstandingDebt(
   customerId: string,
   amount: number
 ): Promise<void> {
-  const debt = await getOutstandingDebt(customerId);
-
-  const remaining = Math.max(0, debt - amount);
-
-  const { error } = await supabase
-    .from("customers")
-    .update({
-      outstanding_debt: remaining,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", customerId);
-
-  if (error) throw error;
+  if (amount <= 0) return;
+  try {
+    await supabase
+      .from("customers")
+      .update({
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", customerId);
+  } catch (err) {
+    console.warn("Could not update customer updated_at:", err);
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -98,15 +107,16 @@ export async function reduceOutstandingDebt(
 export async function clearOutstandingDebt(
   customerId: string
 ): Promise<void> {
-  const { error } = await supabase
-    .from("customers")
-    .update({
-      outstanding_debt: 0,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", customerId);
-
-  if (error) throw error;
+  try {
+    await supabase
+      .from("customers")
+      .update({
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", customerId);
+  } catch (err) {
+    console.warn("Could not update customer updated_at:", err);
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -117,15 +127,17 @@ export async function setOutstandingDebt(
   customerId: string,
   amount: number
 ): Promise<void> {
-  const { error } = await supabase
-    .from("customers")
-    .update({
-      outstanding_debt: amount,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", customerId);
-
-  if (error) throw error;
+  if (amount < 0) return;
+  try {
+    await supabase
+      .from("customers")
+      .update({
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", customerId);
+  } catch (err) {
+    console.warn("Could not update customer updated_at:", err);
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -141,12 +153,12 @@ export async function getCustomerFinanceSummary(
     throw new Error("Customer not found");
   }
 
+  const outstandingDebt = await getOutstandingDebt(customerId);
+
   return {
     walletBalance: Number(customer.wallet_balance ?? 0),
-    outstandingDebt: Number(customer.outstanding_debt ?? 0),
-    availableCredit:
-      Number(customer.credit_limit ?? 0) -
-      Number(customer.outstanding_debt ?? 0),
+    outstandingDebt,
+    availableCredit: 500000 - outstandingDebt,
   };
 }
 

@@ -2,6 +2,8 @@ import { useState, useMemo } from "react";
 import {
   ShoppingCart,
   History,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { usePOSProducts, useSales, useRefundSale, useSalesStats } from "../hooks/useSales";
 import { useCustomers } from "../../customers/hooks/useCustomers";
@@ -14,13 +16,17 @@ import CheckoutModal from "../components/checkout/CheckoutModal";
 import DiscountModal from "../components/checkout/DiscountModal";
 import HoldCartModal from "../components/checkout/HoldCartModal";
 import Receipt from "../components/receipt/Receipt";
+import ThermalPrintingModal from "../components/thermal/ThermalPrintingModal";
 import SalesHistory from "../components/sales-history/SalesHistory";
 import SaleDetails from "../components/sales-history/SaleDetails";
+import OutstandingDebtsWidget from "../components/sales-history/OutstandingDebtsWidget";
 import type { POSProduct, Sale } from "../types/sale";
 import { useCart } from "../hooks/useCart";
 import { formatCurrency } from "../utils/pricing";
+import { useTheme } from "../../../context/useThems";
 
 export const SalesPage = () => {
+  const { effectiveTheme, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState<"pos" | "history">("pos");
 
   // Product Filter State
@@ -35,6 +41,7 @@ export const SalesPage = () => {
   const [isHoldOpen, setIsHoldOpen] = useState(false);
   const [selectedSaleReceipt, setSelectedSaleReceipt] = useState<Sale | null>(null);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
+  const [isThermalPrintingOpen, setIsThermalPrintingOpen] = useState(false);
   const [selectedSaleDetails, setSelectedSaleDetails] = useState<Sale | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
@@ -82,7 +89,7 @@ export const SalesPage = () => {
   const createCustomerMutation = useCreateCustomer();
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto">
+    <div className="space-y-6 p-4 sm:p-6 w-full">
       {/* Top Header & Overview Stats */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
@@ -94,38 +101,59 @@ export const SalesPage = () => {
           </p>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+        {/* Navigation Tabs & Theme Toggle */}
+        <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setActiveTab("pos")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
-              activeTab === "pos"
-                ? "bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs"
-                : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-            }`}
+            onClick={toggleTheme}
+            className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all flex items-center gap-2 text-xs font-bold shadow-2xs cursor-pointer"
+            title="Toggle Dark Mode"
           >
-            <ShoppingCart className="w-4 h-4" />
-            Terminal (POS)
+            {effectiveTheme === "dark" ? (
+              <>
+                <Sun className="w-4 h-4 text-amber-400" />
+                <span className="hidden sm:inline">Light Mode</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-4 h-4 text-slate-600" />
+                <span className="hidden sm:inline">Dark Mode</span>
+              </>
+            )}
           </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("history")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
-              activeTab === "history"
-                ? "bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs"
-                : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-            }`}
-          >
-            <History className="w-4 h-4" />
-            Transactions History
-          </button>
+
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+            <button
+              type="button"
+              onClick={() => setActiveTab("pos")}
+              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+                activeTab === "pos"
+                  ? "bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs"
+                  : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              }`}
+            >
+              <ShoppingCart className="w-4 h-4" />
+              Terminal (POS)
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("history")}
+              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+                activeTab === "history"
+                  ? "bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs"
+                  : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              }`}
+            >
+              <History className="w-4 h-4" />
+              Transactions History
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Overview Stats Bar */}
       {salesStats && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <div className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
             <span className="text-[11px] font-semibold text-slate-400 block">Total Sales</span>
             <span className="text-lg font-black text-slate-900 dark:text-white">
@@ -147,7 +175,13 @@ export const SalesPage = () => {
           <div className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
             <span className="text-[11px] font-semibold text-slate-400 block">Avg Order Value</span>
             <span className="text-lg font-black text-amber-600 dark:text-amber-400">
-              {formatCurrency(salesStats.averageOrderValue)}
+              {formatCurrency(salesStats.averageOrderValue || 0)}
+            </span>
+          </div>
+          <div className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-rose-200/80 dark:border-rose-900/50 bg-rose-50/20 dark:bg-rose-950/10 shadow-2xs col-span-2 sm:col-span-1">
+            <span className="text-[11px] font-semibold text-rose-500 dark:text-rose-400 block">Outstanding Debt</span>
+            <span className="text-lg font-black text-rose-600 dark:text-rose-400">
+              {formatCurrency(salesStats.totalOutstandingBalance || 0)}
             </span>
           </div>
         </div>
@@ -187,19 +221,30 @@ export const SalesPage = () => {
           </div>
         </div>
       ) : (
-        <SalesHistory
-          sales={salesHistory}
-          isLoading={isHistoryLoading}
-          onSelectSale={(s) => {
-            setSelectedSaleDetails(s);
-            setIsDetailsOpen(true);
-          }}
-          onOpenReceipt={(s) => {
-            setSelectedSaleReceipt(s);
-            setIsReceiptOpen(true);
-          }}
-          onRefundSale={handleRefund}
-        />
+        <div className="space-y-6">
+          <OutstandingDebtsWidget
+            sales={salesHistory}
+            isLoading={isHistoryLoading}
+            onSelectSale={(s) => {
+              setSelectedSaleDetails(s);
+              setIsDetailsOpen(true);
+            }}
+          />
+
+          <SalesHistory
+            sales={salesHistory}
+            isLoading={isHistoryLoading}
+            onSelectSale={(s) => {
+              setSelectedSaleDetails(s);
+              setIsDetailsOpen(true);
+            }}
+            onOpenReceipt={(s) => {
+              setSelectedSaleReceipt(s);
+              setIsReceiptOpen(true);
+            }}
+            onRefundSale={handleRefund}
+          />
+        </div>
       )}
 
       {/* Modals Container */}
@@ -207,9 +252,10 @@ export const SalesPage = () => {
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
         customers={customerList}
+        onOpenAddCustomerModal={() => setIsCustomerModalOpen(true)}
         onSaleCompleted={(sale) => {
           setSelectedSaleReceipt(sale);
-          setIsReceiptOpen(true);
+          setIsThermalPrintingOpen(true);
         }}
       />
 
@@ -223,6 +269,17 @@ export const SalesPage = () => {
         isOpen={isHoldOpen}
         onClose={() => setIsHoldOpen(false)}
       />
+
+      {selectedSaleReceipt && (
+        <ThermalPrintingModal
+          sale={selectedSaleReceipt}
+          isOpen={isThermalPrintingOpen}
+          onClose={() => {
+            setIsThermalPrintingOpen(false);
+            setSelectedSaleReceipt(null);
+          }}
+        />
+      )}
 
       {selectedSaleReceipt && (
         <Receipt
@@ -244,8 +301,10 @@ export const SalesPage = () => {
             setSelectedSaleDetails(null);
           }}
           onOpenReceipt={(s) => {
+            setIsDetailsOpen(false);
+            setSelectedSaleDetails(null);
             setSelectedSaleReceipt(s);
-            setIsReceiptOpen(true);
+            setIsThermalPrintingOpen(true);
           }}
           onRefundSale={handleRefund}
           isRefunding={refundMutation.isPending}

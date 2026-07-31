@@ -1,9 +1,8 @@
-import { supabase } from "../../../api/supabase";
+import { supabase } from "../../../../api/supabase";
 import type {
   Cart,
   CartItem,
-  HoldCartInput,
-} from "../types/cart";
+} from "../../types/cart";
 
 /* -------------------------------------------------------------------------- */
 /* Cart Number                                                                */
@@ -308,6 +307,51 @@ export async function cancelCart(
       status: "ABANDONED",
     })
     .eq("id", cartId);
+}
+
+export async function saveHeldCart(
+  cartData: Partial<Cart> & { payment_method?: string },
+  items: CartItem[] = []
+): Promise<Cart> {
+  const cartNumber = await generateCartNumber();
+  const { data, error } = await supabase
+    .from("carts")
+    .insert({
+      cart_number: cartNumber,
+      customer_id: cartData.customer_id,
+      status: "HELD",
+      notes: cartData.notes,
+      subtotal: cartData.subtotal ?? 0,
+      discount_amount: cartData.discount_amount ?? 0,
+      tax_amount: cartData.tax_amount ?? 0,
+      total_amount: cartData.total_amount ?? 0,
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  if (items.length > 0 && data?.id) {
+    const payload = items.map((item) => ({
+      cart_id: data.id,
+      product_id: item.product_id,
+      product_unit_id: item.product_unit_id,
+      quantity: item.quantity,
+      unit_price: item.unit_price,
+      discount: item.discount ?? 0,
+      tax: item.tax ?? 0,
+      subtotal: item.subtotal ?? item.quantity * item.unit_price,
+      total: item.total ?? item.quantity * item.unit_price,
+    }));
+    await supabase.from("cart_items").insert(payload);
+  }
+
+  return data as Cart;
+}
+
+export async function deleteHeldCart(cartId: string): Promise<void> {
+  await supabase.from("cart_items").delete().eq("cart_id", cartId);
+  await supabase.from("carts").delete().eq("id", cartId);
 }
 
 /* -------------------------------------------------------------------------- */

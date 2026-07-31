@@ -4,6 +4,11 @@ import type {
   Sale,
   SaleStatus,
 } from "../../types/sale";
+import type { PaymentMethod } from "../../types/payment";
+export { processCheckout as createSale } from "./checkout.service";
+export { refundSale } from "./refund.service";
+export { getSalesStatistics as getSalesStats } from "./sales-statistics.service";
+export { getPOSProducts } from "./pos-products.service";
 
 /* -------------------------------------------------------------------------- */
 /* Sale Number                                                                */
@@ -41,7 +46,7 @@ export async function createSaleRecord(
 
     createdBy = user?.id ?? null;
   } catch {
-    createdBy = null;
+    // optional auth check
   }
 
   const saleNumber = await generateSaleNumber();
@@ -220,4 +225,53 @@ export async function deleteSale(
     .eq("id", id);
 
   if (error) throw error;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Update Sale Payment                                                        */
+/* -------------------------------------------------------------------------- */
+
+export async function updateSalePayment(
+  saleId: string,
+  additionalAmount: number,
+  paymentMethod: PaymentMethod = "CASH",
+  notes?: string
+): Promise<Sale> {
+  const sale = await getSale(saleId);
+  const currentPaid = Number(sale.amount_paid ?? sale.payable_amount ?? 0);
+  const newAmountPaid = Math.min(sale.payable_amount, currentPaid + additionalAmount);
+
+  const remarkText = notes
+    ? `${sale.remarks ? sale.remarks + " | " : ""}Payment +${additionalAmount} via ${paymentMethod} (${notes})`
+    : sale.remarks;
+
+  const { data, error } = await supabase
+    .from("sales")
+    .update({
+      amount_paid: newAmountPaid,
+      payment_method: paymentMethod || sale.payment_method,
+      remarks: remarkText,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", saleId)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  if (sale.customer_id) {
+    try {
+      const { reduceOutstandingDebt } = await import("../customers/customer-finance.service");
+      await reduceOutstandingDebt({
+        customer_id: sale.customer_id,
+        amount: additionalAmount,
+        payment_method: paymentMethod,
+        notes: notes || `Payment update for Sale #${sale.sale_number}`,
+      });
+    } catch (e) {
+      console.warn("Customer debt update skipped or failed:", e);
+    }
+  }
+
+  return data as Sale;
 }

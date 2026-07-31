@@ -1,23 +1,16 @@
 import { supabase } from "../../../../api/supabase";
-import type {
-  CreateSaleInput,
-  Sale,
-} from "../../types/sale";
+import type { CreateSaleInput, Sale } from "../../types/sale";
 import {
   createSaleRecord,
   createSaleItems,
   getSale,
-} from "../sale.service";
+} from "./sales.service";
 import {
   validateInventory,
   deductInventory,
 } from "./inventory-sync.service";
-import {
-  validateWalletBalance,
-} from "./payment.service";
-import {
-  payWithWallet,
-} from "../../../customers/services/wallet.service";
+import { validateWalletBalance } from "./payment.service";
+import { payWithWallet } from "../customers/wallet.service";
 import { increaseOutstandingDebt } from "../customers/customer-finance.service";
 
 const WALK_IN_CUSTOMER_ID = "walk-in-customer-id";
@@ -25,7 +18,6 @@ const WALK_IN_CUSTOMER_ID = "walk-in-customer-id";
 export async function processCheckout(
   input: CreateSaleInput
 ): Promise<Sale> {
-
   /* ---------------------------------------------------------- */
   /* Cashier                                                    */
   /* ---------------------------------------------------------- */
@@ -37,15 +29,16 @@ export async function processCheckout(
       data: { user },
     } = await supabase.auth.getUser();
     cashierId = user?.id ?? null;
-  } catch {}
+  } catch {
+    // Optional auth check fallback
+  }
 
   /* ---------------------------------------------------------- */
   /* Customer                                                   */
   /* ---------------------------------------------------------- */
 
   const customerId =
-    !input.customer_id ||
-    input.customer_id === WALK_IN_CUSTOMER_ID
+    !input.customer_id || input.customer_id === WALK_IN_CUSTOMER_ID
       ? null
       : input.customer_id;
 
@@ -61,9 +54,7 @@ export async function processCheckout(
 
   if (input.payment_method === "WALLET") {
     if (!customerId) {
-      throw new Error(
-        "Wallet payment requires a registered customer."
-      );
+      throw new Error("Wallet payment requires a registered customer.");
     }
 
     const wallet = await validateWalletBalance(
@@ -89,29 +80,19 @@ export async function processCheckout(
   /* Sale Items                                                 */
   /* ---------------------------------------------------------- */
 
-  await createSaleItems(
-    sale.id,
-    input.items
-  );
+  await createSaleItems(sale.id, input.items);
 
   /* ---------------------------------------------------------- */
   /* Inventory                                                  */
   /* ---------------------------------------------------------- */
 
-  await deductInventory(
-    input.items,
-    sale.sale_number,
-    cashierId
-  );
+  await deductInventory(input.items, sale.sale_number, cashierId);
 
   /* ---------------------------------------------------------- */
   /* Wallet Payment                                             */
   /* ---------------------------------------------------------- */
 
-  if (
-    input.payment_method === "WALLET" &&
-    customerId
-  ) {
+  if (input.payment_method === "WALLET" && customerId) {
     await payWithWallet({
       customer_id: customerId,
       amount: input.payable_amount,
@@ -126,21 +107,12 @@ export async function processCheckout(
   /* Outstanding Balance                                        */
   /* ---------------------------------------------------------- */
 
-  const paid =
-    input.amount_paid ??
-    input.payable_amount;
+  const paid = input.amount_paid ?? input.payable_amount;
+  const outstanding = Math.max(0, input.payable_amount - paid);
 
-const outstanding = Math.max(
-    0,
-    input.payable_amount - paid
-);
-
-if (customerId && outstanding > 0) {
-    await increaseOutstandingDebt(
-        customerId,
-        outstanding
-    );
-}
+  if (customerId && outstanding > 0) {
+    await increaseOutstandingDebt(customerId, sale.id, outstanding);
+  }
 
   /* ---------------------------------------------------------- */
   /* Complete Cart                                              */

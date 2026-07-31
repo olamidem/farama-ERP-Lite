@@ -92,6 +92,9 @@ export async function getSalesSummary(
     revenue += sale.payable_amount;
     discount += sale.discount_amount;
     tax += sale.tax_amount;
+    if (sale.status === "REFUNDED") {
+      refunds += sale.payable_amount;
+    }
 
     const paid =
       sale.amount_paid ?? sale.payable_amount;
@@ -104,7 +107,7 @@ export async function getSalesSummary(
     if (sale.items) {
       for (const item of sale.items) {
         profit +=
-          item.total_price -
+          (item.total_price ?? item.quantity * item.unit_price) -
           item.quantity * item.cost_price;
       }
     }
@@ -141,8 +144,10 @@ export async function getPaymentBreakdown(
   };
 
   sales.forEach((sale) => {
-    result[sale.payment_method] +=
-      sale.payable_amount;
+    const key = (sale.payment_method === "CARD" ? "POS" : sale.payment_method === "BANK_TRANSFER" ? "TRANSFER" : sale.payment_method) as keyof PaymentBreakdown;
+    if (result[key] !== undefined) {
+      result[key] += sale.payable_amount;
+    }
   });
 
   return result;
@@ -217,7 +222,7 @@ export async function getBestSellingProducts(
 
       row.quantity += item.quantity;
 
-      row.revenue += item.total_price;
+      row.revenue += item.total_price ?? item.quantity * item.unit_price;
     });
   });
 

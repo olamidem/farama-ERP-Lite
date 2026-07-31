@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "@tanstack/react-router";
 import { useSale, useRefundSale } from "../hooks/useSales";
-import { ArrowLeft, Printer, RotateCcw } from "lucide-react";
+import { ArrowLeft, Printer, RotateCcw, Sun, Moon } from "lucide-react";
 import Receipt from "../components/receipt/Receipt";
 import { formatCurrency } from "../utils/pricing";
 import { PAYMENT_METHOD_DETAILS } from "../constants";
+import { useTheme } from "../../../context/useThems";
 
 export const SaleDetailsPage = () => {
+  const { effectiveTheme, toggleTheme } = useTheme();
   const params = useParams({ strict: false });
   const saleId = (params as Record<string, string>)?.saleId || "";
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ export const SaleDetailsPage = () => {
       <div className="p-8 text-center space-y-3">
         <p className="text-rose-600 font-bold">Failed to load transaction details.</p>
         <button
-          onClick={() => navigate({ to: "/sales" })}
+          onClick={() => navigate({ to: ".." })}
           className="text-xs font-bold text-blue-600 hover:underline"
         >
           Back to Sales
@@ -48,7 +50,7 @@ export const SaleDetailsPage = () => {
       <div className="flex items-center justify-between">
         <button
           type="button"
-          onClick={() => navigate({ to: "/sales" })}
+          onClick={() => navigate({ to: ".." })}
           className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -56,6 +58,25 @@ export const SaleDetailsPage = () => {
         </button>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all flex items-center gap-2 text-xs font-bold shadow-2xs cursor-pointer"
+            title="Toggle Dark Mode"
+          >
+            {effectiveTheme === "dark" ? (
+              <>
+                <Sun className="w-4 h-4 text-amber-400" />
+                <span className="hidden sm:inline">Light Mode</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-4 h-4 text-slate-600" />
+                <span className="hidden sm:inline">Dark Mode</span>
+              </>
+            )}
+          </button>
+
           <button
             type="button"
             onClick={() => setIsReceiptOpen(true)}

@@ -1,4 +1,4 @@
-import { supabase } from "../../../api/supabase";
+import { supabase } from "../../../../api/supabase";
 
 export type InventoryTransactionType =
   | "SALE"
@@ -186,4 +186,48 @@ export async function increaseInventory(
   });
 
   return newStock;
+}
+
+export async function validateInventory(items: Array<{ product_id: string; product_unit_id: string; quantity: number }>) {
+  for (const item of items) {
+    const baseQty = await getBaseQuantity(item.product_unit_id, item.quantity);
+    const stock = await getCurrentStock(item.product_id);
+    if (stock < baseQty) {
+      throw new Error("Insufficient stock available for product");
+    }
+  }
+}
+
+export async function deductInventory(
+  items: Array<{ product_id: string; product_unit_id: string; quantity: number }>,
+  reference: string,
+  createdBy?: string | null
+) {
+  for (const item of items) {
+    await decreaseInventory({
+      productId: item.product_id,
+      productUnitId: item.product_unit_id,
+      quantity: item.quantity,
+      transactionType: "SALE",
+      reference,
+      createdBy,
+    });
+  }
+}
+
+export async function restoreInventory(
+  items: Array<{ product_id: string; product_unit_id: string; quantity: number }>,
+  reference: string,
+  createdBy?: string | null
+) {
+  for (const item of items) {
+    await increaseInventory({
+      productId: item.product_id,
+      productUnitId: item.product_unit_id,
+      quantity: item.quantity,
+      transactionType: "REFUND",
+      reference,
+      createdBy,
+    });
+  }
 }

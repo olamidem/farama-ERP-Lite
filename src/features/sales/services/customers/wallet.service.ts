@@ -1,11 +1,11 @@
-import { supabase } from "../../../api/supabase";
+import { supabase } from "../../../../api/supabase";
 import type {
   WalletDepositInput,
   WalletWithdrawalInput,
   WalletAdjustmentInput,
   WalletTransaction,
   CustomerWallet,
-} from "../types";
+} from "../../../customers/types/wallet";
 
 /* -------------------------------------------------------------------------- */
 /* Wallet                                                                     */
@@ -190,7 +190,7 @@ export async function payWithWallet({
     customer_id,
     amount,
     payment_method: "WALLET",
-    reference,
+    reference: reference || sale_id,
     notes,
     performed_by,
   });
@@ -219,7 +219,7 @@ export async function refundToWallet({
     customer_id,
     amount,
     payment_method: "WALLET",
-    reference,
+    reference: reference || sale_id,
     notes,
     performed_by,
   });
@@ -274,3 +274,6 @@ export async function adjustWallet(
     performed_by: input.performed_by,
   });
 }
+
+export const depositToWallet = deposit;
+export const withdrawFromWallet = withdraw;
