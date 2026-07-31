@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { processCheckout } from "../services/checkout.service";
+import { processCheckout } from "../services/sales/checkout.service";
 import { useCartStore } from "../store/cart.store";
 import { validateCartCheckout } from "../utils/validation";
 import type { CreateSaleInput, Sale } from "../types/sale";
@@ -19,8 +19,8 @@ export function useCheckout() {
 
   const checkoutMutation = useMutation({
     mutationFn: (saleInput: CreateSaleInput) => processCheckout(saleInput),
-    onSuccess: (sale) => {
-      toast.success(`Sale #${sale.sale_number} completed successfully!`);
+    onSuccess: (sale: Sale) => {
+      toast.success(`Sale #${sale.sale_number || "completed"} completed successfully!`);
       setCompletedSale(sale);
       cartStore.clearCart();
       setIsCheckoutOpen(false);

@@ -19,9 +19,11 @@ export function usePayments() {
   };
 
   const buildPaymentDetails = (payableAmount: number): PaymentDetails => {
+    const received = paymentMethod === "CASH" ? cashTendered : payableAmount;
     return {
       method: paymentMethod,
-      amountPaid: paymentMethod === "CASH" ? cashTendered : payableAmount,
+      amountPaid: Math.min(received, payableAmount),
+      receivedAmount: received,
       changeDue: paymentMethod === "CASH" ? calculateChange(payableAmount) : 0,
       reference: referenceNumber || undefined,
       splitPayments: paymentMethod === "SPLIT" ? splitPayments : undefined,
