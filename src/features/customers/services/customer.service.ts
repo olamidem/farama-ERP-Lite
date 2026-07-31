@@ -34,7 +34,55 @@ export const getCustomers = async (): Promise<Customer[]> => {
 
   if (error) throw error;
 
-  return (data as CustomerWithWallet[]).map(mapCustomer);
+  const mappedCustomers = (data as CustomerWithWallet[]).map(mapCustomer);
+
+  // Compute real outstanding debt per customer from sales
+  try {
+    const { data: salesData } = await supabase
+      .from("sales")
+      .select("customer_id, payable_amount, total_amount, amount_paid, status")
+      .eq("status", "COMPLETED");
+
+    interface MinimalSaleRecord {
+      customer_id?: string;
+      payable_amount?: number;
+      total_amount?: number;
+      amount_paid?: number;
+      status?: string;
+    }
+
+    const debtMap: Record<string, number> = {};
+    (salesData || []).forEach((s: MinimalSaleRecord) => {
+      if (!s.customer_id) return;
+      const payable = Number(s.payable_amount || s.total_amount || 0);
+      const paid = Number(s.amount_paid ?? payable);
+      const debt = Math.max(0, payable - paid);
+      if (debt > 0) {
+        debtMap[s.customer_id] = (debtMap[s.customer_id] || 0) + debt;
+      }
+    });
+
+    const storedSales = localStorage.getItem("farama_pos_sales");
+    if (storedSales) {
+      const parsed: MinimalSaleRecord[] = JSON.parse(storedSales);
+      parsed.forEach((s: MinimalSaleRecord) => {
+        if (!s.customer_id || s.status !== "COMPLETED") return;
+        const payable = Number(s.payable_amount || s.total_amount || 0);
+        const paid = Number(s.amount_paid ?? payable);
+        const debt = Math.max(0, payable - paid);
+        if (debt > 0) {
+          debtMap[s.customer_id] = (debtMap[s.customer_id] || 0) + debt;
+        }
+      });
+    }
+
+    return mappedCustomers.map((c) => ({
+      ...c,
+      outstanding_debt: debtMap[c.id] ?? c.outstanding_debt ?? 0,
+    }));
+  } catch {
+    return mappedCustomers;
+  }
 };
 
 export const getCustomer = async (
