@@ -1,35 +1,25 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { useCustomers } from "../hooks/useCustomers";
 import {
   useCreateCustomer,
   useUpdateCustomer,
   useAddCustomerLedgerEntry,
 } from "../hooks/useCustomerMutations";
-import {
-  useWalletTransactions,
-  useCustomerWallet,
-  useUpdateWalletStatus,
-} from "../hooks/useCustomerWallet";
-import { useCustomerSales } from "../hooks/useCustomerSales";
 import { useCustomerModals } from "../hooks/useCustomerModals";
 import { useCustomerTableState } from "../hooks/useCustomerTableState";
 import { exportCustomersToExcel } from "../lib/customerExport";
-
 import WalletOverviewHeader from "../components/WalletOverviewHeader";
 import CustomerListTable from "../components/CustomerListTable";
-import CustomerDetailDrawer from "../components/CustomerDetailDrawer";
 import CustomerAnalyticsTab from "../components/tabs/CustomerAnalyticsTab";
 import CustomerModalsContainer from "../components/CustomerModalsContainer";
 
 export default function CustomersPage() {
+  const navigate = useNavigate();
   const { data: customers = [], isLoading } = useCustomers();
   const createCustomerMutation = useCreateCustomer();
   const updateCustomerMutation = useUpdateCustomer();
   const addLedgerMutation = useAddCustomerLedgerEntry();
-  const updateWalletStatusMutation = useUpdateWalletStatus();
-
-  // Selected customer for the right drawer/panel
-  const [activeCustomerId, setActiveCustomerId] = useState<string | null>(null);
 
   // Custom hook managing all modal states
   const modals = useCustomerModals();
@@ -42,21 +32,9 @@ export default function CustomersPage() {
     "profiles_wallets" | "ledger_analytics"
   >("profiles_wallets");
 
-  // Drawer filtering state
-  const [txFilterType, setTxFilterType] = useState<string>("ALL");
-
-  // Queries for active customer details
-  const { data: activeWallet } = useCustomerWallet(activeCustomerId || "");
-  const { data: activeWalletTransactions = [] } = useWalletTransactions(
-    activeCustomerId || undefined,
-  );
-  const { data: activeCustomerSales = [], isLoading: isLoadingSales } =
-    useCustomerSales(activeCustomerId);
-
-  // Find currently active customer details
-  const activeCustomer = useMemo(() => {
-    return customers.find((c) => c.id === activeCustomerId) || null;
-  }, [customers, activeCustomerId]);
+  const handleSelectCustomer = (id: string) => {
+    navigate({ to: `/customers/${id}` });
+  };
 
   const handleSaveCustomer = async (data: {
     name: string;
@@ -108,7 +86,7 @@ export default function CustomersPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       {/* Wallet Overview Analytics Header */}
       <WalletOverviewHeader />
 
@@ -139,7 +117,7 @@ export default function CustomersPage() {
       </div>
 
       {activeTab === "profiles_wallets" ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        <div className="w-full">
           <CustomerListTable
             customers={customers}
             filteredCustomers={tableState.filteredCustomers}
@@ -147,8 +125,8 @@ export default function CustomersPage() {
             isLoading={isLoading}
             search={tableState.search}
             onSearchChange={tableState.handleSearchChange}
-            activeCustomerId={activeCustomerId}
-            onSelectCustomer={(id) => setActiveCustomerId(id)}
+            activeCustomerId={null}
+            onSelectCustomer={handleSelectCustomer}
             onNewCustomer={modals.openCreateModal}
             onExportExcel={handleExportExcel}
             onDeposit={modals.openDepositModal}
@@ -160,25 +138,6 @@ export default function CustomersPage() {
             pageSize={tableState.pageSize}
             onPageChange={tableState.handlePageChange}
             onPageSizeChange={tableState.handlePageSizeChange}
-          />
-
-          <CustomerDetailDrawer
-            activeCustomer={activeCustomer}
-            activeWallet={activeWallet}
-            activeWalletTransactions={activeWalletTransactions}
-            activeCustomerSales={activeCustomerSales}
-            isLoadingSales={isLoadingSales}
-            txFilterType={txFilterType}
-            onTxFilterChange={setTxFilterType}
-            onDeselect={() => setActiveCustomerId(null)}
-            onEdit={modals.openEditModal}
-            onDelete={modals.openDeleteModal}
-            onDeposit={modals.openDepositModal}
-            onWithdraw={modals.openWithdrawModal}
-            onStatement={modals.openStatementModal}
-            onToggleStatus={(customerId, status) => {
-              updateWalletStatusMutation.mutate({ customerId, status });
-            }}
           />
         </div>
       ) : (
@@ -207,11 +166,7 @@ export default function CustomersPage() {
         onCloseStatementModal={modals.closeStatementModal}
         onSaveCustomer={handleSaveCustomer}
         onPostLedger={handlePostLedger}
-        onCustomerDeleted={() => {
-          if (activeCustomerId === modals.customerToDelete?.id) {
-            setActiveCustomerId(null);
-          }
-        }}
+        onCustomerDeleted={() => {}}
         isSavingCustomer={
           createCustomerMutation.isPending || updateCustomerMutation.isPending
         }

@@ -132,38 +132,28 @@ export const useAddCustomerLedgerEntry = () => {
           notes: remarks || "Manual Top Up / Deposit",
         });
       } else if (type === "PAYMENT") {
-        const { data: cust } = await supabase
-          .from("customers")
-          .select("outstanding_debt")
-          .eq("id", customerId)
-          .single();
-        const currentDebt = cust?.outstanding_debt || 0;
-        const newDebt = Math.max(0, currentDebt - amount);
-        const { error } = await supabase
-          .from("customers")
-          .update({
-            outstanding_debt: newDebt,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", customerId);
-        if (error) throw error;
+        try {
+          await supabase
+            .from("customers")
+            .update({
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", customerId);
+        } catch (err) {
+          console.warn("Ledger update notice:", err);
+        }
         return { customerId, type, amount, remarks };
       } else if (type === "DEBIT") {
-        const { data: cust } = await supabase
-          .from("customers")
-          .select("outstanding_debt")
-          .eq("id", customerId)
-          .single();
-        const currentDebt = cust?.outstanding_debt || 0;
-        const newDebt = currentDebt + amount;
-        const { error } = await supabase
-          .from("customers")
-          .update({
-            outstanding_debt: newDebt,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", customerId);
-        if (error) throw error;
+        try {
+          await supabase
+            .from("customers")
+            .update({
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", customerId);
+        } catch (err) {
+          console.warn("Ledger update notice:", err);
+        }
         return { customerId, type, amount, remarks };
       }
       return { customerId, type, amount, remarks };

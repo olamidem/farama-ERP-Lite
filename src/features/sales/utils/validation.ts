@@ -1,6 +1,6 @@
+import { WALK_IN_CUSTOMER_ID } from "../constants";
 import type { CartItem } from "../types/cart";
 import type { PaymentMethod } from "../types/payment";
-import { WALK_IN_CUSTOMER_ID } from "../constants";
 
 export function validateCartCheckout(
   cart: CartItem[],

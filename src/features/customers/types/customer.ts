@@ -7,6 +7,7 @@ export interface Customer {
   remarks?: string | null;
   wallet_balance?: number;
   outstanding_debt?: number;
+  credit_limit?: number;
   status?: "ACTIVE" | "SUSPENDED";
   created_at: string;
   updated_at: string;

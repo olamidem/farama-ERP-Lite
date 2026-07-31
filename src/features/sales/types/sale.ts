@@ -1,11 +1,48 @@
 import type { PaymentMethod } from "./payment";
+export type { ReceiptData, ReceiptItem } from "./receipt";
+export type { SalesStats } from "./stats";
 
 export type SaleStatus =
   | "PENDING"
   | "PAID"
   | "PARTIALLY_PAID"
   | "REFUNDED"
-  | "CANCELLED";
+  | "CANCELLED"
+  | "COMPLETED";
+
+export interface POSProductUnit {
+  id: string;
+  product_id: string;
+  unit_id: string;
+  conversion_factor: number;
+  selling_price: number;
+  cost_price: number;
+  is_base_unit?: boolean;
+  is_default?: boolean;
+  unit?: {
+    id?: string;
+    name: string;
+    symbol?: string;
+  };
+}
+
+export interface POSProduct {
+  id: string;
+  name: string;
+  sku: string;
+  barcode?: string;
+  selling_price: number;
+  cost_price: number;
+  stock: number;
+  category_id?: string;
+  base_unit_id?: string;
+  is_active?: boolean;
+  category?: {
+    id: string;
+    name: string;
+  };
+  units?: POSProductUnit[];
+}
 
 export interface SaleItem {
   id?: string;
@@ -17,8 +54,24 @@ export interface SaleItem {
   discount: number;
   tax: number;
   line_total: number;
+  total_price?: number;
   cost_price: number;
   created_at?: string;
+  product?: {
+    id?: string;
+    name: string;
+    sku?: string;
+  };
+  product_unit?: {
+    id?: string;
+    unit_name?: string;
+    name?: string;
+    unit?: {
+      id?: string;
+      name: string;
+      symbol?: string;
+    };
+  };
 }
 
 export interface Sale {
@@ -26,9 +79,12 @@ export interface Sale {
   sale_number: string;
   cart_id?: string | null;
   customer_id?: string | null;
+  customer_name?: string;
+  customer_phone?: string;
   subtotal: number;
   discount_amount: number;
   tax_amount: number;
+  total_amount?: number;
   payable_amount: number;
   amount_paid: number;
   balance_due: number;
@@ -49,17 +105,22 @@ export interface CreateSaleItemInput {
   cost_price: number;
   discount?: number;
   tax?: number;
+  total_price?: number;
 }
 
 export interface CreateSaleInput {
-  cart_id?: string;
+  cart_id?: string | null;
   customer_id?: string | null;
+  customer_name?: string;
+  customer_phone?: string;
   subtotal: number;
   discount_amount: number;
   tax_amount: number;
+  total_amount?: number;
   payable_amount: number;
   amount_paid: number;
   payment_method: PaymentMethod;
   remarks?: string;
+  notes?: string;
   items: CreateSaleItemInput[];
 }

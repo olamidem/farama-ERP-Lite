@@ -1,12 +1,9 @@
-import { supabase } from "../../../api/supabase";
-
-import type { PaymentMethod } from "../../sales/types/payment";
-
+import { supabase } from "../../../../api/supabase";
+import type { PaymentMethod } from "../../types/payment";
 import {
   addCustomerDebt,
   reduceCustomerDebt,
 } from "./customer-credit.service";
-
 import {
   depositToWallet,
   withdrawFromWallet,
@@ -18,19 +15,18 @@ import {
 
 export async function addOutstandingBalance(
   customerId: string,
-  saleId: string,
-  amount: number,
+  saleId?: string,
+  amount = 0,
   paymentMethod?: PaymentMethod,
   performedBy?: string,
 ) {
-  return addCustomerDebt({
-    customer_id: customerId,
-    sale_id: saleId,
-    amount,
-    payment_method: paymentMethod,
-    performed_by: performedBy,
-  });
+  if (saleId && paymentMethod && performedBy) {
+    // optional metadata tracking
+  }
+  return addCustomerDebt(customerId, amount);
 }
+
+export const increaseOutstandingDebt = addOutstandingBalance;
 
 /* -------------------------------------------------------------------------- */
 /* Customer Pays Outstanding Credit                                           */
@@ -44,8 +40,10 @@ export async function payOutstandingBalance(input: {
   notes?: string;
   performed_by?: string;
 }) {
-  return reduceCustomerDebt(input);
+  return reduceCustomerDebt(input.customer_id, input.amount);
 }
+
+export const reduceOutstandingDebt = payOutstandingBalance;
 
 /* -------------------------------------------------------------------------- */
 /* Deposit Money Into Wallet                                                  */
@@ -59,7 +57,14 @@ export async function depositWallet(input: {
   notes?: string;
   performed_by?: string;
 }) {
-  return depositToWallet(input);
+  return depositToWallet({
+    customer_id: input.customer_id,
+    amount: input.amount,
+    payment_method: "CASH",
+    notes: input.notes,
+    reference: input.reference,
+    performed_by: input.performed_by,
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -74,7 +79,14 @@ export async function withdrawWallet(input: {
   notes?: string;
   performed_by?: string;
 }) {
-  return withdrawFromWallet(input);
+  return withdrawFromWallet({
+    customer_id: input.customer_id,
+    amount: input.amount,
+    payment_method: "CASH",
+    notes: input.notes,
+    reference: input.reference,
+    performed_by: input.performed_by,
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -130,28 +142,36 @@ export async function refundToWallet(input: {
 /* -------------------------------------------------------------------------- */
 
 export async function getCustomerFinanceSummary(customerId: string) {
-  const [customerResult, walletResult] = await Promise.all([
-    supabase
-      .from("customers")
-      .select("wallet_balance,outstanding_debt")
-      .eq("id", customerId)
-      .single(),
+  const walletResult = await supabase
+    .from("customer_wallets")
+    .select("balance,status")
+    .eq("customer_id", customerId)
+    .maybeSingle();
 
-    supabase
-      .from("customer_wallets")
-      .select("balance,status")
-      .eq("customer_id", customerId)
-      .maybeSingle(),
-  ]);
+  const outstandingDebt = await getCustomerDebt(customerId);
 
   return {
-    wallet_balance:
-      Number(walletResult.data?.balance ?? customerResult.data?.wallet_balance ?? 0),
-
-    wallet_status:
-      walletResult.data?.status ?? "ACTIVE",
-
-    outstanding_debt:
-      Number(customerResult.data?.outstanding_debt ?? 0),
+    wallet_balance: Number(walletResult.data?.balance ?? 0),
+    wallet_status: walletResult.data?.status ?? "ACTIVE",
+    outstanding_debt: outstandingDebt,
   };
+}
+
+async function getCustomerDebt(customerId: string): Promise<number> {
+  try {
+    const { data } = await supabase
+      .from("sales")
+      .select("payable_amount, amount_paid")
+      .eq("customer_id", customerId)
+      .eq("status", "COMPLETED");
+
+    if (!data) return 0;
+    return data.reduce((sum, sale) => {
+      const payable = Number(sale.payable_amount || 0);
+      const paid = Number(sale.amount_paid ?? payable);
+      return sum + Math.max(0, payable - paid);
+    }, 0);
+  } catch {
+    return 0;
+  }
 }

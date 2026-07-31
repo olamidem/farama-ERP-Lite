@@ -1,8 +1,21 @@
 import { supabase } from "../../../../api/supabase";
 import type { SalesStats } from "../../types/sale";
 
+interface SaleItemRow {
+  quantity: number;
+  cost_price: number;
+}
+
+interface SaleRow {
+  id: string;
+  payable_amount: number;
+  amount_paid: number | null;
+  status: string;
+  items?: SaleItemRow[];
+}
+
 export async function getSalesStatistics(): Promise<SalesStats> {
-  const { data: sales, error } = await supabase
+  const { data: salesData, error: salesError } = await supabase
     .from("sales")
     .select(`
       id,
@@ -15,16 +28,18 @@ export async function getSalesStatistics(): Promise<SalesStats> {
       )
     `);
 
-  if (error) throw error;
+  if (salesError) throw salesError;
+
+  const rawSales = (salesData ?? []) as unknown as SaleRow[];
 
   const completed =
-    sales?.filter((sale) => sale.status === "COMPLETED") ?? [];
+    rawSales.filter((sale) => sale.status === "COMPLETED");
 
   const refunded =
-    sales?.filter((sale) => sale.status === "REFUNDED") ?? [];
+    rawSales.filter((sale) => sale.status === "REFUNDED");
 
   const totalRevenue = completed.reduce(
-    (sum, sale) => sum + Number(sale.payable_amount),
+    (sum: number, sale) => sum + Number(sale.payable_amount),
     0
   );
 
@@ -33,7 +48,7 @@ export async function getSalesStatistics(): Promise<SalesStats> {
   let totalCost = 0;
 
   completed.forEach((sale) => {
-    sale.items?.forEach((item: any) => {
+    sale.items?.forEach((item) => {
       totalCost += Number(item.quantity) * Number(item.cost_price);
     });
   });
@@ -43,7 +58,7 @@ export async function getSalesStatistics(): Promise<SalesStats> {
   const averageOrderValue =
     totalSales === 0 ? 0 : totalRevenue / totalSales;
 
-  const totalOutstandingBalance = completed.reduce((sum, sale) => {
+  const totalOutstandingBalance = completed.reduce((sum: number, sale) => {
     const paid = Number(sale.amount_paid ?? sale.payable_amount);
     const debt = Math.max(0, Number(sale.payable_amount) - paid);
     return sum + debt;

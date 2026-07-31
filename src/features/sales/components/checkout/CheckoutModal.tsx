@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { X, CreditCard, CheckCircle2, User, Coins, AlertCircle } from "lucide-react";
+import { X, CreditCard, CheckCircle2, Coins, AlertCircle } from "lucide-react";
 import type { Customer } from "../../../customers/types/customer";
 import { useCartStore } from "../../store/cart.store";
 import { useCheckout } from "../../hooks/useCheckout";
 import { usePayments } from "../../hooks/usePayments";
 import PaymentModal from "./PaymentModal";
+import CustomerSelector from "../customer/CustomerSelector";
 import { formatCurrency } from "../../utils/pricing";
 import type { Sale } from "../../types/sale";
 import { WALK_IN_CUSTOMER_ID } from "../../constants";
@@ -15,6 +16,7 @@ interface CheckoutModalProps {
   onClose: () => void;
   customers: Customer[];
   onSaleCompleted?: (sale: Sale) => void;
+  onOpenAddCustomerModal?: () => void;
 }
 
 export const CheckoutModal = ({
@@ -22,6 +24,7 @@ export const CheckoutModal = ({
   onClose,
   customers,
   onSaleCompleted,
+  onOpenAddCustomerModal,
 }: CheckoutModalProps) => {
   const cartStore = useCartStore();
   const { checkout, isCheckingOut, validateAndProceed } = useCheckout();
@@ -33,8 +36,6 @@ export const CheckoutModal = ({
     calculateChange,
   } = usePayments();
 
-  const [customerNameOverride, setCustomerNameOverride] = useState("");
-  const [customerPhoneOverride, setCustomerPhoneOverride] = useState("");
   const [customAmountPaid, setCustomAmountPaid] = useState<string>("");
 
   if (!isOpen) return null;
@@ -61,14 +62,8 @@ export const CheckoutModal = ({
       return;
     }
 
-    const saleName =
-      customerNameOverride.trim() ||
-      activeCustomer?.name ||
-      "Walk-in Customer";
-    const salePhone =
-      customerPhoneOverride.trim() ||
-      activeCustomer?.phone ||
-      "";
+    const saleName = activeCustomer?.name || "Walk-in Customer";
+    const salePhone = activeCustomer?.phone || "";
 
     const selectedCustomerIdToSend =
       !cartStore.selectedCustomerId || cartStore.selectedCustomerId === WALK_IN_CUSTOMER_ID
@@ -167,29 +162,13 @@ export const CheckoutModal = ({
             </div>
           </div>
 
-          {/* Customer Details Overrides if needed */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1">
-              <User className="w-3.5 h-3.5 text-blue-500" />
-              Customer Reference
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <input
-                type="text"
-                value={customerNameOverride}
-                onChange={(e) => setCustomerNameOverride(e.target.value)}
-                placeholder={activeCustomer?.name || "Walk-in Customer Name"}
-                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 outline-none"
-              />
-              <input
-                type="text"
-                value={customerPhoneOverride}
-                onChange={(e) => setCustomerPhoneOverride(e.target.value)}
-                placeholder={activeCustomer?.phone || "Phone Number"}
-                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 outline-none"
-              />
-            </div>
-          </div>
+          {/* Customer Selection Component (Dropdown replacing raw text fields) */}
+          <CustomerSelector
+            customers={customers}
+            selectedCustomerId={cartStore.selectedCustomerId}
+            onSelectCustomer={(id) => cartStore.setSelectedCustomerId(id)}
+            onOpenAddCustomerModal={onOpenAddCustomerModal}
+          />
 
           {/* Amount Paid & Outstanding Debt Tracking */}
           <div className="bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2.5">

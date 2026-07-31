@@ -41,7 +41,9 @@ export const CartItem = ({
         <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 rounded-lg p-0.5 border border-slate-200/60 dark:border-slate-800">
           <button
             type="button"
-            onClick={() => onUpdateQuantity(item.product_id, item.product_unit_id, -1)}
+            onClick={() =>
+              onUpdateQuantity(item.product_id, item.product_unit_id, -1)
+            }
             className="p-1 rounded-md text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 shadow-2xs transition-all"
           >
             <Minus className="w-3 h-3" />
@@ -51,7 +53,9 @@ export const CartItem = ({
           </span>
           <button
             type="button"
-            onClick={() => onUpdateQuantity(item.product_id, item.product_unit_id, 1)}
+            onClick={() =>
+              onUpdateQuantity(item.product_id, item.product_unit_id, 1)
+            }
             className="p-1 rounded-md text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 shadow-2xs transition-all"
           >
             <Plus className="w-3 h-3" />

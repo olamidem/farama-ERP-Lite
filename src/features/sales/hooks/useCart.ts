@@ -7,7 +7,7 @@ import {
   calculateTax,
   calculatePayableAmount,
 } from "../utils/calculations";
-import { saveHeldCart, getHeldCarts, deleteHeldCart } from "../services/cart.service";
+import { saveHeldCart, getHeldCarts, deleteHeldCart } from "../services/sales/cart.service";
 import { toast } from "sonner";
 
 export function useCart() {

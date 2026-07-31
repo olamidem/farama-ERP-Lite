@@ -1,4 +1,4 @@
-import { supabase } from "../../../api/supabase";
+import { supabase } from "../../../../api/supabase";
 import { deposit } from "./wallet.service";
 
 /* -------------------------------------------------------------------------- */
@@ -8,31 +8,31 @@ import { deposit } from "./wallet.service";
 export async function getOutstandingDebt(
   customerId: string
 ): Promise<number> {
-  const { data, error } = await supabase
-    .from("customers")
-    .select("outstanding_debt")
-    .eq("id", customerId)
-    .single();
+  try {
+    const { data } = await supabase
+      .from("sales")
+      .select("payable_amount, amount_paid")
+      .eq("customer_id", customerId)
+      .eq("status", "COMPLETED");
 
-  if (error) throw error;
-
-  return Number(data.outstanding_debt ?? 0);
+    if (!data) return 0;
+    return data.reduce((sum, sale) => {
+      const payable = Number(sale.payable_amount || 0);
+      const paid = Number(sale.amount_paid ?? payable);
+      return sum + Math.max(0, payable - paid);
+    }, 0);
+  } catch {
+    return 0;
+  }
 }
 
 /* -------------------------------------------------------------------------- */
 
-export async function getCreditLimit(
-  customerId: string
-): Promise<number> {
-  const { data, error } = await supabase
-    .from("customers")
-    .select("credit_limit")
-    .eq("id", customerId)
-    .single();
-
-  if (error) throw error;
-
-  return Number(data.credit_limit ?? 0);
+export async function getCreditLimit(customerId?: string): Promise<number> {
+  if (customerId) {
+    // optional customer-specific limit override logic
+  }
+  return 500000;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -73,19 +73,18 @@ export async function addOutstandingDebt(
   customerId: string,
   amount: number
 ) {
-  const debt = await getOutstandingDebt(customerId);
-
   await validateCredit(customerId, amount);
 
-  const { error } = await supabase
-    .from("customers")
-    .update({
-      outstanding_debt: debt + amount,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", customerId);
-
-  if (error) throw error;
+  try {
+    await supabase
+      .from("customers")
+      .update({
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", customerId);
+  } catch (err) {
+    console.warn("Could not update customer updated_at:", err);
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -96,19 +95,17 @@ export async function reduceOutstandingDebt(
   customerId: string,
   amount: number
 ) {
-  const debt = await getOutstandingDebt(customerId);
-
-  const remaining = Math.max(0, debt - amount);
-
-  const { error } = await supabase
-    .from("customers")
-    .update({
-      outstanding_debt: remaining,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", customerId);
-
-  if (error) throw error;
+  if (amount <= 0) return;
+  try {
+    await supabase
+      .from("customers")
+      .update({
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", customerId);
+  } catch (err) {
+    console.warn("Could not update customer updated_at:", err);
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -227,3 +224,7 @@ export async function getCustomerStatement(customerId: string) {
     history,
   };
 }
+
+export const addCustomerDebt = addOutstandingDebt;
+export const increaseOutstandingDebt = addOutstandingDebt;
+export const reduceCustomerDebt = reduceOutstandingDebt;

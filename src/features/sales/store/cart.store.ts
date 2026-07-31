@@ -45,7 +45,7 @@ export const useCartStore = create<CartState>((set) => ({
       const availableUnits = product.units || [];
       const chosenUnit =
         availableUnits.find((u: POSProductUnit) => u.id === unitId) ||
-        availableUnits.find((u: POSProductUnit) => u.is_default) ||
+        availableUnits.find((u: POSProductUnit) => u.is_base_unit || u.is_default) ||
         availableUnits[0];
 
       const chosenUnitId = chosenUnit?.id || product.id;
@@ -71,6 +71,7 @@ export const useCartStore = create<CartState>((set) => ({
           return item;
         });
       } else {
+        const subtotal = unitPrice * quantityToAdd;
         const newItem: CartItem = {
           product_id: product.id,
           product_unit_id: chosenUnitId,
@@ -81,6 +82,10 @@ export const useCartStore = create<CartState>((set) => ({
           cost_price: costPrice,
           max_stock: product.stock || 0,
           conversion_factor: conversionFactor,
+          discount: 0,
+          tax: 0,
+          subtotal,
+          total: subtotal,
         };
         updatedItems = [...state.items, newItem];
       }
@@ -143,7 +148,7 @@ export const useCartStore = create<CartState>((set) => ({
       discountVal: cart.discount_amount || 0,
       discountType: "fixed",
       taxRate: cart.tax_amount ? (cart.tax_amount / (cart.subtotal || 1)) * 100 : DEFAULT_TAX_RATE,
-      paymentMethod: (cart.payment_method as PaymentMethod) || "CASH",
+      paymentMethod: ((cart as Cart & { payment_method?: PaymentMethod }).payment_method) || "CASH",
       remarks: cart.notes || "",
     });
   },

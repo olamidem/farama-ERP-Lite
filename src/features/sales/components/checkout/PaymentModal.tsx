@@ -1,7 +1,7 @@
 import { CheckCircle2 } from "lucide-react";
 import type { PaymentMethod } from "../../types/payment";
-import { PAYMENT_METHOD_DETAILS } from "../../constants";
 import { formatCurrency } from "../../utils/pricing";
+import { PAYMENT_METHOD_DETAILS } from "../../constants";
 
 interface PaymentModalProps {
   paymentMethod: PaymentMethod;
