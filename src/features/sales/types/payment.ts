@@ -3,7 +3,9 @@ export type PaymentMethod =
   | "POS"
   | "CARD"
   | "BANK_TRANSFER"
+  | "TRANSFER"
   | "WALLET"
+  | "DEPOSIT"
   | "SPLIT";
 
 export interface SplitPayment {
@@ -11,6 +13,8 @@ export interface SplitPayment {
   amount: number;
   reference?: string;
 }
+
+export type SplitPaymentDetail = SplitPayment;
 
 export interface PaymentDetails {
   method: PaymentMethod;

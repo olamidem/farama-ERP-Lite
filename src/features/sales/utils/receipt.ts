@@ -1,15 +1,18 @@
 import type { Sale } from "../types/sale";
 import type { ReceiptData } from "../types/receipt";
+import { useReceiptStore } from "../store/receipt.store";
+import { thermalPrinter } from "../services/thermal/escpos-printer";
 
 export function formatReceiptData(
   sale: Sale,
   amountPaid?: number,
-  change?: number,
-  storeInfo?: { name?: string; address?: string; phone?: string }
-): ReceiptData {
+  change?: number
+): ReceiptData & { rcNumber?: string; logoUrl?: string; socialHandle?: string; footerText?: string } {
+  const settings = useReceiptStore.getState().settings;
+
   const items = (sale.items || []).map((item) => {
     const productName = item.product?.name || "Item";
-    const unitName = item.product_unit?.unit?.symbol || item.product_unit?.unit?.name || "unit";
+    const unitName = item.product_unit?.unit?.symbol || item.product_unit?.unit_name || "unit";
     return {
       name: productName,
       unit_name: unitName,
@@ -19,14 +22,21 @@ export function formatReceiptData(
     };
   });
 
+  const actualPaid = amountPaid ?? Number(sale.amount_paid ?? sale.payable_amount);
+  const actualBalance = sale.balance_due ?? Math.max(0, sale.payable_amount - actualPaid);
+
   return {
-    storeName: storeInfo?.name || "FARAMA STORE",
-    storeAddress: storeInfo?.address || "Main Retail Outlet",
-    storePhone: storeInfo?.phone || "+234 800 000 0000",
+    storeName: settings.storeName || "FARAMA STORE",
+    storeAddress: settings.storeAddress || "12, Garki Road, Area 11, Abuja",
+    storePhone: settings.storePhone || "+234 803 123 4567",
+    rcNumber: settings.rcNumber || "RC: 938472-A",
+    socialHandle: settings.socialHandle || "@faramastore",
+    logoUrl: settings.logoUrl || "",
+    footerText: settings.footerText || "Thank you for shopping with us! Please keep this receipt for return/refund reference.",
     receiptNumber: sale.sale_number,
     date: sale.created_at ? new Date(sale.created_at).toLocaleString() : new Date().toLocaleString(),
-    cashierName: sale.created_by || "Cashier",
-    customerName: sale.customer_name || "Walk-in Customer",
+    cashierName: sale.created_by || "Super Admin",
+    customerName: sale.customer_name || "Walk-In Customer",
     customerPhone: sale.customer_phone || "",
     items,
     subtotal: sale.subtotal || sale.payable_amount,
@@ -34,55 +44,55 @@ export function formatReceiptData(
     tax: sale.tax_amount || 0,
     total: sale.payable_amount,
     paymentMethod: sale.payment_method,
-    amountPaid: amountPaid ?? sale.payable_amount,
+    amountPaid: actualPaid,
+    balanceDue: actualBalance,
     change: change ?? 0,
   };
 }
 
-export function printReceiptElement(elementId: string): void {
-  const printContent = document.getElementById(elementId);
-  if (!printContent) {
-    window.print();
-    return;
+/**
+ * Direct ESC/POS thermal printing for a sale object
+ */
+export async function printThermalReceiptForSale(sale: Sale, paperWidth: 58 | 80 = 58): Promise<boolean> {
+  const data = formatReceiptData(sale);
+  try {
+    if (!thermalPrinter.isConnected()) {
+      await thermalPrinter.connect();
+    }
+    await thermalPrinter.printReceipt({
+      storeName: data.storeName,
+      storeAddress: data.storeAddress,
+      storePhone: data.storePhone,
+      rcNumber: data.rcNumber,
+      receiptNumber: data.receiptNumber,
+      date: data.date,
+      cashierName: data.cashierName,
+      customerName: data.customerName || "Walk-In Customer",
+      paymentMethod: data.paymentMethod,
+      items: data.items,
+      subtotal: data.subtotal,
+      discount: data.discount,
+      tax: data.tax,
+      total: data.total,
+      amountPaid: data.amountPaid,
+      balanceDue: data.balanceDue,
+      change: data.change,
+      currencySymbol: "₦",
+    }, paperWidth);
+    useReceiptStore.getState().markSaleAsPrinted(sale.id);
+    return true;
+  } catch (err) {
+    console.error("Direct ESC/POS thermal printing error:", err);
+    return false;
   }
-  const windowUrl = "about:blank";
-  const uniqueName = new Date().getTime();
-  const windowName = "Print" + uniqueName;
-  const printWindow = window.open(
-    windowUrl,
-    windowName,
-    "left=100,top=100,width=800,height=600"
-  );
+}
 
-  if (printWindow) {
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Receipt Print</title>
-          <style>
-            body { font-family: 'Courier New', monospace; font-size: 12px; margin: 0; padding: 10px; color: #000; }
-            .no-print { display: none !important; }
-            table { width: 100%; border-collapse: collapse; }
-            td, th { padding: 4px 0; }
-            .text-center { text-align: center; }
-            .text-right { text-align: right; }
-            .border-t { border-top: 1px dashed #000; }
-            .border-b { border-bottom: 1px dashed #000; }
-          </style>
-        </head>
-        <body>
-          ${printContent.innerHTML}
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-    }, 250);
-  } else {
-    window.print();
+export function printThermalReceipt(_elementId: string, saleId?: string): void {
+  if (saleId) {
+    useReceiptStore.getState().markSaleAsPrinted(saleId);
   }
+}
+
+export function printReceiptElement(elementId: string, saleId?: string): void {
+  printThermalReceipt(elementId, saleId);
 }

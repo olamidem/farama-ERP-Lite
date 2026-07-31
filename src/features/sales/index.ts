@@ -10,10 +10,10 @@ export * from "./hooks/useSales";
 export * from "./hooks/usePayments";
 
 // Services
-export * from "./services/cart.service";
-export * from "./services/checkout.service";
-export * from "./services/payment.service";
-export * from "./services/sales.service";
+export * from "./services/sales/cart.service";
+export * from "./services/sales/checkout.service";
+export * from "./services/sales/payment.service";
+export * from "./services/sales/sales.service";
 
 // Store
 export * from "./store/cart.store";
@@ -23,7 +23,6 @@ export * from "./types/cart";
 export * from "./types/sale";
 export * from "./types/payment";
 export * from "./types/receipt";
-export * from "./types/sales";
 
 // Utils
 export * from "./utils/calculations";
