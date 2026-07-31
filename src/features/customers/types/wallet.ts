@@ -1,7 +1,5 @@
 export type CurrencyCode = "NGN" | "USD" | "EUR";
-
 export type WalletStatus = "ACTIVE" | "SUSPENDED";
-
 export type WalletTransactionDirection = "CREDIT" | "DEBIT";
 
 export type WalletTransactionType =
@@ -20,7 +18,8 @@ export type WalletPaymentMethod =
   | "BANK_TRANSFER"
   | "CARD"
   | "WALLET"
-  | "SYSTEM";
+  | "SYSTEM"
+  | "OTHER";
 
 export interface CustomerWallet {
   id: string;

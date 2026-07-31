@@ -1,4 +1,4 @@
-import { QRCodeSVG } from "qrcode.react";
+// import { QRCodeSVG } from "qrcode.react";
 
 interface ReceiptQRCodeProps {
   value: string;

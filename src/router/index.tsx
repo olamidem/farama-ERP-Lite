@@ -21,6 +21,10 @@ import SetPasswordPage from "../features/auth/pages/SetPasswordPage";
 import AcceptInvitationPage from "../features/auth/pages/AcceptInvitationPage";
 import { StaffPage } from "../features/staff";
 import CustomersPage from "../features/customers/pages/CustomersPage";
+import { CustomerDetailPage } from "../features/customers/pages/CustomerDetailPage";
+import { SalesPage } from "../features/sales/pages/SalesPage";
+import { SalesHistoryPage } from "../features/sales/pages/SalesHistoryPage";
+import { SaleDetailsPage } from "../features/sales/pages/SaleDetailsPage";
 
 const rootRoute = createRootRoute();
 const loginRoute = createRoute({
@@ -179,20 +183,54 @@ const lockScreenRoute = createRoute({
   },
 });
 
-// const salesRoute = createRoute({
-//   getParentRoute: () => appLayoutRoute,
-//   path: "/sales",
-//   component: SalesPage,
-// });
+const salesRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/sales",
+  component: SalesPage,
+  staticData: {
+    title: "Point of Sale",
+    subtitle: "Manage sales transactions and checkout",
+  },
+});
+
+const salesHistoryRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/sales/history",
+  component: SalesHistoryPage,
+  staticData: {
+    title: "Sales History",
+    subtitle: "View and process past sales transactions",
+  },
+});
+
+const saleDetailsRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/sales/$saleId",
+  component: SaleDetailsPage,
+  staticData: {
+    title: "Sale Details",
+    subtitle: "View transaction receipt and details",
+  },
+});
 
 const customersRoute = createRoute({
-getParentRoute: () => appLayoutRoute,
- path: "/customers",
+  getParentRoute: () => appLayoutRoute,
+  path: "/customers",
   component: CustomersPage,
-  staticData:{
+  staticData: {
     title: "Customers",
-    subtitle: "Manage customer profiles and wallets"
-  }
+    subtitle: "Manage customer profiles and wallets",
+  },
+});
+
+const customerDetailsRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/customers/$customerId",
+  component: CustomerDetailPage,
+  staticData: {
+    title: "Customer Financial Dashboard",
+    subtitle: "Detailed purchase history, wallet ledger, and debt management",
+  },
 });
 
 /**
@@ -215,8 +253,11 @@ const routeTree = rootRoute.addChildren([
     staffRoute,
     // settingsRoute,
     profileRoute,
-    // salesRoute,
+    salesRoute,
+    salesHistoryRoute,
+    saleDetailsRoute,
     customersRoute,
+    customerDetailsRoute,
   ]),
 ]);
 

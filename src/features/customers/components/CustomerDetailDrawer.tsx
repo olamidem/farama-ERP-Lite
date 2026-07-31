@@ -1,4 +1,3 @@
-import CustomerFinancialDashboard from "./CustomerFinancialDashboard";
 import type { Customer } from "../types/customer";
 import type {
   CustomerWallet,
@@ -6,6 +5,7 @@ import type {
   WalletStatus,
 } from "../types/wallet";
 import type { Sale } from "../../sales/types/sale";
+import CustomerFinancialDashboard from "./CustomerFinancialDashboard";
 
 interface CustomerDetailDrawerProps {
   activeCustomer: Customer | null;
