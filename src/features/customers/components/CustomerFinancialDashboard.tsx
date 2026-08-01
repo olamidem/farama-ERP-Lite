@@ -27,7 +27,7 @@ import type {
 import type { Sale } from "../../sales/types/sale";
 import { formatNaira } from "../lib/customerExport";
 import { getBadgeColorForTransactionType } from "../utils/wallet.utils";
-import { useCustomerDebt } from "../hooks/useCustomerDebt";
+import { useCustomerDebt, useCustomerCreditHistory } from "../hooks/useCustomerDebt";
 import CustomerDebtSettleModal from "./CustomerDebtSettleModal";
 import CustomerSaleDetailModal from "./CustomerSaleDetailModal";
 import ThermalPrintingModal from "../../sales/components/thermal/ThermalPrintingModal";
@@ -74,8 +74,9 @@ export default function CustomerFinancialDashboard({
     useState<Sale | null>(null);
   const [isSettleDebtOpen, setIsSettleDebtOpen] = useState(false);
 
-  // Debt query hook
+  // Debt query hook & Credit history hook
   const { data: debtData } = useCustomerDebt(activeCustomer?.id || null);
+  const { data: creditHistory = [] } = useCustomerCreditHistory(activeCustomer?.id || null);
 
   if (!activeCustomer) {
     return (
@@ -595,6 +596,99 @@ export default function CustomerFinancialDashboard({
                             Pay this invoice →
                           </button>
                         </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+
+          {/* Credit Transactions & Debt Repayment History */}
+          <div className="space-y-2 pt-3 border-t border-slate-200/80 dark:border-slate-800">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                Credit & Repayment History ({creditHistory.length})
+              </span>
+              <span className="text-[10px] font-bold text-slate-400">
+                Audited ledger from customer_credit_transactions
+              </span>
+            </div>
+
+            <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+              {creditHistory.length === 0 ? (
+                <div className="p-6 text-center text-slate-400 text-xs font-bold bg-slate-50 dark:bg-slate-800/40 rounded-2xl">
+                  No credit sales or repayment transactions recorded for this customer.
+                </div>
+              ) : (
+                creditHistory.map((tx) => {
+                  const isPayment = tx.transaction_type === "PAYMENT";
+                  const isRefund = tx.transaction_type === "REFUND";
+
+                  return (
+                    <div
+                      key={tx.id}
+                      className={`p-3.5 rounded-2xl border flex items-center justify-between text-xs transition ${
+                        isPayment
+                          ? "border-emerald-200/80 dark:border-emerald-900/40 bg-emerald-50/40 dark:bg-emerald-950/20"
+                          : isRefund
+                          ? "border-sky-200/80 dark:border-sky-900/40 bg-sky-50/40 dark:bg-sky-950/20"
+                          : "border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40"
+                      }`}
+                    >
+                      <div className="space-y-1">
+                        <div className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                          <span
+                            className={`px-2 py-0.5 rounded-md text-[9px] font-black border uppercase tracking-wider ${
+                              isPayment
+                                ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
+                                : isRefund
+                                ? "bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 border-sky-300 dark:border-sky-800"
+                                : "bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800"
+                            }`}
+                          >
+                            {tx.transaction_type}
+                          </span>
+
+                          {tx.payment_method && (
+                            <span className="px-2 py-0.5 rounded-md text-[9px] font-extrabold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono">
+                              {tx.payment_method}
+                            </span>
+                          )}
+
+                          <span className="text-[10px] text-slate-400 font-semibold">
+                            {new Date(tx.created_at).toLocaleString()}
+                          </span>
+                        </div>
+
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">
+                          {tx.notes || (isPayment ? "Debt repayment" : "Credit debt added")}
+                          {tx.sale?.sale_number && (
+                            <span className="font-mono text-slate-700 dark:text-slate-300 ml-1">
+                              (Sale: #{tx.sale.sale_number})
+                            </span>
+                          )}
+                        </p>
+                      </div>
+
+                      <div className="text-right">
+                        <span
+                          className={`font-mono font-black text-sm ${
+                            isPayment
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : isRefund
+                              ? "text-sky-600 dark:text-sky-400"
+                              : "text-amber-600 dark:text-amber-400"
+                          }`}
+                        >
+                          {isPayment ? "-" : "+"}{formatNaira(Number(tx.amount || 0))}
+                        </span>
+
+                        {tx.performer?.full_name && (
+                          <div className="text-[9px] text-slate-400 font-medium mt-0.5">
+                            Cashier: {tx.performer.full_name}
+                          </div>
+                        )}
                       </div>
                     </div>
                   );

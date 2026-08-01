@@ -74,6 +74,22 @@ export interface SaleItem {
   };
 }
 
+export interface SalePayment {
+  id?: string;
+  sale_id: string;
+  customer_id?: string | null;
+  amount: number;
+  payment_method: PaymentMethod;
+  reference?: string | null;
+  notes?: string | null;
+  performed_by?: string | null;
+  created_at?: string;
+  performer?: {
+    full_name?: string;
+    email?: string;
+  } | null;
+}
+
 export interface Sale {
   id: string;
   sale_number: string;
@@ -95,6 +111,7 @@ export interface Sale {
   created_at: string;
   updated_at?: string;
   items?: SaleItem[];
+  payments?: SalePayment[];
 }
 
 export interface CreateSaleItemInput {

@@ -1,5 +1,7 @@
 export type CurrencyCode = "NGN" | "USD" | "EUR";
+
 export type WalletStatus = "ACTIVE" | "SUSPENDED";
+
 export type WalletTransactionDirection = "CREDIT" | "DEBIT";
 
 export type WalletTransactionType =
@@ -13,13 +15,14 @@ export type WalletTransactionType =
   | "OPENING_BALANCE"
   | "REVERSAL";
 
+// Must match DB CHECK constraint on wallet_transactions.payment_method:
+// ('CASH','BANK_TRANSFER','CARD','WALLET','SYSTEM')
 export type WalletPaymentMethod =
   | "CASH"
   | "BANK_TRANSFER"
   | "CARD"
   | "WALLET"
-  | "SYSTEM"
-  | "OTHER";
+  | "SYSTEM";
 
 export interface CustomerWallet {
   id: string;
@@ -90,6 +93,7 @@ export interface WalletAdjustmentInput {
   amount: number;
   direction: WalletTransactionDirection;
   notes: string;
+  reference?: string;
   performed_by?: string;
 }
 

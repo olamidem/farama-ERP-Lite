@@ -69,6 +69,21 @@ export async function createPurchase(input: CreatePurchaseInput) {
 
   const purchaseNumber = await generatePurchaseNumber();
 
+  /*
+   * Resolve the authenticated staff member who is raising this purchase order.
+   * We catch errors so a missing/expired session doesn't block the create —
+   * the column is nullable in the schema.
+   */
+  let createdBy: string | null = null;
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    createdBy = user?.id ?? null;
+  } catch {
+    // Auth unavailable — created_by will be null but we still proceed
+  }
+
   const { data: purchase, error } = await supabase
     .from("purchases")
     .insert({
@@ -79,6 +94,7 @@ export async function createPurchase(input: CreatePurchaseInput) {
       remarks: input.remarks,
       total_amount: total,
       status: PURCHASE_STATUS.PENDING,
+      created_by: createdBy,   // ← was missing; now always written
     })
     .select()
     .single();
