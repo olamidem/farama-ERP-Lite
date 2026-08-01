@@ -60,9 +60,11 @@ export async function depositWallet(input: {
   return depositToWallet({
     customer_id: input.customer_id,
     amount: input.amount,
-    payment_method: "CASH",
+    payment_method: input.payment_method || "CASH",
     notes: input.notes,
-    reference: input.reference,
+    reference:
+      input.reference ||
+      `DEP-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     performed_by: input.performed_by,
   });
 }
@@ -82,9 +84,11 @@ export async function withdrawWallet(input: {
   return withdrawFromWallet({
     customer_id: input.customer_id,
     amount: input.amount,
-    payment_method: "CASH",
+    payment_method: input.payment_method || "WALLET",
     notes: input.notes,
-    reference: input.reference,
+    reference:
+      input.reference ||
+      `WTH-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     performed_by: input.performed_by,
   });
 }
@@ -98,11 +102,14 @@ export async function payOutstandingUsingWallet(
   amount: number,
   performedBy?: string,
 ) {
+  const ref = `DEBT-REPAY-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+
   await withdrawWallet({
     customer_id: customerId,
     amount,
     payment_method: "WALLET",
-    notes: "Outstanding payment via wallet",
+    reference: ref,
+    notes: "Outstanding debt repayment via wallet",
     performed_by: performedBy,
   });
 
@@ -110,7 +117,8 @@ export async function payOutstandingUsingWallet(
     customer_id: customerId,
     amount,
     payment_method: "WALLET",
-    notes: "Outstanding payment via wallet",
+    reference: ref,
+    notes: "Outstanding debt repayment via wallet",
     performed_by: performedBy,
   });
 }

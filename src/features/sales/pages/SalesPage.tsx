@@ -2,8 +2,6 @@ import { useState, useMemo } from "react";
 import {
   ShoppingCart,
   History,
-  Sun,
-  Moon,
 } from "lucide-react";
 import { usePOSProducts, useSales, useRefundSale, useSalesStats } from "../hooks/useSales";
 import { useCustomers } from "../../customers/hooks/useCustomers";
@@ -26,7 +24,6 @@ import { formatCurrency } from "../utils/pricing";
 import { useTheme } from "../../../context/useThems";
 
 export const SalesPage = () => {
-  const { effectiveTheme, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState<"pos" | "history">("pos");
 
   // Product Filter State
@@ -103,24 +100,6 @@ export const SalesPage = () => {
 
         {/* Navigation Tabs & Theme Toggle */}
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all flex items-center gap-2 text-xs font-bold shadow-2xs cursor-pointer"
-            title="Toggle Dark Mode"
-          >
-            {effectiveTheme === "dark" ? (
-              <>
-                <Sun className="w-4 h-4 text-amber-400" />
-                <span className="hidden sm:inline">Light Mode</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-4 h-4 text-slate-600" />
-                <span className="hidden sm:inline">Dark Mode</span>
-              </>
-            )}
-          </button>
 
           <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
             <button

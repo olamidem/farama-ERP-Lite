@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "@tanstack/react-router";
 import { useSale, useRefundSale } from "../hooks/useSales";
-import { ArrowLeft, Printer, RotateCcw, Sun, Moon } from "lucide-react";
+import { ArrowLeft, Printer, RotateCcw } from "lucide-react";
 import Receipt from "../components/receipt/Receipt";
 import { formatCurrency } from "../utils/pricing";
 import { PAYMENT_METHOD_DETAILS } from "../constants";
 import { useTheme } from "../../../context/useThems";
 
 export const SaleDetailsPage = () => {
-  const { effectiveTheme, toggleTheme } = useTheme();
   const params = useParams({ strict: false });
   const saleId = (params as Record<string, string>)?.saleId || "";
   const navigate = useNavigate();
@@ -58,24 +57,7 @@ export const SaleDetailsPage = () => {
         </button>
 
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all flex items-center gap-2 text-xs font-bold shadow-2xs cursor-pointer"
-            title="Toggle Dark Mode"
-          >
-            {effectiveTheme === "dark" ? (
-              <>
-                <Sun className="w-4 h-4 text-amber-400" />
-                <span className="hidden sm:inline">Light Mode</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-4 h-4 text-slate-600" />
-                <span className="hidden sm:inline">Dark Mode</span>
-              </>
-            )}
-          </button>
+        
 
           <button
             type="button"
