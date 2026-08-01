@@ -1,5 +1,7 @@
 export type CurrencyCode = "NGN" | "USD" | "EUR";
+
 export type WalletStatus = "ACTIVE" | "SUSPENDED";
+
 export type WalletTransactionDirection = "CREDIT" | "DEBIT";
 
 export type WalletTransactionType =
@@ -15,9 +17,13 @@ export type WalletTransactionType =
 
 export type WalletPaymentMethod =
   | "CASH"
-  | "BANK_TRANSFER"
+  | "POS"
   | "CARD"
+  | "BANK_TRANSFER"
+  | "TRANSFER"
   | "WALLET"
+  | "DEPOSIT"
+  | "SPLIT"
   | "SYSTEM"
   | "OTHER";
 
@@ -90,6 +96,7 @@ export interface WalletAdjustmentInput {
   amount: number;
   direction: WalletTransactionDirection;
   notes: string;
+  reference?: string;
   performed_by?: string;
 }
 
