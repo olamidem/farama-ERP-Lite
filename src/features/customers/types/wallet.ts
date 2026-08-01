@@ -15,17 +15,14 @@ export type WalletTransactionType =
   | "OPENING_BALANCE"
   | "REVERSAL";
 
+// Must match DB CHECK constraint on wallet_transactions.payment_method:
+// ('CASH','BANK_TRANSFER','CARD','WALLET','SYSTEM')
 export type WalletPaymentMethod =
   | "CASH"
-  | "POS"
-  | "CARD"
   | "BANK_TRANSFER"
-  | "TRANSFER"
+  | "CARD"
   | "WALLET"
-  | "DEPOSIT"
-  | "SPLIT"
-  | "SYSTEM"
-  | "OTHER";
+  | "SYSTEM";
 
 export interface CustomerWallet {
   id: string;

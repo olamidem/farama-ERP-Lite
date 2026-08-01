@@ -289,7 +289,7 @@ export async function completeCart(
   await supabase
     .from("carts")
     .update({
-      status: "COMPLETED",
+      status: "CHECKED_OUT",
     })
     .eq("id", cartId);
 }
@@ -304,7 +304,7 @@ export async function cancelCart(
   await supabase
     .from("carts")
     .update({
-      status: "ABANDONED",
+      status: "CANCELLED",
     })
     .eq("id", cartId);
 }

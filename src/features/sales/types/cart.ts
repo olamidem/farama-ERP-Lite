@@ -1,8 +1,8 @@
 export type CartStatus =
   | "ACTIVE"
   | "HELD"
-  | "COMPLETED"
-  | "ABANDONED";
+  | "CHECKED_OUT"
+  | "CANCELLED";
 
 export interface CartItem {
   id?: string;

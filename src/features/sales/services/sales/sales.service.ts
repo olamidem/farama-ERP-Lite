@@ -136,13 +136,39 @@ export async function getSales(): Promise<Sale[]> {
           *,
           unit:units(*)
         )
+      ),
+      payments:sale_payments(
+        *,
+        performer:profiles(full_name, email)
       )
     `)
     .order("created_at", {
       ascending: false,
     });
 
-  if (error) throw error;
+  if (error) {
+    // Fallback: If PostgREST schema cache has not picked up the FK to profiles yet
+    const { data: fallbackData, error: fallbackError } = await supabase
+      .from("sales")
+      .select(`
+        *,
+        items:sale_items(
+          *,
+          product:products(*),
+          product_unit:product_units(
+            *,
+            unit:units(*)
+          )
+        ),
+        payments:sale_payments(*)
+      `)
+      .order("created_at", {
+        ascending: false,
+      });
+
+    if (fallbackError) throw fallbackError;
+    return (fallbackData ?? []) as Sale[];
+  }
 
   return (data ?? []) as Sale[];
 }
@@ -165,12 +191,37 @@ export async function getSale(
           *,
           unit:units(*)
         )
+      ),
+      payments:sale_payments(
+        *,
+        performer:profiles(full_name, email)
       )
     `)
     .eq("id", id)
     .single();
 
-  if (error) throw error;
+  if (error) {
+    // Fallback if PostgREST schema cache is refreshing
+    const { data: fallbackData, error: fallbackError } = await supabase
+      .from("sales")
+      .select(`
+        *,
+        items:sale_items(
+          *,
+          product:products(*),
+          product_unit:product_units(
+            *,
+            unit:units(*)
+          )
+        ),
+        payments:sale_payments(*)
+      `)
+      .eq("id", id)
+      .single();
+
+    if (fallbackError) throw fallbackError;
+    return fallbackData as Sale;
+  }
 
   return data as Sale;
 }
@@ -183,12 +234,41 @@ export async function updateSale(
   id: string,
   updates: Partial<Sale>
 ): Promise<Sale> {
+  // Only pick actual DB columns — never spread joined/computed fields like `items` or `balance_due`
+  const {
+    customer_id,
+    customer_name,
+    customer_phone,
+    subtotal,
+    discount_amount,
+    tax_amount,
+    total_amount,
+    payable_amount,
+    amount_paid,
+    payment_method,
+    status,
+    remarks,
+    cart_id,
+  } = updates;
+
+  const payload: Record<string, unknown> = { updated_at: new Date().toISOString() };
+  if (customer_id !== undefined) payload.customer_id = customer_id;
+  if (customer_name !== undefined) payload.customer_name = customer_name;
+  if (customer_phone !== undefined) payload.customer_phone = customer_phone;
+  if (subtotal !== undefined) payload.subtotal = subtotal;
+  if (discount_amount !== undefined) payload.discount_amount = discount_amount;
+  if (tax_amount !== undefined) payload.tax_amount = tax_amount;
+  if (total_amount !== undefined) payload.total_amount = total_amount;
+  if (payable_amount !== undefined) payload.payable_amount = payable_amount;
+  if (amount_paid !== undefined) payload.amount_paid = amount_paid;
+  if (payment_method !== undefined) payload.payment_method = payment_method;
+  if (status !== undefined) payload.status = status;
+  if (remarks !== undefined) payload.remarks = remarks;
+  if (cart_id !== undefined) payload.cart_id = cart_id;
+
   const { error } = await supabase
     .from("sales")
-    .update({
-      ...updates,
-      updated_at: new Date().toISOString(),
-    })
+    .update(payload)
     .eq("id", id);
 
   if (error) throw error;
@@ -238,40 +318,26 @@ export async function updateSalePayment(
   notes?: string
 ): Promise<Sale> {
   const sale = await getSale(saleId);
-  const currentPaid = Number(sale.amount_paid ?? sale.payable_amount ?? 0);
-  const newAmountPaid = Math.min(sale.payable_amount, currentPaid + additionalAmount);
 
-  const remarkText = notes
-    ? `${sale.remarks ? sale.remarks + " | " : ""}Payment +${additionalAmount} via ${paymentMethod} (${notes})`
-    : sale.remarks;
-
-  const { data, error } = await supabase
-    .from("sales")
-    .update({
-      amount_paid: newAmountPaid,
-      payment_method: paymentMethod || sale.payment_method,
-      remarks: remarkText,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", saleId)
-    .select()
-    .single();
-
-  if (error) throw error;
-
-  if (sale.customer_id) {
-    try {
-      const { reduceOutstandingDebt } = await import("../customers/customer-finance.service");
-      await reduceOutstandingDebt({
-        customer_id: sale.customer_id,
-        amount: additionalAmount,
-        payment_method: paymentMethod,
-        notes: notes || `Payment update for Sale #${sale.sale_number}`,
-      });
-    } catch (e) {
-      console.warn("Customer debt update skipped or failed:", e);
-    }
+  let cashierId: string | null = null;
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    cashierId = user?.id ?? null;
+  } catch {
+    // Auth check fallback
   }
 
-  return data as Sale;
+  if (sale.customer_id) {
+    const { reduceOutstandingDebt } = await import("../customers/customer-finance.service");
+    await reduceOutstandingDebt({
+      customer_id: sale.customer_id,
+      amount: additionalAmount,
+      payment_method: paymentMethod,
+      notes: notes || `Installment payment for Sale #${sale.sale_number}`,
+      performed_by: cashierId ?? undefined,
+      sale_id: saleId,
+    });
+  }
+
+  return getSale(saleId);
 }
